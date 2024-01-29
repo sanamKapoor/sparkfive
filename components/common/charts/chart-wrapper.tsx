@@ -2,7 +2,7 @@ import Chart from "chart.js";
 import { useEffect, useRef, useState } from "react";
 import styles from "./chart-wrapper.module.css";
 
-const ChartWrapper = ({ chartObj, data }) => {
+const ChartWrapper = ({ chartObj, data, width = 400,  height = 400 }) => {
   const wrapperRef = useRef();
   const ctx = "chart";
 
@@ -31,7 +31,7 @@ const ChartWrapper = ({ chartObj, data }) => {
 
   return (
     <div className={styles.wrapper} ref={wrapperRef}>
-      <canvas id="chart" width="400" height="400"></canvas>
+      <canvas id="chart" width={width} height={height}></canvas>
     </div>
   );
 };

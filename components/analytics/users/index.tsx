@@ -1,6 +1,8 @@
+// TableComponent.js
+
 import React, { useEffect, useState } from "react";
 import { InsightsApiEndpoint, TABLE_REC_LEN, TableBodySection, analyticsLayoutSection } from "../../../constants/analytics";
-import { assetarrowColumns, assetColumns } from "../../../data/analytics";
+import { UserTableColumns, arrowColumns } from "../../../data/analytics";
 import Download from "../common/download-button";
 import NoData from "../common/no-data";
 import Pagination from "../common/pagination";
@@ -8,13 +10,15 @@ import SearchButton from "../common/search";
 import TableData from "../common/table";
 import styles from "../index.module.css";
 import useInsights from "../../../hooks/useInsights";
-import InsightsHeader from "../common/headline";
 import Heading from "../common/header/heading";
-import DateRangeTitle from "../common/header/date-title";
-import DateFilter from "../common/date-filter";
 import ClearSort from "../common/header/clear-sort";
+import DateFilter from "../common/date-filter";
+import InsightsHeader from "../common/headline";
+import DateRangeTitle from "../common/header/date-title";
 
-function Asset({ initialData }) {
+const Users = ({
+  initialData,
+}) => {
   let {
     loading,
     error,
@@ -33,16 +37,16 @@ function Asset({ initialData }) {
     setDownloadCSV,
     setFilter,
     setCustomDates,
-  } = useInsights({ section: analyticsLayoutSection.ACCOUNT_ASSETS, endpoint: InsightsApiEndpoint.ASSET });
+  } = useInsights({ section: analyticsLayoutSection.ACCOUNT_USERS, endpoint: InsightsApiEndpoint.USER });
   const [emptyRows, setEmptyRows] = useState([]);
-  const [totalAssets, setTotalAssets] = useState(0);
-  const [totalAssetsData, setTotalAssetsData] = useState([]);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [totalUsersData, setTotalUsersData] = useState([]);
 
   useEffect(() => {
     if (totalRecords > 0 && data.length > 0) {
       setEmptyRows(Array.from({ length: Math.max(TABLE_REC_LEN - (data ? data.length : 0), 0) }, (_, index) => ({})));
-      setTotalAssets(totalRecords);
-      setTotalAssetsData(data);
+      setTotalUsers(totalRecords);
+      setTotalUsersData(data);
     }
   }, [totalRecords, data]);
 
@@ -51,34 +55,29 @@ function Asset({ initialData }) {
     setSortOrder(true);
   };
 
-  useEffect(() => {
+  useEffect(() => {    
     if (initialData) {
-      setEmptyRows(
-        Array.from(
-          { length: Math.max(TABLE_REC_LEN - (initialData.data ? initialData.data.length : 0), 0) },
-          (_, index) => ({}),
-        ),
-      );
-      setTotalAssetsData(initialData.data);
-      setTotalAssets(initialData.totalRecords);
+      setEmptyRows(Array.from({ length: Math.max(TABLE_REC_LEN - (initialData.data ? initialData.data.length : 0), 0) }, (_, index) => ({})));
+      setTotalUsersData(initialData.data);
+      setTotalUsers(initialData.totalRecords);
     }
   }, [initialData]);
 
   return (
     <section className={styles.mainContainer}>
       <div className={styles.tableHeader}>
-        <InsightsHeader title="Assets" />
+        <InsightsHeader title="Users" />
       </div>
       <div className={`${styles["inner-container"]}`}>
         <section className={`${styles["outer-wrapper"]}`}>
-          {error ? (
+          {error ? 
             <NoData message={error} />
-          ) : (
+            : (
             <div className={styles.tableResponsive}>
               <div className={styles.headerContainer}>
                 <div className={styles.inline}>
-                  <Heading mainText="Top Assets" />
-                  <DateRangeTitle filter={filter} />
+                    <Heading mainText="User Engagement" />
+                    <DateRangeTitle filter={filter} />
                 </div>
                 <div className={`${styles["table-header-tabs"]}`}>
                   <SearchButton label="Search User" setSearch={setSearch} />
@@ -91,23 +90,23 @@ function Asset({ initialData }) {
                   <Download setDownloadCSV={setDownloadCSV} />
                 </div>
               </div>
-              {totalAssetsData?.length > 0 && sortBy && <ClearSort onClick={handleClearSorting} />}
+              {totalUsersData?.length > 0 && sortBy && <ClearSort onClick={handleClearSorting} />}
               <TableData
-                columns={assetColumns}
-                data={totalAssetsData && emptyRows.length > 0 ? [...totalAssetsData, ...emptyRows] : null}
-                apiData={totalAssetsData}
-                arrowColumns={assetarrowColumns}
-                activeSection={analyticsLayoutSection.ACCOUNT_ASSETS}
+                columns={UserTableColumns}
+                data={totalUsersData && emptyRows.length > 0 ? [...totalUsersData, ...emptyRows] : null}
+                apiData={totalUsersData}
+                arrowColumns={arrowColumns}
+                activeSection={analyticsLayoutSection.ACCOUNT_USERS}
                 tableLoading={loading}
-                totalRecords={totalAssets}
+                totalRecords={totalUsers}
                 sortBy={sortBy}
                 sortOrder={sortOrder}
                 setSortBy={setSortBy}
                 setSortOrder={setSortOrder}
-                tableFor={TableBodySection.ASSET}
+                tableFor={TableBodySection.USER}
               />
-              {totalAssetsData?.length > 0 && totalAssets > limit && (
-                <Pagination page={page} limit={limit} totalRecords={totalAssets} setPage={setPage} />
+              {totalUsersData?.length > 0 && totalUsers > limit && (
+                <Pagination page={page} limit={limit} totalRecords={totalUsers} setPage={setPage} />
               )}
             </div>
           )}
@@ -115,6 +114,6 @@ function Asset({ initialData }) {
       </div>
     </section>
   );
-}
+};
 
-export default Asset;
+export default Users;

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { saveAs } from "file-saver";
 import styles from "./modal.module.css";
-import SearchButton from "../search";
 import Datefilter from "../date-filter";
 import Download from "../download-button";
 import NoData from "../no-data";
@@ -13,12 +12,10 @@ import IconClickable from "../../../common/buttons/icon-clickable";
 import { insights } from "../../../../assets";
 import {
   userActivityModalArrowColumns,
-  userActivityModalButtonColumns,
-  userActivityModalButtonTexts,
   userActivityModalcolumns,
 } from "../../../../data/analytics";
 import { calculateBeginDate } from "../../../../config/data/filter";
-import { analyticsActiveModal, analyticsLayoutSection } from "../../../../constants/analytics";
+import { InsightsApiEndpoint, TableBodySection, analyticsActiveModal, analyticsLayoutSection } from "../../../../constants/analytics";
 import { SOMETHING_WENT_WRONG } from "../../../../constants/messages";
 import AnalyticsApi from "../../../../server-api/analytics";
 import { getCSVFileName } from "../../../../utils/analytics";
@@ -101,7 +98,7 @@ const Modal = ({ section, setShowModal, id }: {
       } else {
         setModalData(prev => ({ ...prev, totalRecords: data.totalRecords }))
         setApiData(data.data);
-        setModalHeaderData(data.extra);
+        setModalHeaderData(data?.userData);
       }
 
       initialRender ? setModalData(prev => ({ ...prev, loading: false })) : setModalData(prev => ({ ...prev, tableLoading: false }))
@@ -135,7 +132,7 @@ const Modal = ({ section, setShowModal, id }: {
   const init = () => {
     switch (section) {
       case analyticsLayoutSection.ACCOUNT_USERS:
-        setApiEndpoint(`user/${id}`);
+        setApiEndpoint(`${InsightsApiEndpoint.USER_ACTIVITY}?userId=${id}`);
         setActiveModal(analyticsActiveModal.USER_ACTIVITY);
         break;
     }
@@ -353,8 +350,6 @@ const Modal = ({ section, setShowModal, id }: {
                   apiData={apiData}
                   columns={userActivityModalcolumns}
                   arrowColumns={userActivityModalArrowColumns}
-                  buttonColumns={userActivityModalButtonColumns}
-                  buttonTexts={userActivityModalButtonTexts}
                   activeSection={activeModal}
                   tableLoading={modalData.tableLoading}
                   totalRecords={modalData.totalRecords}
@@ -362,7 +357,7 @@ const Modal = ({ section, setShowModal, id }: {
                   sortOrder={modalData.sortOrder}
                   setSortBy={(val: string) => setModalData(prev => ({ ...prev, sortBy: val }))}
                   setSortOrder={(val: boolean) => setModalData(prev => ({ ...prev, sortOrder: val }))}
-                  tableFor={activeModal}
+                  tableFor={TableBodySection.USER_ACTIVITY}
                 />
                 {apiData && apiData?.length > 0 && totalRecords > limit &&
                   <Pagination

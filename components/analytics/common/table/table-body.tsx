@@ -3,27 +3,20 @@ import { TableBodySection } from "../../../../constants/analytics";
 import DateFormatter from "../../../../utils/date";
 import AssetIcon from "../../../common/asset/asset-icon";
 import styles from "./table-data.module.css";
+import { useRouter } from "next/router";
 
-const TableBody = ({ columns, buttonColumns, buttonTexts, handleModals, data, dashboardView, tableFor }) => {
+const TableBody = ({ handleModals, data, tableFor, dashboardView }) => {
 
   const renderTableData = () => {
     switch (tableFor) {
       case TableBodySection.USER:
         return <UserTableRows data={data} handleModals={handleModals} dashboardView={dashboardView} />;
       case TableBodySection.ASSET:
-        return <AssetTableRows data={data} handleModals={handleModals} dashboardView={dashboardView} />;
+        return <AssetTableRows data={data} handleModals={handleModals} />;
       case TableBodySection.USER_ACTIVITY:
-        return <UserActivityRows data={data} handleModals={handleModals} dashboardView={dashboardView} />;
+        return <UserActivityRows data={data} dashboardView={dashboardView} />;
       default:
-        return (
-          <DefaultTableRows
-            data={data}
-            columns={columns}
-            buttonColumns={buttonColumns}
-            buttonTexts={buttonTexts}
-            handleModals={handleModals}
-          />
-        );
+        return null;
     }
   };
 
@@ -32,7 +25,7 @@ const TableBody = ({ columns, buttonColumns, buttonTexts, handleModals, data, da
 
 export default TableBody;
 
-export const DefaultTableRows = ({ data, columns, buttonColumns, buttonTexts, handleModals, activeSection }) => {  
+export const DefaultTableRows = ({ data, columns, buttonColumns, buttonTexts, handleModals, activeSection }) => {
   return (
     <tbody>
       {data.map((row, rowIndex) => (
@@ -66,7 +59,7 @@ export const DefaultTableRows = ({ data, columns, buttonColumns, buttonTexts, ha
   );
 };
 
-export const UserTableRows = ({ data, handleModals, dashboardView }) => {  
+export const UserTableRows = ({ data, handleModals, dashboardView }) => {
   return (
     <tbody>
       {data.map((row) => {
@@ -113,7 +106,7 @@ export const UserTableRows = ({ data, handleModals, dashboardView }) => {
   );
 };
 
-export const AssetTableRows = ({ data, handleModals, dashboardView }) => {
+export const AssetTableRows = ({ data, handleModals }) => {
   return (
     <tbody>
       {data.map((row) => {
@@ -150,7 +143,7 @@ export const AssetTableRows = ({ data, handleModals, dashboardView }) => {
   );
 };
 
-export const UserActivityRows = ({ data, handleModals, dashboardView }) => {
+export const UserActivityRows = ({ data, dashboardView }) => {
   let activityTitle = "";
   let activityDate = "";
   return (
@@ -164,26 +157,61 @@ export const UserActivityRows = ({ data, handleModals, dashboardView }) => {
             : row.last_shared
               ? row.last_shared
               : "";
-        return (
-          <tr key={row._id}>
-            <td>
-              {" "}
-              <div style={{ display: "flex" }}>
-                <span className={`${styles["user-name"]}`}>
-                  {activityTitle} {row.name}
-                </span>
-              </div>
-            </td>
-            <td>
-              <div style={{ display: "flex" }}>
-                <span className={`${styles["user-name"]}`}>
-                  {activityDate ? DateFormatter.analyticsDateFormatter(activityDate) : ""}
-                </span>
-              </div>
-            </td>
-            <td>{row.assetId ? <button className={styles.actionButton}>View Link</button> : ""}</td>
-          </tr>
-        );
+
+        if (dashboardView) {
+          return (
+            <tr key={row._id}>
+              {row?.user?.name && (
+                <div className={styles["usernameWithImage"]}>
+                  <div className={`${styles["image-wrapper"]}`}>
+                    {row.user.profilePhoto !== null ? (
+                      <img src={row.user.profilePhoto} alt="user" className={styles.userImage} />
+                    ) : (
+                      <div className={styles.userAvatar}>{row.user.name.charAt(0).toUpperCase()}</div>
+                    )}
+                  </div>
+                  <span className={`${styles["user-name"]}`}>{row.user.name}</span>
+                </div>
+              )}
+              <td>
+                {" "}
+                <div style={{ display: "flex" }}>
+                  <span className={`${styles["user-name"]}`}>
+                    {activityTitle} {row.name}
+                  </span>
+                </div>
+              </td>
+              <td>
+                <div style={{ display: "flex" }}>
+                  <span className={`${styles["user-name"]}`}>
+                    {activityDate ? DateFormatter.analyticsDateFormatter(activityDate) : ""}
+                  </span>
+                </div>
+              </td>
+            </tr>
+          )
+        } else {
+          return (
+            <tr key={row._id}>
+              <td>
+                {" "}
+                <div style={{ display: "flex" }}>
+                  <span className={`${styles["user-name"]}`}>
+                    {activityTitle} {row.name}
+                  </span>
+                </div>
+              </td>
+              <td>
+                <div style={{ display: "flex" }}>
+                  <span className={`${styles["user-name"]}`}>
+                    {activityDate ? DateFormatter.analyticsDateFormatter(activityDate) : ""}
+                  </span>
+                </div>
+              </td>
+              <td>{row.assetId ? <button className={styles.actionButton}>View Link</button> : ""}</td>
+            </tr>
+          );
+        }
       })}
     </tbody>
   );

@@ -72,6 +72,16 @@ export const analyticsLayoutSection = {
     SHARED_LINK: 'SHARED_LINK',
 }
 
+export const analyticsRoutes = {
+  DASHBOARD: "/main/insights",
+  ACCOUNT_USERS: "/main/insights/account/users",
+  ACCOUNT_ASSETS: "/main/insights/account/assets",
+  ACCOUNT_TEAM: "/main/insights/account/team",
+  EXTERNAL_USERS: "/main/insights/external/users",
+  EXTERNAL_ASSETS: "/main/insights/external/assets",
+  EXTERNAL_LINK: "/main/insights/external/links",
+};
+
 export const analyticsActiveModal = {
     USER_ACTIVITY: 'activity',
     ASSET_CHART: 'chart'
@@ -79,7 +89,8 @@ export const analyticsActiveModal = {
 
 export const DashboardSections = {
     USER: 'users',
-    ASSET: 'assets'
+    ASSET: 'assets',
+    USER_ACTIVITY: 'user-activity'
 }
 
 export const TableBodySection = {
@@ -87,3 +98,15 @@ export const TableBodySection = {
     USER: 'users',
     ASSET: 'assets'
 }
+
+export const InsightsApiEndpoint = {
+  USER: "users",
+  ASSET: "assets",
+  TEAM: "team",
+  USER_ACTIVITY: "user-activity",
+};
+
+export const PAGE = 1;
+export const LIMIT = 3;
+export const DASHBOARD_REC_LIMIT = 6;
+export const TABLE_REC_LEN = 15;

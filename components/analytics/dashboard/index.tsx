@@ -1,35 +1,30 @@
-import React, { useContext } from "react";
-import { DashboardSections } from "../../../constants/analytics";
-import { AnalyticsContext } from "../../../context";
-import AssetTable from "../asset";
+import React from "react";
 import styles from "../index.module.css";
-import UserTable from "../insight-table";
-import AssetChart from "../insights-chart";
+import Activity from "./activity";
+import InsightsHeader from "../common/headline";
+import TeamSession from "./session";
+import TopAssets from "./top-asset";
+import UserEngagment from "./user-eng";
+import { DashboardSections } from "../../../constants/analytics";
 
-function Dashboard() {
-  const { dashboardData } = useContext(AnalyticsContext);
-
+function Dashboard({ data }) {  
   return (
-    <section>
-      <div className={styles.outerLayout}>
-        <div className={`${styles["inner-wrapper"]}`}>
-          <div className={`${styles["total-session"]}`}>
-            <AssetChart />
-          </div>
-          <div>
-            <AssetTable dashboardView={true} dashboardData={dashboardData[DashboardSections.ASSET]} />
-          </div>
-          <div>
-            <UserTable dashboardView={true} dashboardData={dashboardData[DashboardSections.USER]} />
-          </div>
-          {/* <div>
-            <ShareLinkPage dashboardView={true} />
-          </div>
-          <div>
-            <ActivityFeedTable />
-          </div> */}
-        </div>
+    <section className={styles.mainContainer}>
+      <div className={styles.tableHeader}>
+        <InsightsHeader title="Dashboard" />
       </div>
+      <div className={`${styles["inner-container"]}`}>
+        <section className={`${styles["inner-wrapper"]}`}>
+          <TeamSession />
+          <TopAssets initialData={data.find(d => d.section === DashboardSections.ASSET)}  />
+        </section>
+      </div>
+      <div className={`${styles["inner-container"]}`}>
+      <section className={`${styles["inner-wrapper"]}`}>
+        <UserEngagment initialData={data.find(d => d.section === DashboardSections.USER)} />
+        <Activity initialData={data.find(d => d.section === DashboardSections.USER_ACTIVITY)} />
+        </section>
+        </div>
     </section>
   );
 }

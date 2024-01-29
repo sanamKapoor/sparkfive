@@ -1,16 +1,16 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
+import Cookies from "universal-cookie";
 
 // Components
 import { useRouter } from "next/router";
-import { useContext, useEffect } from "react";
-import Analytics from "../../../components/analytics";
-import AppLayout from "../../../components/common/layouts/app-layout";
-import MainLayout from "../../../components/common/layouts/main-layout";
-import { pages } from "../../../constants/analytics";
-import { CALENDAR_ACCESS } from "../../../constants/permissions";
+import { DashboardSections, pages } from "../../../constants/analytics";
 import { UserContext } from "../../../context";
-import AnalyticsProvider from "../../../context/analytics-provider";
 import useAnalytics from "../../../hooks/useAnalytics";
+import Dashboard from "../../../components/analytics/dashboard";
+import { calculateBeginDate } from "../../../config/data/filter";
+import { AnalyticsApiHelperServerRender } from "../../../server-api/analytics";
+import { SOMETHING_WENT_WRONG } from "../../../constants/messages";
+import InsightsLayout from "../../../components/common/layouts/insights-layout";
 
 const Insights = ({ data }) => {
 
@@ -29,59 +29,51 @@ const Insights = ({ data }) => {
   }, [user])
 
   return (
-    <>
-      <AppLayout title="Overview">
-        <MainLayout requiredPermissions={[CALENDAR_ACCESS]}>
-          <AnalyticsProvider>
-            <Analytics />
-          </AnalyticsProvider>
-        </MainLayout>
-      </AppLayout>
-    </>
-  )
+    <InsightsLayout title="Insights - Dashboard">
+      <Dashboard data={data} />
+    </InsightsLayout>
+  );
 };
 
+export async function getServerSideProps({ req, res, query }) {
+  const cookies = new Cookies(req.headers.cookie, { path: "/" });
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${cookies.get("jwt")}`
+  }
+  const payload = {
+    page: 1,
+    limit: 6,
+    sortBy: "",
+    sortOrder: true,
+    filter: {
+      beginDate: calculateBeginDate(7, 1),
+      endDate: new Date(),
+    },
+  };
 
+  let result: Array<any> = [];
+  for (const endpoint in DashboardSections) {
+    const res = await AnalyticsApiHelperServerRender(DashboardSections[endpoint], payload, headers);
+    if (!res.ok) {
+      result.push({
+        error: SOMETHING_WENT_WRONG,
+        section: DashboardSections[endpoint],
+      });
+    } else {
+      const data = await res.json();
+      result.push({
+        ...data,
+        section: DashboardSections[endpoint],
+      });
+    }
+  }
 
-
-// export async function getServerSideProps({ req, res, query }) {
-//   const { section, page, limit } = query;
-
-//   const cookies = new Cookies(req.headers.cookie, { path: '/' });
-//   const headers = {
-//     'Content-Type': 'application/json',
-//     'Authorization': `Bearer ${cookies.get("jwt")}`
-//   }
-
-//   let result: Array<any> = [];
-//   if (section === 'dashboard') {
-//     for (const endpoint of DashboardSections) {
-//       const res = await fetch(`${process.env.SERVER_BASE_URL}/analytics/${endpoint}`, {
-//         method: 'post',
-//         headers,
-//         body: JSON.stringify({
-//           page: +page || 1,
-//           limit: +limit || 6,
-//           filter: {
-//             endDate: new Date(),
-//             beginDate: calculateBeginDate(7, 1)
-//           }
-//         })
-//       })
-//       const data = await res.json();
-
-//       result.push({
-//         ...data,
-//         endpoint
-//       })
-//     }
-//   }
-
-//   return {
-//     props: {
-//       data: result,
-//     },
-//   };
-// }
+  return {
+    props: {
+      data: result,
+    },
+  };
+}
 
 export default Insights;

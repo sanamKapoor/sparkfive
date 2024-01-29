@@ -1,4 +1,63 @@
 import { insights, Utilities } from "../assets";
+import { analyticsRoutes } from "../constants/analytics";
+import { NavItem } from "../interfaces/analytics"
+
+export const NavItems: NavItem[] = [
+  {
+    id: 1,
+    parent: "Main",
+    components: [
+      {
+        route: analyticsRoutes.DASHBOARD,
+        label: "Dashboard",
+        image: insights.insightDashboard,
+      },
+    ],
+  },
+  {
+    id: 2,
+    parent: "In Account",
+    components: [
+      {
+        route: analyticsRoutes.ACCOUNT_USERS,
+        label: "Users",
+        image: insights.insightUser,
+      },
+      {
+        route: analyticsRoutes.ACCOUNT_ASSETS,
+        label: "Assets",
+        image: insights.insightAsset,
+      },
+      {
+        route: analyticsRoutes.ACCOUNT_TEAM,
+        label: "Teams",
+        image: insights.insightGroups,
+      },
+    ],
+  },
+  {
+    id: 3,
+    parent: "External",
+    components: [
+      {
+        route: analyticsRoutes.EXTERNAL_USERS,
+        label: "Users",
+        image: insights.insightUser,
+      },
+      {
+        route: analyticsRoutes.EXTERNAL_ASSETS,
+        label: "Assets",
+        image: insights.insightAsset,
+      },
+      {
+        route: analyticsRoutes.EXTERNAL_LINK,
+        label: "Shared link",
+        image: insights.insightShare,
+      },
+    ],
+  },
+];
+
 //insight table
 export const UserTableColumns = [
   "User name",
@@ -9,7 +68,7 @@ export const UserTableColumns = [
   "Shares",
   "Actions",
 ];
-export const dashboardColumns = ["User name", "Sessions", "Last session date", "Actions"];
+export const DashboardUserColumns = ["User name", "Sessions", "Last session date", "Actions"];
 export const arrowColumns = [
   {
     label: "User name",
@@ -122,7 +181,7 @@ export const insightdata = [
 ];
 
 // Asset table
-export const columns = ["Asset name", "Views", "Downloads", "Shares", "Actions"];
+export const assetColumns = ["Asset name", "Views", "Downloads", "Shares", "Actions"];
 export const assetarrowColumns = [
   {
     label: "Asset name",
@@ -222,61 +281,61 @@ export const sharedbuttonColumns = ["Action"];
 export const sharedbuttonTexts = { Actions: "User Info" };
 
 //Activity feed table
-export const activitycolumns = ["User name", "Activity", "Date"];
-export const activitydata = [
-  {
-    "User name": "Seraphina Alexandra Montgomery-Smith",
-    icon: insights.userImg1,
-    Activity: "Downloaded...",
-    Date: "Today at 04:22 pm",
-  },
-  {
-      "User name": "Harvey Elliott",
-      icon: insights.userImg2,
-      Activity: "Viewed...",
-      Date: "Today 04:01 pm",
-  },
-  {
-      "User name": "Charles Wells",
-      icon: insights.userImg3,
-      Activity: "Shared...",
-      Date: "Today 03:55 pm",
-  },
-  {
-      "User name": "John Ali",
-      icon: insights.userImg4,
-      Activity: "Viewed...",
-      Date: "Today 03:31 pm",
-  },
-  {
-      "User name": "Clyde Booth",
-      icon: insights.userImg1,
-      Activity: "Downloaded...",
-      Date: "Today 03:08 pm",
-  },
-  {
-      "User name": "Beverly Marshall",
-      icon: insights.userImg2,
-      Activity: "Downloaded",
-      Date: "Today 03:01 pm",
-  },
-  {
-      "User name": "Harvey Elliott",
-      icon: insights.userImg2,
-      Activity: "Viewed...",
-      Date: "Today 04:01 pm",
-  },
-  {
-      "User name": "Seraphina Alexandra Montgomery-Smith",
-      icon: insights.userImg1,
-      Activity: "Downloaded...",
-      Date: "Today at 04:22 pm",
-    },
+// export const activitycolumns = ["User name", "Activity", "Date"];
+// export const activitydata = [
+//   {
+//     "User name": "Seraphina Alexandra Montgomery-Smith",
+//     icon: insights.userImg1,
+//     Activity: "Downloaded...",
+//     Date: "Today at 04:22 pm",
+//   },
+//   {
+//       "User name": "Harvey Elliott",
+//       icon: insights.userImg2,
+//       Activity: "Viewed...",
+//       Date: "Today 04:01 pm",
+//   },
+//   {
+//       "User name": "Charles Wells",
+//       icon: insights.userImg3,
+//       Activity: "Shared...",
+//       Date: "Today 03:55 pm",
+//   },
+//   {
+//       "User name": "John Ali",
+//       icon: insights.userImg4,
+//       Activity: "Viewed...",
+//       Date: "Today 03:31 pm",
+//   },
+//   {
+//       "User name": "Clyde Booth",
+//       icon: insights.userImg1,
+//       Activity: "Downloaded...",
+//       Date: "Today 03:08 pm",
+//   },
+//   {
+//       "User name": "Beverly Marshall",
+//       icon: insights.userImg2,
+//       Activity: "Downloaded",
+//       Date: "Today 03:01 pm",
+//   },
+//   {
+//       "User name": "Harvey Elliott",
+//       icon: insights.userImg2,
+//       Activity: "Viewed...",
+//       Date: "Today 04:01 pm",
+//   },
+//   {
+//       "User name": "Seraphina Alexandra Montgomery-Smith",
+//       icon: insights.userImg1,
+//       Activity: "Downloaded...",
+//       Date: "Today at 04:22 pm",
+//     },
 
-];
-export const activityarrowColumns = ["User name", "Activity", "Date",];
-export const activitybuttonColumns = ["Actions"];
-export const activitybuttonTexts = { Actions: "User info" };
+// ];
+// export const activityarrowColumns = ["User name", "Activity", "Date",];
+// export const activitybuttonColumns = ["Actions"];
+// export const activitybuttonTexts = { Actions: "User info" };
 
 //modal
 // shared user modal
@@ -500,6 +559,7 @@ export const shareLinksData = [
 export const shareModalbuttonTexts = { Actions: "View Asset" };
 
 // User modal
+export const activitycolumns = ["User name", "Activity", "Date"];
 export const userModalcolumns = ["Viewed Link", "Viewed File", "Download File", "Date", "Actions"];
 export const userModaldata = [
   {
@@ -553,9 +613,12 @@ export const userModalbuttonTexts = { Actions: "View Asset" };
 export const userActivityModalcolumns = ["Activity", "Date", "Action"];
 export const userActivityModalArrowColumns = [
   {
+    label: "User name",
+    value: "user_name",
+  },
+  {
     label: "Activity",
     value: "name",
-    disable: true
   },
   {
     label: "Date",
@@ -564,3 +627,5 @@ export const userActivityModalArrowColumns = [
 ];
 export const userActivityModalButtonColumns = ["Action"];
 export const userActivityModalButtonTexts = { Actions: "View Link" };
+
+// Dashboard 

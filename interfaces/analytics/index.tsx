@@ -16,4 +16,14 @@ export interface DashboardSectionI {
     error: string,
     loading: boolean,
     tableLoading: boolean
-  }
+}
+  
+export interface NavItem {
+  id: number;
+  parent: string;
+  components: Array<{
+    route: string;
+    label: string;
+    image: string;
+  }>;
+}

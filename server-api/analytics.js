@@ -7,3 +7,11 @@ export default {
   captureSharedLinkAnalytics: (data) => axios.post(`${analyticsUrl}/share-link/events`, data),
   getAnalyticsData: (endpoint, data) => axios.post(`${analyticsUrl}/${endpoint}`, data),
 };
+
+export const AnalyticsApiHelperServerRender = async (url, payload, headers) => {
+  return await fetch(`${analyticsUrl}/${url}`, {
+    method: "post",
+    headers,
+    body: JSON.stringify(payload)
+  });
+}

@@ -1,8 +1,8 @@
 import React from "react";
 import styles from "./insights.header.module.css";
-import { Utilities } from "../../../assets";
+import { Utilities } from "../../../../assets";
 
-export default function InsightsHeader({ title, companyName }) {
+export default function InsightsHeader({ title, companyName = "Hooli Inc." }) {
   return (
     <>
       <section className={styles.header}>

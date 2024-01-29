@@ -11,7 +11,7 @@ import IconClickable from "../../../common/buttons/icon-clickable";
 import { AnalyticsContext } from '../../../../context';
 
 export default function DateFilter({
-  filter, setFilter, customDates, setCustomDates, activeFilterFor
+  filter, setFilter, customDates, setCustomDates
 }) {
   const { dashboardView, filterFor, setFilterFor, customDatesFor, setCustomDatesFor } = useContext(AnalyticsContext);
   const [activeFilter, setActiveFilter] = useState("7d");

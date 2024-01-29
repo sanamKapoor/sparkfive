@@ -10,8 +10,6 @@ import { AnalyticsContext } from "../../../../context";
 export default function TableData({
   columns,
   arrowColumns,
-  buttonColumns,
-  buttonTexts,
   tableLoading,
   data,
   apiData,
@@ -21,11 +19,11 @@ export default function TableData({
   sortOrder,
   setSortBy,
   setSortOrder,
-  tableFor
+  tableFor,
+  dashboardView = false
 }) {
   const [activeId, setActiveId] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const { dashboardView } = useContext(AnalyticsContext);
 
   const handleModals = async (id: string) => {
     setShowModal(true);
@@ -47,13 +45,10 @@ export default function TableData({
           />
           {data?.length > 0 &&
             <TableBody
-              columns={columns}
-              buttonColumns={buttonColumns}
-              buttonTexts={buttonTexts}
               handleModals={handleModals}
               data={data}
-              dashboardView={dashboardView}
               tableFor={tableFor}
+              dashboardView={dashboardView}
             />
           }
         </table>
@@ -63,7 +58,7 @@ export default function TableData({
         showModal && <Modal section={activeSection} setShowModal={setShowModal} id={activeId} />
       }
       {
-        (apiData && apiData.length === 0 && (activeSection === analyticsLayoutSection.ACCOUNT_USERS || activeSection === analyticsLayoutSection.ACCOUNT_ASSETS)) &&
+        apiData?.length === 0 &&
         <div className={styles.empty}>
           <NoData message="Data not found." wrapper={false} />
         </div>

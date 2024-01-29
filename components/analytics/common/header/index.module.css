@@ -1,0 +1,41 @@
+.smallHeading {
+    font-weight: 600;
+    font-size: 16px;
+    color: #08135e;
+}
+.tableHeading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    cursor: default;
+}   
+.heading {
+    font-weight: 600;
+    font-size: 22px;
+    color: #08135e;
+}
+.table-header-tabs {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.description,.link {
+    cursor: pointer;
+    font-weight: 400;
+    font-size: 12px;
+    color: #08135e;
+    margin-left: 10px;
+}
+.link:hover {
+    text-decoration: underline;
+}
+
+.clear-sort {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    margin-top: 15px;
+}
+
+
