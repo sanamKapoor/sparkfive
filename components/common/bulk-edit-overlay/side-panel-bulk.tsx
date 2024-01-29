@@ -208,6 +208,7 @@ const SidePanelBulk = ({
       setInputTags(tagsResponse.data);
       setInputCustomFields(customFieldsResponse.data);
     } catch (err) {
+      console.log("🚀 ~ getInputData ~ err:", err)
       // TODO: Maybe show error?
     }
   };
