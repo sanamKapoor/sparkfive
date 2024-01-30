@@ -90,24 +90,33 @@ const Users = ({
                   <Download setDownloadCSV={setDownloadCSV} />
                 </div>
               </div>
-              {totalUsersData?.length > 0 && sortBy && <ClearSort onClick={handleClearSorting} />}
-              <TableData
-                columns={UserTableColumns}
-                data={totalUsersData && emptyRows.length > 0 ? [...totalUsersData, ...emptyRows] : null}
-                apiData={totalUsersData}
-                arrowColumns={arrowColumns}
-                activeSection={analyticsLayoutSection.ACCOUNT_USERS}
-                tableLoading={loading}
-                totalRecords={totalUsers}
-                sortBy={sortBy}
-                sortOrder={sortOrder}
-                setSortBy={setSortBy}
-                setSortOrder={setSortOrder}
-                tableFor={TableBodySection.USER}
-              />
-              {totalUsersData?.length > 0 && totalUsers > limit && (
-                <Pagination page={page} limit={limit} totalRecords={totalUsers} setPage={setPage} />
-              )}
+              {
+                totalUsersData?.length > 0 ?
+                <>
+                  {sortBy && <ClearSort onClick={handleClearSorting} />}
+                  <TableData
+                    columns={UserTableColumns}
+                    data={totalUsersData && emptyRows.length > 0 ? [...totalUsersData, ...emptyRows] : null}
+                    apiData={totalUsersData}
+                    arrowColumns={arrowColumns}
+                    activeSection={analyticsLayoutSection.ACCOUNT_USERS}
+                    tableLoading={loading}
+                    totalRecords={totalUsers}
+                    sortBy={sortBy}
+                    sortOrder={sortOrder}
+                    setSortBy={setSortBy}
+                    setSortOrder={setSortOrder}
+                    tableFor={TableBodySection.USER}
+                  />
+                  {totalUsers > limit && (
+                    <Pagination page={page} limit={limit} totalRecords={totalUsers} setPage={setPage} />
+                  )}
+                </>
+                :
+                <div className={styles.empty}>
+                  <NoData message="Data not found." wrapper={false} />
+                </div>
+              }
             </div>
           )}
         </section>

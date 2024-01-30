@@ -91,24 +91,33 @@ function Asset({ initialData }) {
                   <Download setDownloadCSV={setDownloadCSV} />
                 </div>
               </div>
-              {totalAssetsData?.length > 0 && sortBy && <ClearSort onClick={handleClearSorting} />}
-              <TableData
-                columns={assetColumns}
-                data={totalAssetsData && emptyRows.length > 0 ? [...totalAssetsData, ...emptyRows] : null}
-                apiData={totalAssetsData}
-                arrowColumns={assetarrowColumns}
-                activeSection={analyticsLayoutSection.ACCOUNT_ASSETS}
-                tableLoading={loading}
-                totalRecords={totalAssets}
-                sortBy={sortBy}
-                sortOrder={sortOrder}
-                setSortBy={setSortBy}
-                setSortOrder={setSortOrder}
-                tableFor={TableBodySection.ASSET}
-              />
-              {totalAssetsData?.length > 0 && totalAssets > limit && (
-                <Pagination page={page} limit={limit} totalRecords={totalAssets} setPage={setPage} />
-              )}
+              {
+                totalAssetsData?.length > 0 ?
+                <>
+                  {sortBy && <ClearSort onClick={handleClearSorting} />}
+                  <TableData
+                    columns={assetColumns}
+                    data={totalAssetsData && emptyRows.length > 0 ? [...totalAssetsData, ...emptyRows] : null}
+                    apiData={totalAssetsData}
+                    arrowColumns={assetarrowColumns}
+                    activeSection={analyticsLayoutSection.ACCOUNT_ASSETS}
+                    tableLoading={loading}
+                    totalRecords={totalAssets}
+                    sortBy={sortBy}
+                    sortOrder={sortOrder}
+                    setSortBy={setSortBy}
+                    setSortOrder={setSortOrder}
+                    tableFor={TableBodySection.ASSET}
+                  />
+                  {totalAssets > limit && (
+                    <Pagination page={page} limit={limit} totalRecords={totalAssets} setPage={setPage} />
+                  )}
+                </>
+                :
+                <div className={styles.empty}>
+                  <NoData message="Data not found." wrapper={false} />
+                </div>
+              }
             </div>
           )}
         </section>
