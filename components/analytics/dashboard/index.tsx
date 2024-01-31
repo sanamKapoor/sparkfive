@@ -6,6 +6,7 @@ import TeamSession from "./session";
 import TopAssets from "./top-asset";
 import UserEngagment from "./user-eng";
 import { DashboardSections } from "../../../constants/analytics";
+import ChartComp from "../common/chart";
 
 function Dashboard({ data }) {  
   return (
@@ -15,7 +16,7 @@ function Dashboard({ data }) {
       </div>
       <div className={`${styles["inner-container"]}`}>
         <section className={`${styles["inner-wrapper"]}`}>
-          <TeamSession />
+          <ChartComp data={data.find(d => d.section === DashboardSections.TEAM)} />
           <TopAssets initialData={data.find(d => d.section === DashboardSections.ASSET)}  />
         </section>
       </div>

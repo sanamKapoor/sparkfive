@@ -1,45 +1,45 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ChartWrapper from '../../../common/charts/chart-wrapper';
+import { ChartLines } from '../../../../constants/analytics';
 
 const ChartComp = ({ data }) => {
     const [chartData, setChartData] = useState({
-        // labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
         datasets: [
             {
-                data: [{x:10,y:10},{x:5,y:5}],
+                data: [23, 56, 124, 342, 22, 69],
                 borderColor: "#3e95cd",
                 backgroundColor: "#7bb6dd",
                 fill: true,
-                
             },
         ]
     })
 
-    // useEffect(() => {
-    //     setChartData({
-    //         labels: data.dates,
-    //         datasets: [
-    //             {
-    //                 data: data.data,
-    //                 borderColor: "#3e95cd",
-    //                 backgroundColor: "#7bb6dd",
-    //                 fill: true,
-    //             },
-    //         ]
-    //     })
-    // }, [data])
+    useEffect(() => {
+
+        const datasets = data?.data?.map(d => {            
+            return {
+                ...ChartLines[d.key],
+                data: d.data
+            }
+        })
+
+        setChartData({
+            labels: data.labels,
+            datasets
+        })
+    }, [data])
 
 
-return (
-    // <canvas id='myChart'></canvas>
-    <ChartWrapper
-        chartObj={{
-            type: 'line'
-        }}
-        data={chartData}
-        height={200}
-    />
-)
+    return (
+        <ChartWrapper
+            chartObj={{
+                type: 'line'
+            }}
+            data={chartData}
+            height={200}
+        />
+    )
 }
 
 export default ChartComp

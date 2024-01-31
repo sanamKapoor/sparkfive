@@ -3,14 +3,14 @@ import Cookies from "universal-cookie";
 
 // Components
 import { useRouter } from "next/router";
+import Dashboard from "../../../components/analytics/dashboard";
+import InsightsLayout from "../../../components/common/layouts/insights-layout";
+import { calculateBeginDate } from "../../../config/data/filter";
 import { DashboardSections, pages } from "../../../constants/analytics";
+import { SOMETHING_WENT_WRONG } from "../../../constants/messages";
 import { UserContext } from "../../../context";
 import useAnalytics from "../../../hooks/useAnalytics";
-import Dashboard from "../../../components/analytics/dashboard";
-import { calculateBeginDate } from "../../../config/data/filter";
 import { AnalyticsApiHelperServerRender } from "../../../server-api/analytics";
-import { SOMETHING_WENT_WRONG } from "../../../constants/messages";
-import InsightsLayout from "../../../components/common/layouts/insights-layout";
 
 const Insights = ({ data }) => {
 
