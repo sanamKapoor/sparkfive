@@ -939,16 +939,19 @@ export default ({ getAssets }) => {
 
   const removeSelectedFromList = () => {
     if (activeSortFilter?.mainFilter === "SubCollectionView") {
+
       const newAssets = subFoldersAssetsViewList.results.filter((existingAsset) => {
         const searchedAssetIndex = selectedSubFolderAssetId.findIndex(
           (assetListItem) => existingAsset.asset.id === assetListItem.asset.id,
         );
         return searchedAssetIndex === -1;
       });
+
       setSubFoldersAssetsViewList({
         ...subFoldersAssetsViewList,
         results: [...newAssets],
       });
+
     } else if (!operationAsset) {
       const newAssets = assets.filter((existingAsset) => {
         const searchedAssetIndex = selectedAssets.findIndex(
@@ -1088,6 +1091,7 @@ export default ({ getAssets }) => {
   let operationLength = 0;
 
   // Check selected assets to be operated
+
   if (operationAsset) {
     operationLength = 1;
   } else if (operationFolder) {

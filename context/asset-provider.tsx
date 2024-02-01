@@ -1,6 +1,6 @@
 import update from "immutability-helper";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 import { validation } from "../constants/file-validation";
 import { AssetContext, SocketContext } from "../context";
@@ -141,6 +141,11 @@ export default ({ children }) => {
   const [currentFolder, setCurrentFolder] = useState(null);
 
   const [showSubCollectionContent, setShowSubCollectionContent] = useState(false);
+  const [assetDragFlag, setAssetDragFlag] = useState(false);
+  const [assetDragId, setAssetDragId] = useState(false);
+  const [assetDragType, setAssetDragType] = useState("")
+
+  const [droppableId, setDroppableId] = useState("");
 
   const setPlaceHolders = (type, replace = true) => {
     if (type === "asset") {
@@ -193,6 +198,7 @@ export default ({ children }) => {
   };
 
   const subFoldersAssetList = (inputFolders: { results: Item[]; next: number; total: number }, replace = true) => {
+
     const { results, next, total } = inputFolders;
 
     setSubFoldersAssetsViewList((previousValue) => {
@@ -203,6 +209,7 @@ export default ({ children }) => {
         total,
       };
     });
+
   };
 
   const setSidenavFolderChildListItems = (inputFolders: any, id: string, replace = true) => {
@@ -560,7 +567,6 @@ export default ({ children }) => {
 
     const handleRouteChange = (url, { shallow }) => {
       const parts = localStorage.getItem('history')?.split('/');
-
       if (parts && parts.length > 3 && parts[1] === 'main' && parts[2] === 'assets') {
         localStorage.setItem("history", url)
       } else if (parts && parts.length > 3 && parts[1] === 'collections' && parts[2] === 'assetDetail') {
@@ -569,8 +575,8 @@ export default ({ children }) => {
         setActiveFolder("");
         localStorage.setItem("history", url)
       }
-
     };
+
     router.events.on("routeChangeStart", handleRouteChange);
     // If the component is unmounted, unsubscribe
     // from the event with the `off` method:
@@ -684,7 +690,16 @@ export default ({ children }) => {
     setCurrentFolder,
     showSubCollectionContent,
     setShowSubCollectionContent,
-    history, setHistory
+    history,
+    setHistory,
+    assetDragFlag,
+    assetDragId,
+    assetDragType,
+    setAssetDragFlag,
+    setAssetDragId,
+    setAssetDragType,
+    droppableId,
+    setDroppableId
   };
   return <AssetContext.Provider value={assetsValue}>{children}</AssetContext.Provider>;
 };

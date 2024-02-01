@@ -946,7 +946,6 @@ const AssetsLibrary = () => {
   const deleteFolder = async (id) => {
     try {
       await folderApi.deleteFolder(id);
-
       if (activeMode === "SubCollectionView") {
         const folderIndex = subFoldersViewList?.results?.findIndex((folder) => folder.id === id);
         if (folderIndex !== -1) {

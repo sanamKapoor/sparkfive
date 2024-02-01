@@ -103,7 +103,7 @@ export const AssetContext = createContext({
     retryList,
     folderId,
     folderGroups,
-    subFolderAutoTag
+    subFolderAutoTag,
   ) => { },
 
   uploadingFileName: "",
@@ -189,7 +189,16 @@ export const AssetContext = createContext({
   showSubCollectionContent: false,
   setShowSubCollectionContent: (value) => { },
   history: "",
-  setHistory: (value) => { }
+  setHistory: (value) => { },
+  assetDragFlag: false,
+  setAssetDragFlag: (value) => { },
+  assetDragId: "",
+  setAssetDragId: (value) => { },
+  assetDragType: "",
+  setAssetDragType: (value) => { },
+  setDroppableId: (value) => { },
+  droppableId: ""
+
 });
 
 export const TeamContext = createContext({

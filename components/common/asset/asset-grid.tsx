@@ -1,4 +1,4 @@
-import { boxesIntersect, useSelectionContainer } from "@air/react-drag-to-select";
+import { boxesIntersect, useSelectionContainer, SelectableGroup } from "@air/react-drag-to-select";
 import copyClipboard from "copy-to-clipboard";
 import update from "immutability-helper";
 import fileDownload from "js-file-download";
@@ -86,15 +86,21 @@ const AssetGrid = ({
     setSelectedAllSubFoldersAndAssets,
     setSelectedAllSubAssets,
     setSubFoldersViewList,
-    subFoldersViewList: { results, next, total }
+    subFoldersViewList: { results, next, total },
+    setAssetDragFlag,
+    setAssetDragId,
+    setAssetDragType,
+    setDroppableId,
   } = useContext(AssetContext);
+
   const { advancedConfig, hasPermission, user } = useContext(UserContext);
   const { activeSortFilter } = useContext(FilterContext);
   const { setIsLoading } = useContext(LoadingContext);
 
-
   // Ref values
+  const childFolder = useRef("")
   const parentFolder = useRef("")
+
   const ref = useRef(null);
   const selectionArea = useRef(null);
   const selectableItemsRef = useRef<Box[]>([]);
@@ -114,6 +120,7 @@ const AssetGrid = ({
   const [focusedItem, setFocusedItem] = useState(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [render, setRender] = useState(false);
+  const [moveModalFlag, setMoveModalFlag] = useState(false);
 
   const [sortedAssets, currentSortAttribute, setCurrentSortAttribute] = useSortedAssets(assets);
   const [sortedFolders, currentSortFolderAttribute, setCurrentSortFolderAttribute] = useSortedAssets(folders);
@@ -389,6 +396,7 @@ const AssetGrid = ({
       setFocusedItem(id);
     }
   };
+
   //------Drag-Select-area-------Start======//
   // Set the co-ordinates for the selected area of dragged area
   const onSelectionChange = (box) => {
@@ -485,6 +493,7 @@ const AssetGrid = ({
       }
     }
   }
+
   //library initialization
   const { DragSelection } = useSelectionContainer({
     eventsElement: document.getElementById("__next"),
@@ -508,9 +517,9 @@ const AssetGrid = ({
     },
     selectionProps: {
       style: {
-        border: "2px dashed purple",
+        border: "2px solid darkblue",
         borderRadius: 4,
-        backgroundColor: "blue",
+        backgroundColor: "lightskyblue",
         opacity: 0.5,
         zIndex: 9999
       },
@@ -585,7 +594,7 @@ const AssetGrid = ({
 
   const onDragStart = (evt) => {
     const element = evt.currentTarget;
-    parentFolder.current = element.id
+    childFolder.current = element.id
   };
 
   const filterFolderInList = (folderList, updatedFolder) => {
@@ -595,27 +604,12 @@ const AssetGrid = ({
   };
 
   const onDragDrop = async (evt) => {
-    try {
-      const element = evt.currentTarget
-      setLoader(true);
-      if (parentFolder.current !== "" && parentFolder.current !== element.id) {
-        const data = await folderApi.updateParent({
-          parentId: element.id,
-          folderId: parentFolder.current,
-        });
-        if (data) {
-          const updatedFolders = filterFolderInList(folders, data.data);
-          setFolders(updatedFolders);
-        }
-        setListUpdateFlag(true);
-        parentFolder.current = ""
-
-        toastUtils.success("Collection successfully moved");
-      }
-      setLoader(false);
-    } catch (err) {
-      setLoader(false);
-      toastUtils.error(err.response.data.error);
+    const element = evt.currentTarget
+    parentFolder.current = element.id
+    if (childFolder.current !== "" && childFolder.current !== parentFolder.current) {
+      setMoveModalFlag(true)
+    } else if (childFolder.current === "") {
+      toastUtils.error("You can't move collection with sub-collection");
     }
   };
 
@@ -623,11 +617,9 @@ const AssetGrid = ({
     return user?.role?.id === "admin" || user?.role?.id === "super_admin";
   };
 
-
-
   // Helper function to determine if the item is draggable
-  const isDraggable = (folder) => {
-    return folder?.childFolders?.length === 0 && isAdmin();
+  const isDraggable = () => {
+    return isAdmin();
   };
 
   // Helper function to handle drag start
@@ -637,12 +629,57 @@ const AssetGrid = ({
     }
   };
 
+  const handleAssetDragStart = (e) => {
+    const element = e.currentTarget;
+    setAssetDragFlag(true);
+    setAssetDragId(element.id);
+    setAssetDragType(activeFolder === "" ? "copy" : "move");
+  }
+
+  const handleAssetDrop = (e) => {
+    setAssetDragFlag(false);
+    setAssetDragId("");
+    setAssetDragType("");
+    setDroppableId("")
+  }
   // Helper function to handle drop (assuming onDragDrop is your drop handler)
-  const handleDrop = (e, folder) => {
+  const handleDrop = (e) => {
     if (isAdmin()) {
       onDragDrop(e);
     }
   };
+
+  const moveCollection = async () => {
+    try {
+      setLoader(true);
+      const data = await folderApi.updateParent({
+        parentId: parentFolder.current,
+        folderId: childFolder.current,
+      });
+
+      if (data) {
+        const updatedFolders = filterFolderInList(folders, data.data);
+        setFolders(updatedFolders);
+      }
+      childFolder.current = ""
+      parentFolder.current = ""
+      setMoveModalFlag(false);
+      setListUpdateFlag(true);
+      setLoader(false);
+      toastUtils.success("Collection successfully moved");
+    } catch (err) {
+      setLoader(false);
+      setMoveModalFlag(false);
+      toastUtils.error(err.response.data.error.name);
+    }
+  };
+
+  const closeMoveModal = () => {
+    childFolder.current = "";
+    parentFolder.current = "";
+    setMoveModalFlag(false);
+    setLoader(false);
+  }
 
   return (
     <>
@@ -745,9 +782,12 @@ const AssetGrid = ({
                             key={index}
                             id={assetItem.asset?.id}
                             // ref={(el) => (itemsRef.current[index] = assetItem)}
-
                             onClick={(e) => handleFocusChange(e, assetItem.asset.id)}
                             style={{ width: `$${widthCard} px` }}
+                            draggable={isDraggable()}
+                            onDragStart={(e) => handleAssetDragStart(e)}
+                            onDragOver={(ev) => ev.preventDefault()}
+                            onDrop={e => { handleAssetDrop(e) }}
                           >
                             <div className={activeView === "grid" && styles["collection-assets"]}>
                               <AssetThumbail
@@ -781,7 +821,6 @@ const AssetGrid = ({
                     })}
                   </>
                 )}
-
                 {mode === "folders" && (
                   <>
                     {activeView === "list" && (
@@ -790,10 +829,10 @@ const AssetGrid = ({
                     {sortedFolders.map((folder, index) => {
                       return (
                         <li
-                          draggable={isDraggable(folder)}
+                          draggable={isDraggable()}
                           onDragStart={(e) => handleDragStart(e, folder)}
                           onDragOver={(ev) => ev.preventDefault()}
-                          onDrop={(e) => handleDrop(e, folder)}
+                          onDrop={(e) => handleDrop(e)}
                           data-drag="false"
                           className={`${styles["grid-item"]}`}
                           id={folder.id}
@@ -828,7 +867,6 @@ const AssetGrid = ({
                 )}
               </ul>
             }
-
             {showLoadMore && nextPage !== -1 && (
               <>
                 {nextPage > 2 || mode === "folders" ? (
@@ -846,7 +884,6 @@ const AssetGrid = ({
             )}
           </div>
         }
-
         {/* Change thumbnail modal */}
         <ChangeThumbnail
           closeModal={() => {
@@ -860,7 +897,6 @@ const AssetGrid = ({
           confirmAction={() => { }}
           getSubFolders={getSubFolders}
         />
-
         {/* Delete modal */}
         <ConfirmModal
           closeModal={() => setDeleteModalOpen(false)}
@@ -877,7 +913,14 @@ const AssetGrid = ({
           }
           modalIsOpen={deleteModalOpen}
         />
-
+        <ConfirmModal
+          message={"Make Collection a Subcollection"}
+          modalIsOpen={moveModalFlag}
+          closeModal={() => closeMoveModal()}
+          confirmAction={moveCollection}
+          confirmText={"Make Subcollection"}
+          subText="The selected collection will be moved from its current location and made a subcollection of the selected parent collection"
+        />
         {/* Archive modal */}
         <ConfirmModal
           closeModal={() => setActiveArchiveAsset(undefined)}

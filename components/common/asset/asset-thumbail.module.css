@@ -251,7 +251,12 @@
   color:
   #AEB0C2;
 }
+.userEvents{
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
 
+}
 @media (max-width:420px){
   .listContainer{
     grid-template-columns: 50% 25% 25%;
