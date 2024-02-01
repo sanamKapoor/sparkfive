@@ -4,19 +4,11 @@ import { ChartLines } from '../../../../constants/analytics';
 
 const ChartComp = ({ data }) => {
     const [chartData, setChartData] = useState({
-        labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-        datasets: [
-            {
-                data: [23, 56, 124, 342, 22, 69],
-                borderColor: "#3e95cd",
-                backgroundColor: "#7bb6dd",
-                fill: true,
-            },
-        ]
+        labels: [],
+        datasets: []
     })
 
     useEffect(() => {
-
         const datasets = data?.data?.map(d => {            
             return {
                 ...ChartLines[d.key],
@@ -24,10 +16,10 @@ const ChartComp = ({ data }) => {
             }
         })
 
-        setChartData({
+        setChartData(prev => ({
             labels: data.labels,
             datasets
-        })
+        }))
     }, [data])
 
 

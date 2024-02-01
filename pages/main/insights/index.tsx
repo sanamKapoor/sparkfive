@@ -41,11 +41,7 @@ export async function getServerSideProps({ req, res, query }) {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${cookies.get("jwt")}`
   }
-  const payload = {
-    page: 1,
-    limit: 6,
-    sortBy: "",
-    sortOrder: true,
+  let payload: Record<string, unknown> = {
     filter: {
       beginDate: calculateBeginDate(7, 1),
       endDate: new Date(),
@@ -54,6 +50,17 @@ export async function getServerSideProps({ req, res, query }) {
 
   let result: Array<any> = [];
   for (const endpoint in DashboardSections) {
+
+    if (endpoint !== DashboardSections.TEAM) {
+      payload = {
+        ...payload,
+        page: 1,
+        limit: 6,
+        sortBy: "",
+        sortOrder: true,
+      }
+    }
+
     const res = await AnalyticsApiHelperServerRender(DashboardSections[endpoint], payload, headers);
     if (!res.ok) {
       result.push({

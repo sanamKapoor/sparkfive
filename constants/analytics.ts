@@ -88,7 +88,7 @@ export const analyticsActiveModal = {
 };
 
 export const DashboardSections = {
-  TEAM: "team",
+  TEAM: "team?sessionOnly=true",
   USER: "users",
   ASSET: "assets",
   USER_ACTIVITY: "user-activity",
@@ -111,25 +111,25 @@ export const ChartLines = {
   views: {
     label: 'Views',
     borderColor: "pink",
-    backgroundColor: "pink",
+    backgroundColor: "#d199cd",
     fill: true,
   },
   downloads: {
     label: 'Downloads',
     borderColor: "blue",
-    backgroundColor: "blue",
+    backgroundColor: "#a8aded",
     fill: true,
   },
   shares: {
     label: 'Shares',
     borderColor: "yellow",
-    backgroundColor: "yellow",
+    backgroundColor: "#e1e39d",
     fill: true,
   },
-  sessions: {
+  sessionCount: {
     label: 'Sessions',
     borderColor: "green",
-    backgroundColor: "green",
+    backgroundColor: "#9bc99d",
     fill: true,
   },
 };

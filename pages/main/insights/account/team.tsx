@@ -16,7 +16,6 @@ const TeamPage = ({ data }) => {
 
 export async function getServerSideProps({ req, res, query }) {
   try {
-    const { page, limit, search } = query;
     const cookies = new Cookies(req.headers.cookie, { path: "/" });
     const headers = {
       "Content-Type": "application/json",

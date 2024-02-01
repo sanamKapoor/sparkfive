@@ -14,19 +14,17 @@ const ChartWrapper = ({ chartObj, data, width = 400,  height = 400 }) => {
     }
   }, [chartObj.type]);
 
-  useEffect(() => {
-    updateChart();
+  useEffect(() => {    
+    if (chart && data.labels && data.datasets) updateChart();
   }, [data]);
 
   const drawChart = () => {
     setChart(new Chart(ctx, { ...chartObj, data }));
   };
 
-  const updateChart = () => {
-    if (chart) {
-      chart.data = Object.assign({}, data);
-      chart.update();
-    }
+  const updateChart = () => {      
+    chart.data = data;
+    chart.update();
   };
 
   return (

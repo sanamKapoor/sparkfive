@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from "../index.module.css";
 import ChartComp from '../common/chart';
 import InsightsHeader from '../common/headline';
@@ -11,10 +11,19 @@ import Download from '../common/download-button';
 
 const Team = ({ initialData }) => {
 
-  const { filter, customDates, setFilter, setCustomDates, setDownloadCSV } = useInsights({
+  const { filter, customDates, setFilter, setCustomDates, setDownloadCSV, setData, data } = useInsights({
     section: analyticsLayoutSection.TEAM,
     endpoint: InsightsApiEndpoint.TEAM
   })
+  const [chartData, setChartData] = useState({});
+
+  useEffect(() => {
+    setChartData(data)
+  }, [data])
+
+  useEffect(() => {
+    setChartData(initialData)
+  }, [initialData])
 
   return (
     <section className={styles.mainContainer}>
@@ -39,7 +48,7 @@ const Team = ({ initialData }) => {
               <Download setDownloadCSV={setDownloadCSV} text='Chart' />
             </div>
           </div>
-          <ChartComp data={initialData} />
+          <ChartComp data={chartData} />
         </div>
       </section>
       </div>
