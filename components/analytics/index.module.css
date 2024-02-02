@@ -64,11 +64,13 @@
 }
 
 .tableResponsive {
-    /* overflow-x: auto; */
+    overflow-x: auto;
     border: 1px solid#DEDAD4;
     padding: 18px;
 }
-
+.dashboard-chart{
+    height:fit-content;
+}
 .heading {
     font-weight: 600;
     font-size: 22px;
