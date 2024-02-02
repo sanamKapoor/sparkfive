@@ -13,7 +13,6 @@ import { AnalyticsContext } from '../../../../context';
 export default function DateFilter({
   filter, setFilter, customDates, setCustomDates
 }) {
-  const { dashboardView, filterFor, setFilterFor, customDatesFor, setCustomDatesFor } = useContext(AnalyticsContext);
   const [activeFilter, setActiveFilter] = useState("7d");
   const [activeDays, setActiveDays] = useState(7);
   const [showCustomRange, setShowCustomRange] = useState(false);
@@ -26,35 +25,12 @@ export default function DateFilter({
   const handleFilterClick = (filter, days) => {
     setShowCustomRange(false);
     setActiveFilter(filter);
-    if (dashboardView) {
-      const others = customDatesFor.filter(d => d.for !== activeFilterFor)
-      setCustomDatesFor([
-        ...others,
-        {
-          for: activeFilterFor,
-          customeDates: false
-        }
-      ])
-    } else {
-      setCustomDates(false);
-    }
+    setCustomDates(false);
     if (days !== activeDays) {
-      const dateObj = {
+      setFilter({
         endDate: new Date(),
         beginDate: calculateBeginDate(days, 1)
-      };
-      if (dashboardView) {
-        const others = filterFor.filter(d => d.for !== activeFilterFor)
-        setFilterFor([
-          ...others,
-          {
-            for: activeFilterFor,
-            ...dateObj
-          }
-        ])
-      } else {
-        setFilter(dateObj)
-      }
+      })
     }
     setActiveDays(days);
   };
@@ -93,30 +69,8 @@ export default function DateFilter({
       return;
     }
     setActiveDays(DateUtils.daysBetweenDates(customDateVal.beginDate, customDateVal.endDate));
-    if (dashboardView) {
-      const otherFilters = filterFor.filter(d => d.for !== activeFilterFor)
-      setFilterFor(([
-        ...otherFilters,
-        {
-          for: activeFilterFor,
-          ...customDateVal
-        }
-      ]))
-
-      const otherCustomFilters = customDatesFor.filter(d => d.for !== activeFilterFor)
-      setCustomDatesFor([
-        ...otherCustomFilters,
-        {
-          for: activeFilterFor,
-          customeDates: true
-        }
-      ])
-    } else {
-      setFilter(customDateVal);
-      setCustomDates(true);
-    }
-
-
+    setFilter(customDateVal);
+    setCustomDates(true);
   }
 
   useEffect(() => {

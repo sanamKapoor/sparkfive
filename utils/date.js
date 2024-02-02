@@ -227,6 +227,8 @@ const calculateDateDifference = ({
 }
 
 function daysBetweenDates(startDate, endDate) {
+  startDate = new Date(startDate)
+  endDate = new Date(endDate)
   // Convert both dates to UTC to avoid issues with daylight saving time
   const utcDate1 = Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
   const utcDate2 = Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
