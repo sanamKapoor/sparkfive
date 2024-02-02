@@ -15,7 +15,7 @@ import {
 } from "../constants/analytics";
 import { useRouter } from "next/router";
 
-const useInsights = ({ section, endpoint }: { section: string; endpoint: string }) => {
+const useInsights = ({ section, endpoint }: { section?: string; endpoint?: string }) => {
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState({
@@ -33,7 +33,6 @@ const useInsights = ({ section, endpoint }: { section: string; endpoint: string 
   const [totalRecords, setTotalRecords] = useState(0);
   const [downloadCSV, setDownloadCSV] = useState(false);
   const [activeSection, setActiveSection] = useState("");
-  const [activeModal, setActiveModal] = useState("");
   const [apiEndpoint, setApiEndpoint] = useState("");
 
   const analyticsApiHandler = async (defaultPage?: number) => {
@@ -73,9 +72,10 @@ const useInsights = ({ section, endpoint }: { section: string; endpoint: string 
       } else {
         if (apiEndpoint.includes(InsightsApiEndpoint.TEAM)) {
           setData(data);
+        } else {
+          setTotalRecords(data.totalRecords);
+          setData(data.data);
         }
-        setTotalRecords(data.totalRecords);
-        setData(data.data);
       }
 
       setLoading(false);
@@ -137,9 +137,7 @@ const useInsights = ({ section, endpoint }: { section: string; endpoint: string 
     totalRecords,
     setTotalRecords,
     downloadCSV,
-    setDownloadCSV,
-    activeModal,
-    setActiveModal
+    setDownloadCSV
   };
 };
 

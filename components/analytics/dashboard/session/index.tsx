@@ -36,7 +36,7 @@ const TeamSession = ({ initialData }) => {
           <button className={styles.downloadChart} onClick={handleDownload} >Download Chart</button>
         </div>
       </div>
-      <ChartComp data={chartData} />
+      <ChartComp data={chartData} fileName="Team Session" />
     </div>
   );
 }

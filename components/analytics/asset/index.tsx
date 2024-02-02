@@ -33,7 +33,6 @@ function Asset({ initialData }) {
     setDownloadCSV,
     setFilter,
     setCustomDates,
-    setActiveModal
   } = useInsights({ section: analyticsLayoutSection.ACCOUNT_ASSETS, endpoint: InsightsApiEndpoint.ASSET });
   const [emptyRows, setEmptyRows] = useState([]);
   const [totalAssets, setTotalAssets] = useState(0);
@@ -101,7 +100,6 @@ function Asset({ initialData }) {
                     data={totalAssetsData && emptyRows.length > 0 ? [...totalAssetsData, ...emptyRows] : null}
                     apiData={totalAssetsData}
                     arrowColumns={assetarrowColumns}
-                    activeSection={analyticsLayoutSection.ACCOUNT_ASSETS}
                     tableLoading={loading}
                     totalRecords={totalAssets}
                     sortBy={sortBy}
@@ -109,7 +107,6 @@ function Asset({ initialData }) {
                     setSortBy={setSortBy}
                     setSortOrder={setSortOrder}
                     tableFor={TableBodySection.ASSET}
-                    setActiveModal={setActiveModal}
                   />
                   {totalAssets > limit && (
                     <Pagination page={page} limit={limit} totalRecords={totalAssets} setPage={setPage} />

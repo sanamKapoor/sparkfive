@@ -53,7 +53,6 @@ function Activity({ initialData }) {
           arrowColumns={userActivityModalArrowColumns} 
           data={totalActivitiesData}
           apiData={totalActivitiesData}
-          activeSection={analyticsLayoutSection.DASHBOARD}
           tableLoading={loading}
           totalRecords={totalActivities}
           sortBy={sortBy}

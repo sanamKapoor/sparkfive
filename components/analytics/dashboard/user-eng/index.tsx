@@ -54,7 +54,6 @@ const UserEngagment = ({ initialData }) => {
         data={totalUsersData}
         apiData={totalUsersData}
         arrowColumns={arrowColumns}
-        activeSection={analyticsLayoutSection.DASHBOARD}
         tableLoading={loading}
         totalRecords={totalUsers}
         sortBy={sortBy}

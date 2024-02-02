@@ -21,7 +21,8 @@ import AnalyticsApi from "../../../../server-api/analytics";
 import { getCSVFileName } from "../../../../utils/analytics";
 import toastUtils from "./../../../../utils/toast";
 import DateFormatter from "../../../../utils/date";
-import useInsights from "../../../../hooks/useInsights";
+import Heading from "../header/heading";
+import ChartComp from "../chart";
 
 const Modal = ({ section, setShowModal, id }: {
   section: string,
@@ -29,7 +30,7 @@ const Modal = ({ section, setShowModal, id }: {
   id: string
 }) => {
   const [apiData, setApiData] = useState([]);
-  const [activeModal, setActiveModal] = useState('');
+  const [activeModalSection, setActiveModalSection] = useState('');
   const [apiEndpoint, setApiEndpoint] = useState('');
   const [downloadCSV, setDownloadCSV] = useState(false);
   const [initialRender, setInitialRender] = useState(true);
@@ -78,7 +79,7 @@ const Modal = ({ section, setShowModal, id }: {
         }))
       }
 
-      const { data } = await AnalyticsApi.getAnalyticsData(apiEndpoint, {
+      let payload: Record<string, unknown> = {
         page: defaultPage ? defaultPage : page,
         limit,
         search,
@@ -86,20 +87,32 @@ const Modal = ({ section, setShowModal, id }: {
         sortOrder,
         filter,
         downloadCSV,
-      });
+      }
+
+      if (apiEndpoint.includes(InsightsApiEndpoint.TEAM)) {
+        payload = {
+          filter,
+        };
+      }
+
+      const { data } = await AnalyticsApi.getAnalyticsData(apiEndpoint, payload);
 
       if (downloadCSV) {
         const fileData = new Blob([data], {
           type: "text/csv;charset=utf-8",
         });
 
-        const { fileName, successMsg } = getCSVFileName(activeModal);
+        const { fileName, successMsg } = getCSVFileName(activeModalSection);
         saveAs(fileData, fileName);
         toastUtils.success(successMsg);
       } else {
-        setModalData(prev => ({ ...prev, totalRecords: data.totalRecords }))
-        setApiData(data.data);
-        setModalHeaderData(data?.userData);
+        if (apiEndpoint.includes(InsightsApiEndpoint.TEAM)) {
+          setApiData(data);
+        } else {
+          setModalData(prev => ({ ...prev, totalRecords: data.totalRecords }))
+          setApiData(data.data);
+          setModalHeaderData(data?.userData);
+        }
       }
 
       initialRender ? setModalData(prev => ({ ...prev, loading: false })) : setModalData(prev => ({ ...prev, tableLoading: false }))
@@ -130,14 +143,15 @@ const Modal = ({ section, setShowModal, id }: {
     if (initialRender) setInitialRender(false)
   };
 
-  const init = () => {    
-    console.log({ section });
-    
+  const init = () => {
     switch (section) {
-      case analyticsLayoutSection.ACCOUNT_USERS:
-      case analyticsLayoutSection.DASHBOARD:
+      case analyticsActiveModal.USER_ACTIVITY:
         setApiEndpoint(`${InsightsApiEndpoint.USER_ACTIVITY}?userId=${id}`);
-        setActiveModal(analyticsActiveModal.USER_ACTIVITY);
+        setActiveModalSection(analyticsActiveModal.USER_ACTIVITY);
+        break;
+      case analyticsActiveModal.ASSET_CHART:
+        setApiEndpoint(`${InsightsApiEndpoint.TEAM}?assetId=${id}`);
+        setActiveModalSection(analyticsActiveModal.ASSET_CHART);
         break;
     }
   };
@@ -174,7 +188,7 @@ const Modal = ({ section, setShowModal, id }: {
   const handleCloseModal = () => {
     setShowModal(false);
     setInitialRender(true);
-    setActiveModal('');
+    setActiveModalSection('');
     setApiEndpoint('');
   };
 
@@ -214,6 +228,9 @@ const Modal = ({ section, setShowModal, id }: {
     }))
   }
 
+  console.log({ apiData });
+
+
   const { loading, error, sortBy, limit, totalRecords } = modalData;
   return (
     <div className={`${styles.backdrop}`}>
@@ -222,107 +239,104 @@ const Modal = ({ section, setShowModal, id }: {
           loading ? <Loader /> :
             (error) ?
               <>
-              <div  className={`${styles["data-close-icon"]}`}>
-              <IconClickable
-                  src={insights.insightClose}
-                  additionalClass={styles.closeIcon}
-                  text={""}
-                  onClick={handleCloseModal}
-                />
-              </div>
-             
+                <div className={`${styles["data-close-icon"]}`}>
+                  <IconClickable
+                    src={insights.insightClose}
+                    additionalClass={styles.closeIcon}
+                    text={""}
+                    onClick={handleCloseModal}
+                  />
+                </div>
                 <NoData message={error} />
-              </> 
+              </>
               :
-              <div className={`${styles["user-modal"]}`}>
-                {
-                  (modalHeaderData && modalHeaderData?.name) &&
-                  <div className={styles["profile-img-wrapper"]}>
-                    <div className={`${styles["image-wrapper"]}`}>
-                      {modalHeaderData?.profilePhoto !== null ? (
-                        <img src={modalHeaderData?.profilePhoto} alt="user" className={styles.userImage} />
-                      ) : (
-                        <div className={styles.userAvatar}>{modalHeaderData?.name.charAt(0).toUpperCase()}</div>
-                      )}
-                    </div>
-                    <span className={`${styles["user-name"]}`}>{modalHeaderData?.name}</span>
-                  </div>
-                }
-                <div className={`${styles["user-detail-top"]}  ${styles["web-view"]}`}>
-                  <div className={`${styles["user-detail"]}`}>
-                    {modalHeaderData && modalHeaderData?.email &&
-                      <p>
-                        Email: <span>{modalHeaderData?.email}</span>
-                      </p>}
-                    {modalHeaderData && modalHeaderData?.lastSession &&
-                      <p>Last Session Date: <span>{DateFormatter.analyticsDateFormatter(modalHeaderData?.lastSession)}</span></p>}
-                  </div>
-                  <div className={`${styles["table-header-tabs"]}`}>
-                    {/* <SearchButton label="Search" setSearch={handleSearch} /> */}
+              activeModalSection === analyticsActiveModal.ASSET_CHART
+                ?
+                <div className={`${styles["user-modal"]}`}>
+                  <Heading mainText={apiData?.asset?.name || 'Asset Chart'} />
+                  <div>
                     <Datefilter
                       filter={modalData.filter}
                       customDates={modalData.customDates}
                       setFilter={handleFilter}
                       setCustomDates={handleCustomDate}
-                      activeFilterFor=""
                     />
-                    <Download setDownloadCSV={setDownloadCSV} />
-                    <IconClickable
-                      src={insights.insightClose}
-                      additionalClass={styles.closeIcon}
-                      text={""}
-                      onClick={handleCloseModal}
-                    />
+                    <div className={`${styles["data-close-icon"]}`}>
+                      <IconClickable
+                        src={insights.insightClose}
+                        additionalClass={styles.closeIcon}
+                        text={""}
+                        onClick={handleCloseModal}
+                      />
+                    </div>
                   </div>
+                  <ChartComp data={apiData} fileName={apiData?.asset?.name && (apiData?.asset?.name).split('.')[0]} />
                 </div>
-                {/* for laptop */}
-                <div className={`${styles["laptop-view"]}`}>
-                  <div className={`${styles["heading-wrap"]}`}>
-                    <div className={`${styles["laptop-view-wrap"]}`}>
-                      <div className={`${styles["user-detail"]}`}>
-                        {modalHeaderData && modalHeaderData?.email &&
-                          <p>
-                            Email: <span>{modalHeaderData?.email}</span>
-                          </p>}
-                        {modalHeaderData && modalHeaderData?.lastSession &&
-                          <p>Last Session Date: <span>{DateFormatter.analyticsDateFormatter(modalHeaderData?.lastSession)}</span></p>}
+                :
+                <div className={`${styles["user-modal"]}`}>
+                  {
+                    (modalHeaderData && modalHeaderData?.name) &&
+                    <div className={styles["profile-img-wrapper"]}>
+                      <div className={`${styles["image-wrapper"]}`}>
+                        {modalHeaderData?.profilePhoto !== null ? (
+                          <img src={modalHeaderData?.profilePhoto} alt="user" className={styles.userImage} />
+                        ) : (
+                          <div className={styles.userAvatar}>{modalHeaderData?.name.charAt(0).toUpperCase()}</div>
+                        )}
                       </div>
-                      <div>
-                        {/* <SearchButton label="Search" setSearch={handleSearch} /> */}
-                      </div>
+                      <span className={`${styles["user-name"]}`}>{modalHeaderData?.name}</span>
+                    </div>
+                  }
+                  <div className={`${styles["user-detail-top"]}  ${styles["web-view"]}`}>
+                    <div className={`${styles["user-detail"]}`}>
+                      {modalHeaderData && modalHeaderData?.email &&
+                        <p>
+                          Email: <span>{modalHeaderData?.email}</span>
+                        </p>}
+                      {modalHeaderData && modalHeaderData?.lastSession &&
+                        <p>Last Session Date: <span>{DateFormatter.analyticsDateFormatter(modalHeaderData?.lastSession)}</span></p>}
                     </div>
                     <div className={`${styles["table-header-tabs"]}`}>
+                      {/* <SearchButton label="Search" setSearch={handleSearch} /> */}
                       <Datefilter
                         filter={modalData.filter}
                         customDates={modalData.customDates}
                         setFilter={handleFilter}
                         setCustomDates={handleCustomDate}
-                      activeFilterFor=""
-
                       />
                       <Download setDownloadCSV={setDownloadCSV} />
                       <IconClickable
                         src={insights.insightClose}
                         additionalClass={styles.closeIcon}
                         text={""}
-                        onClick={() => setShowModal(false)}
+                        onClick={handleCloseModal}
                       />
                     </div>
                   </div>
-                </div>
-                {/* for mobile */}
-                <div className={`${styles["mobile-view"]}`}>
-                  <div className={`${styles["heading-wraps"]}`}>
-                    <div className={`${styles["teb-mob-view"]}`}>
-                      <div className={`${styles["user-detail"]}`}>
-                        {modalHeaderData && modalHeaderData?.email &&
-                          <p>
-                            Email: <span>{modalHeaderData?.email}</span>
-                          </p>}
-                        {modalHeaderData && modalHeaderData?.lastSession &&
-                          <p>Last Session Date: <span>{DateFormatter.analyticsDateFormatter(modalHeaderData?.lastSession)}</span></p>}
+                  {/* for laptop */}
+                  <div className={`${styles["laptop-view"]}`}>
+                    <div className={`${styles["heading-wrap"]}`}>
+                      <div className={`${styles["laptop-view-wrap"]}`}>
+                        <div className={`${styles["user-detail"]}`}>
+                          {modalHeaderData && modalHeaderData?.email &&
+                            <p>
+                              Email: <span>{modalHeaderData?.email}</span>
+                            </p>}
+                          {modalHeaderData && modalHeaderData?.lastSession &&
+                            <p>Last Session Date: <span>{DateFormatter.analyticsDateFormatter(modalHeaderData?.lastSession)}</span></p>}
+                        </div>
+                        <div>
+                          {/* <SearchButton label="Search" setSearch={handleSearch} /> */}
+                        </div>
                       </div>
-                      <div className={`${styles["close-mob"]}`}>
+                      <div className={`${styles["table-header-tabs"]}`}>
+                        <Datefilter
+                          filter={modalData.filter}
+                          customDates={modalData.customDates}
+                          setFilter={handleFilter}
+                          setCustomDates={handleCustomDate}
+                        />
+                        <Download setDownloadCSV={setDownloadCSV} />
                         <IconClickable
                           src={insights.insightClose}
                           additionalClass={styles.closeIcon}
@@ -331,46 +345,65 @@ const Modal = ({ section, setShowModal, id }: {
                         />
                       </div>
                     </div>
-                    <div className={`${styles["filter-mob"]}`}>
-                      <Datefilter
-                        filter={modalData.filter}
-                        customDates={modalData.customDates}
-                        setFilter={handleFilter}
-                        setCustomDates={handleCustomDate}
-                      activeFilterFor=""
+                  </div>
+                  {/* for mobile */}
+                  <div className={`${styles["mobile-view"]}`}>
+                    <div className={`${styles["heading-wraps"]}`}>
+                      <div className={`${styles["teb-mob-view"]}`}>
+                        <div className={`${styles["user-detail"]}`}>
+                          {modalHeaderData && modalHeaderData?.email &&
+                            <p>
+                              Email: <span>{modalHeaderData?.email}</span>
+                            </p>}
+                          {modalHeaderData && modalHeaderData?.lastSession &&
+                            <p>Last Session Date: <span>{DateFormatter.analyticsDateFormatter(modalHeaderData?.lastSession)}</span></p>}
+                        </div>
+                        <div className={`${styles["close-mob"]}`}>
+                          <IconClickable
+                            src={insights.insightClose}
+                            additionalClass={styles.closeIcon}
+                            text={""}
+                            onClick={() => setShowModal(false)}
+                          />
+                        </div>
+                      </div>
+                      <div className={`${styles["filter-mob"]}`}>
+                        <Datefilter
+                          filter={modalData.filter}
+                          customDates={modalData.customDates}
+                          setFilter={handleFilter}
+                          setCustomDates={handleCustomDate}
+                        />
+                        <Download setDownloadCSV={setDownloadCSV} />
+                      </div>
+                    </div>
 
-                      />
-                      <Download setDownloadCSV={setDownloadCSV} />
+                    <div style={{ marginTop: "22px" }}>
+                      {/* <SearchButton label="Search" setSearch={handleSearch} /> */}
                     </div>
                   </div>
-
-                  <div style={{ marginTop: "22px" }}>
-                    {/* <SearchButton label="Search" setSearch={handleSearch} /> */}
-                  </div>
-                </div>
-                {(apiData && apiData?.length > 0 && sortBy) && <div className={`${styles["clear-sort"]}`}><Button text="Clear sorting" className={'clear-sort-btn'} onClick={handleClearSorting} /></div>}
-                <TableData
-                  data={apiData}
-                  apiData={apiData}
-                  columns={userActivityModalcolumns}
-                  arrowColumns={userActivityModalArrowColumns}
-                  activeSection={activeModal}
-                  tableLoading={modalData.tableLoading}
-                  totalRecords={modalData.totalRecords}
-                  sortBy={modalData.sortBy}
-                  sortOrder={modalData.sortOrder}
-                  setSortBy={(val: string) => setModalData(prev => ({ ...prev, sortBy: val }))}
-                  setSortOrder={(val: boolean) => setModalData(prev => ({ ...prev, sortOrder: val }))}
-                  tableFor={TableBodySection.USER_ACTIVITY}
-                />
-                {apiData && apiData?.length > 0 && totalRecords > limit &&
-                  <Pagination
-                    page={modalData.page}
-                    limit={modalData.limit}
+                  {(apiData && apiData?.length > 0 && sortBy) && <div className={`${styles["clear-sort"]}`}><Button text="Clear sorting" className={'clear-sort-btn'} onClick={handleClearSorting} /></div>}
+                  <TableData
+                    data={apiData}
+                    apiData={apiData}
+                    columns={userActivityModalcolumns}
+                    arrowColumns={userActivityModalArrowColumns}
+                    tableLoading={modalData.tableLoading}
                     totalRecords={modalData.totalRecords}
-                    setPage={handlePage}
-                  />}
-              </div>
+                    sortBy={modalData.sortBy}
+                    sortOrder={modalData.sortOrder}
+                    setSortBy={(val: string) => setModalData(prev => ({ ...prev, sortBy: val }))}
+                    setSortOrder={(val: boolean) => setModalData(prev => ({ ...prev, sortOrder: val }))}
+                    tableFor={TableBodySection.USER_ACTIVITY}
+                  />
+                  {apiData && apiData?.length > 0 && totalRecords > limit &&
+                    <Pagination
+                      page={modalData.page}
+                      limit={modalData.limit}
+                      totalRecords={modalData.totalRecords}
+                      setPage={handlePage}
+                    />}
+                </div>
         }
       </section>
     </div>

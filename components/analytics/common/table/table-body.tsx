@@ -7,8 +7,10 @@ import { useRouter } from "next/router";
 
 const TableBody = ({ handleModals, data, tableFor, dashboardView }) => {
 
-  const renderTableData = () => {
+  const renderTableData = () => {    
     switch (tableFor) {
+      case TableBodySection.DASHBOARD_ASSETS:
+        return <AssetTableDashboardRows data={data} />
       case TableBodySection.USER:
         return <UserTableRows data={data} handleModals={handleModals} dashboardView={dashboardView} />;
       case TableBodySection.ASSET:
@@ -217,7 +219,7 @@ export const UserActivityRows = ({ data, dashboardView }) => {
   );
 };
 
-export const AssetTableDashboardRows = ({ data, handleModals }) => {
+export const AssetTableDashboardRows = ({ data }) => {
   return (
     <tbody>
       {data.map((row) => {
@@ -242,8 +244,8 @@ export const AssetTableDashboardRows = ({ data, handleModals }) => {
             <td>{row.shares}</td>
             <td>
               {row._id && (
-                <button className={styles.actionButton} onClick={() => handleModals(row._id, analyticsActiveModal.ASSET_CHART)}>
-                  View chart
+                <button className={styles.actionButton}>
+                  View asset
                 </button>
               )}
             </td>

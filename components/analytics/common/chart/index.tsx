@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ChartWrapper from '../../../common/charts/chart-wrapper';
 import { ChartLines } from '../../../../constants/analytics';
 
-const ChartComp = ({ data }) => {
+const ChartComp = ({ data, fileName = '' }) => {
     const [chartData, setChartData] = useState({
         labels: [],
         datasets: []
@@ -30,6 +30,7 @@ const ChartComp = ({ data }) => {
             }}
             data={chartData}
             height={200}
+            fileName={fileName}
         />
     )
 }
