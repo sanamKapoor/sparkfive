@@ -5,7 +5,6 @@ import styles from "./table-data.module.css";
 import TableHeader from "./table-header";
 import TableBody from "./table-body";
 import Modal from "../modal";
-import { AnalyticsContext } from "../../../../context";
 
 export default function TableData({
   columns,
@@ -13,21 +12,20 @@ export default function TableData({
   tableLoading,
   data,
   apiData,
-  activeSection,
   totalRecords,
   sortBy,
   sortOrder,
   setSortBy,
   setSortOrder,
   tableFor,
-  setActiveModal,
   dashboardView = false,
 }) {
   const [activeId, setActiveId] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [activeModalFor, setActiveModalFor] = useState('');
 
-  const handleModals = async (id: string, section: string) => {
-    setActiveModal(section);
+  const handleModals = async (id: string, section: string) => {    
+    setActiveModalFor(section);
     setShowModal(true);
     setActiveId(id)
   };
@@ -57,7 +55,7 @@ export default function TableData({
         {tableLoading ? <div className={styles.backdrop}></div> : null}
       </div>
       {
-        showModal && <Modal section={activeSection} setShowModal={setShowModal} id={activeId} />
+        showModal && <Modal section={activeModalFor} setShowModal={setShowModal} id={activeId} />
       }
       {
         apiData?.length === 0 &&

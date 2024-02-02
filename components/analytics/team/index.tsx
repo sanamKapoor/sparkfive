@@ -48,7 +48,7 @@ const Team = ({ initialData }) => {
               {/* <Download setDownloadCSV={setDownloadCSV} text='Chart' /> */}
             </div>
           </div>
-          <ChartComp data={chartData} />
+          <ChartComp data={chartData} fileName='Team Engagement' />
         </div>
       </section>
       </div>

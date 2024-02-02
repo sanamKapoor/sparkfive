@@ -51,14 +51,13 @@ const TopAssets = ({ initialData }) => {
         data={totalAssetsData}
         apiData={totalAssetsData}
         arrowColumns={assetarrowColumns}
-        activeSection={analyticsLayoutSection.DASHBOARD}
         tableLoading={loading}
         totalRecords={totalAssets}
         sortBy={sortBy}
         sortOrder={sortOrder}
         setSortBy={setSortBy}
         setSortOrder={setSortOrder}
-        tableFor={TableBodySection.ASSET}
+        tableFor={TableBodySection.DASHBOARD_ASSETS}
         dashboardView={true}
       />
     </div>

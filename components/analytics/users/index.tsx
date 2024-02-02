@@ -37,7 +37,6 @@ const Users = ({
     setDownloadCSV,
     setFilter,
     setCustomDates,
-    setActiveModal
   } = useInsights({ section: analyticsLayoutSection.ACCOUNT_USERS, endpoint: InsightsApiEndpoint.USER });
   const [emptyRows, setEmptyRows] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
@@ -100,7 +99,6 @@ const Users = ({
                     data={totalUsersData && emptyRows.length > 0 ? [...totalUsersData, ...emptyRows] : null}
                     apiData={totalUsersData}
                     arrowColumns={arrowColumns}
-                    activeSection={analyticsLayoutSection.ACCOUNT_USERS}
                     tableLoading={loading}
                     totalRecords={totalUsers}
                     sortBy={sortBy}
@@ -108,7 +106,6 @@ const Users = ({
                     setSortBy={setSortBy}
                     setSortOrder={setSortOrder}
                     tableFor={TableBodySection.USER}
-                    setActiveModal={setActiveModal}
                   />
                   {totalUsers > limit && (
                     <Pagination page={page} limit={limit} totalRecords={totalUsers} setPage={setPage} />

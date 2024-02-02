@@ -27,7 +27,7 @@ const TeamSession = ({ initialData }) => {
           <DateFilter filter={filter} setFilter={setFilter} customDates={customDates} setCustomDates={setCustomDates} />
         </div>
       </div>
-      <ChartComp data={chartData} />
+      <ChartComp data={chartData} fileName="Team Session" />
     </div>
   );
 }
