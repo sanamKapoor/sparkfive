@@ -112,19 +112,22 @@ export const ChartLines = {
   views: {
     label: 'Views',
     borderColor: "#E2407B",
-    backgroundColor: "#fcecf2",
+    // backgroundColor: "#fcecf2",
+    backgroundColor:"rgba(252, 236, 242, 0.6)",
   
     fill: true,
   },
   downloads: {
     label: 'Downloads',
     borderColor: "#2484F4",
-    backgroundColor: "#a8aded",
+    // backgroundColor: "#a8aded",
+    backgroundColor: "rgba(168, 173, 237, 0.6)",
+
     fill: true,
   },
   shares: {
     label: 'Shares',
-    borderColor: "yellow",
+    borderColor: "#EEBA01",
     backgroundColor:"rgba(255,255,0,0.1)",
     fill: true,
   },
