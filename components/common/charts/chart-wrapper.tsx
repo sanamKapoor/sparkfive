@@ -51,7 +51,8 @@ const ChartWrapper = ({ chartObj, data, width = 400,  height = 400, fileName = '
             ctx.fillRect(0, 0, chart.width, chart.height);
             ctx.restore();
           }
-        }
+        },
+        
       ]  
     }));
   };
@@ -72,7 +73,7 @@ const ChartWrapper = ({ chartObj, data, width = 400,  height = 400, fileName = '
 
   return (
     <div className={styles.wrapper} ref={wrapperRef}>
-      {router.pathname !== analyticsRoutes.DASHBOARD && <button onClick={handleDownload}>Download Chart</button>}
+      {/* {router.pathname !== analyticsRoutes.DASHBOARD && <button onClick={handleDownload}>Download Chart</button>} */}
       <canvas id="chart" width={width} height={height} style={{ background: "white" }}></canvas>
     </div>
   );

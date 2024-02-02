@@ -64,7 +64,7 @@
 }
 
 .tableResponsive {
-    overflow-x: auto;
+    /* overflow-x: auto; */
     border: 1px solid#DEDAD4;
     padding: 18px;
 }
@@ -123,6 +123,7 @@
     display: flex;
     justify-content: center;
 }
+
 
 @media (max-width:820px) {
     .tableResponsive {

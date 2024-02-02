@@ -24,7 +24,7 @@ export default function TableData({
   const [showModal, setShowModal] = useState(false);
   const [activeModalFor, setActiveModalFor] = useState('');
 
-  const handleModals = async (id: string, section: string) => {    
+  const handleModals = (id: string, section: string) => {    
     setActiveModalFor(section);
     setShowModal(true);
     setActiveId(id)

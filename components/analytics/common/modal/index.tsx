@@ -253,8 +253,9 @@ const Modal = ({ section, setShowModal, id }: {
               activeModalSection === analyticsActiveModal.ASSET_CHART
                 ?
                 <div className={`${styles["user-modal"]}`}>
+                  <div className= {`${styles["user-chart-modal"]}`}>
                   <Heading mainText={apiData?.asset?.name || 'Asset Chart'} />
-                  <div>
+                  <div className= {`${styles["user-filters"]}`} >
                     <Datefilter
                       filter={modalData.filter}
                       customDates={modalData.customDates}
@@ -270,6 +271,9 @@ const Modal = ({ section, setShowModal, id }: {
                       />
                     </div>
                   </div>
+
+                  </div>
+                 
                   <ChartComp data={apiData} fileName={apiData?.asset?.name && (apiData?.asset?.name).split('.')[0]} />
                 </div>
                 :
