@@ -15,11 +15,42 @@ const ChartWrapper = ({ chartObj, data, width = 400,  height = 400 }) => {
   }, [chartObj.type]);
 
   useEffect(() => {    
-    if (chart && data.labels && data.datasets) updateChart();
+    if (chart && data.labels && data.datasets) {
+      updateChart();
+    }
   }, [data]);
 
   const drawChart = () => {
-    setChart(new Chart(ctx, { ...chartObj, data }));
+    setChart(new Chart(ctx, { ...chartObj, data, 
+      options: {
+        color: "#ffffff",
+        scales: {
+          yAxes: [{
+              ticks: {
+                  beginAtZero:true
+              }
+          }]
+        },
+        plugins: {
+          customCanvasBackgroundColor: {
+            color: '#ffffff',
+          }
+        }
+      },  
+      plugins: [
+        {
+          id: 'chart',
+          beforeDraw: (chart, args, options) => {
+            const {ctx} = chart;
+            ctx.save();
+            ctx.globalCompositeOperation = 'destination-over';
+            ctx.fillStyle = options.color || '#ffffff';
+            ctx.fillRect(0, 0, chart.width, chart.height);
+            ctx.restore();
+          }
+        }
+      ]  
+    }));
   };
 
   const updateChart = () => {      
@@ -27,9 +58,23 @@ const ChartWrapper = ({ chartObj, data, width = 400,  height = 400 }) => {
     chart.update();
   };
 
+  useEffect(() => {
+
+  }, [])
+
+  const handleDownload = () => {
+    const canvas = document.getElementById("chart");
+    const url = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.download = "chart.png";
+    link.href = url;
+    link.click();
+  };
+
   return (
     <div className={styles.wrapper} ref={wrapperRef}>
-      <canvas id="chart" width={width} height={height}></canvas>
+      <button onClick={handleDownload}>Download Chart</button>
+      <canvas id="chart" width={width} height={height} style={{ background: "white" }}></canvas>
     </div>
   );
 };

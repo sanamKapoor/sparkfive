@@ -38,7 +38,13 @@
 .inner-container{
     padding: 30px 40px;
 }
-
+.empty{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px 0;
+  }
 @media (max-width :1682px){
     .inner-wrapper{
         grid-template-columns: repeat(1,1fr);

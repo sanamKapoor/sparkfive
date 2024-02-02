@@ -7,6 +7,7 @@ import DateFilter from '../../common/date-filter';
 import ClearSort from '../../common/header/clear-sort';
 import { DashboardUserColumns, arrowColumns } from '../../../../data/analytics';
 import TableData from '../../common/table';
+import SectionLink from '../../common/header/link';
 
 const UserEngagment = ({ initialData }) => {
   const { filter, setFilter, customDates, setCustomDates, loading, error, sortBy, sortOrder, totalRecords, data, setSortBy, setSortOrder, setError } = useInsights({
@@ -39,7 +40,10 @@ const UserEngagment = ({ initialData }) => {
   return (
     <div className={styles.tableResponsive}>
       <div className={styles.headerContainer}>
-        <Heading mainText="User Engagement" smallHeading={true} />
+        <div>
+          <Heading mainText="User Engagement" smallHeading={true} />
+          <SectionLink title='View All' link="/main/insights/account/users" />
+        </div>
         <div className={`${styles["table-header-tabs"]}`}>
           <DateFilter filter={filter} setFilter={setFilter} customDates={customDates} setCustomDates={setCustomDates} />
         </div>

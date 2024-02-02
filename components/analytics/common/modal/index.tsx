@@ -21,6 +21,7 @@ import AnalyticsApi from "../../../../server-api/analytics";
 import { getCSVFileName } from "../../../../utils/analytics";
 import toastUtils from "./../../../../utils/toast";
 import DateFormatter from "../../../../utils/date";
+import useInsights from "../../../../hooks/useInsights";
 
 const Modal = ({ section, setShowModal, id }: {
   section: string,
@@ -129,9 +130,12 @@ const Modal = ({ section, setShowModal, id }: {
     if (initialRender) setInitialRender(false)
   };
 
-  const init = () => {
+  const init = () => {    
+    console.log({ section });
+    
     switch (section) {
       case analyticsLayoutSection.ACCOUNT_USERS:
+      case analyticsLayoutSection.DASHBOARD:
         setApiEndpoint(`${InsightsApiEndpoint.USER_ACTIVITY}?userId=${id}`);
         setActiveModal(analyticsActiveModal.USER_ACTIVITY);
         break;

@@ -33,6 +33,7 @@ const useInsights = ({ section, endpoint }: { section: string; endpoint: string 
   const [totalRecords, setTotalRecords] = useState(0);
   const [downloadCSV, setDownloadCSV] = useState(false);
   const [activeSection, setActiveSection] = useState("");
+  const [activeModal, setActiveModal] = useState("");
   const [apiEndpoint, setApiEndpoint] = useState("");
 
   const analyticsApiHandler = async (defaultPage?: number) => {
@@ -137,6 +138,8 @@ const useInsights = ({ section, endpoint }: { section: string; endpoint: string 
     setTotalRecords,
     downloadCSV,
     setDownloadCSV,
+    activeModal,
+    setActiveModal
   };
 };
 

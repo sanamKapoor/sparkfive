@@ -45,7 +45,7 @@ const Team = ({ initialData }) => {
                 customDates={customDates}
                 setCustomDates={setCustomDates}
               />
-              <Download setDownloadCSV={setDownloadCSV} text='Chart' />
+              {/* <Download setDownloadCSV={setDownloadCSV} text='Chart' /> */}
             </div>
           </div>
           <ChartComp data={chartData} />

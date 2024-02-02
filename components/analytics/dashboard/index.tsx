@@ -6,9 +6,8 @@ import TeamSession from "./session";
 import TopAssets from "./top-asset";
 import UserEngagment from "./user-eng";
 import { DashboardSections } from "../../../constants/analytics";
-import ChartComp from "../common/chart";
 
-function Dashboard({ data }) {  
+function Dashboard({ data }) {
   return (
     <section className={styles.mainContainer}>
       <div className={styles.tableHeader}>
@@ -16,17 +15,17 @@ function Dashboard({ data }) {
       </div>
       <div className={`${styles["inner-container"]}`}>
         <section className={`${styles["inner-wrapper"]}`}>
-          <ChartComp data={data.find(d => d.section === DashboardSections.TEAM)} />
-          <TopAssets initialData={data.find(d => d.section === DashboardSections.ASSET)}  />
+        <TeamSession initialData={data.find(d => d.section === DashboardSections.TEAM)} />
+        <TopAssets initialData={data.find(d => d.section === DashboardSections.ASSET)} />
         </section>
-      </div>
-      <div className={`${styles["inner-container"]}`}>
+      </div >
+    <div className={`${styles["inner-container"]}`}>
       <section className={`${styles["inner-wrapper"]}`}>
         <UserEngagment initialData={data.find(d => d.section === DashboardSections.USER)} />
         <Activity initialData={data.find(d => d.section === DashboardSections.USER_ACTIVITY)} />
-        </section>
-        </div>
-    </section>
+      </section>
+    </div>
+    </section >
   );
 }
 

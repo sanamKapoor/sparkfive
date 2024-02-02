@@ -20,12 +20,14 @@ export default function TableData({
   setSortBy,
   setSortOrder,
   tableFor,
-  dashboardView = false
+  setActiveModal,
+  dashboardView = false,
 }) {
   const [activeId, setActiveId] = useState('');
   const [showModal, setShowModal] = useState(false);
 
-  const handleModals = async (id: string) => {
+  const handleModals = async (id: string, section: string) => {
+    setActiveModal(section);
     setShowModal(true);
     setActiveId(id)
   };

@@ -7,6 +7,7 @@ import DateFilter from '../../common/date-filter';
 import TableData from '../../common/table';
 import ClearSort from '../../common/header/clear-sort';
 import { assetColumns, assetarrowColumns } from '../../../../data/analytics';
+import SectionLink from '../../common/header/link';
 
 const TopAssets = ({ initialData }) => {
   const { filter, setFilter, customDates, setCustomDates, totalRecords, data, error, sortBy, setError, loading, sortOrder, setSortBy, setSortOrder } = useInsights({ section: analyticsLayoutSection.DASHBOARD, endpoint: InsightsApiEndpoint.ASSET });
@@ -36,7 +37,10 @@ const TopAssets = ({ initialData }) => {
   return (
     <div className={styles.tableResponsive}>
       <div className={styles.headerContainer}>
-        <Heading mainText="Top Assets" smallHeading={true} />
+        <div>
+          <Heading mainText="Top Assets" smallHeading={true} />
+          <SectionLink title='View All' link="/main/insights/account/assets" />
+        </div>
         <div className={`${styles["table-header-tabs"]}`}>
           <DateFilter filter={filter} setFilter={setFilter} customDates={customDates} setCustomDates={setCustomDates} />
         </div>
