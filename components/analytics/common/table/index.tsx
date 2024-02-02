@@ -1,10 +1,9 @@
-import React, { useContext, useState } from "react";
-import { analyticsLayoutSection } from "../../../../constants/analytics";
+import React, { useState } from "react";
+import Modal from "../modal";
 import NoData from "../no-data";
+import TableBody from "./table-body";
 import styles from "./table-data.module.css";
 import TableHeader from "./table-header";
-import TableBody from "./table-body";
-import Modal from "../modal";
 
 export default function TableData({
   columns,

@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import styles from "../../index.module.css";
+import React, { useEffect, useState } from 'react';
+import { AnalyticsLayoutSection, InsightsApiEndpoint, TableBodySection } from '../../../../constants/analytics';
+import { DashboardUserColumns, arrowColumns } from '../../../../data/analytics';
 import useInsights from '../../../../hooks/useInsights';
-import { InsightsApiEndpoint, TableBodySection, analyticsLayoutSection } from '../../../../constants/analytics';
-import Heading from '../../common/header/heading';
 import DateFilter from '../../common/date-filter';
 import ClearSort from '../../common/header/clear-sort';
-import { DashboardUserColumns, arrowColumns } from '../../../../data/analytics';
-import TableData from '../../common/table';
+import Heading from '../../common/header/heading';
 import SectionLink from '../../common/header/link';
+import TableData from '../../common/table';
+import styles from "../../index.module.css";
 
 const UserEngagment = ({ initialData }) => {
   const { filter, setFilter, customDates, setCustomDates, loading, error, sortBy, sortOrder, totalRecords, data, setSortBy, setSortOrder, setError } = useInsights({
-    section: analyticsLayoutSection.DASHBOARD,
+    section: AnalyticsLayoutSection.DASHBOARD,
     endpoint: InsightsApiEndpoint.USER
   });
   const [totalUsers, setTotalUsers] = useState(0);

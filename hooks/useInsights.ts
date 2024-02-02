@@ -1,19 +1,18 @@
-import { useEffect, useState } from "react";
 import { saveAs } from "file-saver";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { calculateBeginDate } from "../config/data/filter";
+import {
+    AnalyticsRoutes,
+    DASHBOARD_REC_LIMIT,
+    InsightsApiEndpoint,
+    LIMIT,
+    PAGE
+} from "../constants/analytics";
 import { SOMETHING_WENT_WRONG } from "../constants/messages";
+import AnalyticsApi from "../server-api/analytics";
 import { getCSVFileName } from "../utils/analytics";
 import toastUtils from "./../utils/toast";
-import AnalyticsApi from "../server-api/analytics";
-import {
-  DASHBOARD_REC_LIMIT,
-  InsightsApiEndpoint,
-  LIMIT,
-  PAGE,
-  analyticsLayoutSection,
-  analyticsRoutes,
-} from "../constants/analytics";
-import { useRouter } from "next/router";
 
 const useInsights = ({ section, endpoint }: { section?: string; endpoint?: string }) => {
   const router = useRouter();
@@ -45,7 +44,7 @@ const useInsights = ({ section, endpoint }: { section?: string; endpoint?: strin
 
       let payload: Record<string, unknown> = {
         page: defaultPage ? defaultPage : page,
-        limit: router.pathname === analyticsRoutes.DASHBOARD ? DASHBOARD_REC_LIMIT : limit,
+        limit: router.pathname === AnalyticsRoutes.DASHBOARD ? DASHBOARD_REC_LIMIT : limit,
         search,
         sortBy,
         sortOrder,

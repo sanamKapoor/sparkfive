@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DayPickerInput from "react-day-picker/DayPickerInput";
 
 import styles from "./date-filter.module.css";
@@ -6,9 +6,7 @@ import { insights } from "../../../../assets";
 import Button from "../../../common/buttons/button";
 import { calculateBeginDate } from "../../../../config/data/filter";
 import DateUtils from "../../../../utils/date";
-import dateStyles from "../../../common/filter/date-uploaded.module.css";
 import IconClickable from "../../../common/buttons/icon-clickable";
-import { AnalyticsContext } from '../../../../context';
 
 export default function DateFilter({
   filter, setFilter, customDates, setCustomDates
