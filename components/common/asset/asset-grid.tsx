@@ -583,7 +583,6 @@ const AssetGrid = ({
                     )}
 
                     {sortedAssets.map((assetItem, index) => {
-                      console.log({ assetItem });
                       
                       if (assetItem.status !== "fail") {
                         return (

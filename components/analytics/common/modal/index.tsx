@@ -229,9 +229,6 @@ const Modal = ({ section, setShowModal, id }: {
     }))
   }
 
-  console.log({ apiData });
-
-
   const { loading, error, sortBy, limit, totalRecords } = modalData;
   return (
     <div className={`${styles.backdrop}`}>
