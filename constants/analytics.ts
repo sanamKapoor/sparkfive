@@ -141,6 +141,6 @@ export const ChartLines = {
 };
 
 export const PAGE = 1;
-export const LIMIT = 3;
+export const LIMIT = 15;
 export const DASHBOARD_REC_LIMIT = 6;
 export const TABLE_REC_LEN = 15;
