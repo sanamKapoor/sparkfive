@@ -47,15 +47,7 @@
   margin-right: 10px;
   cursor: pointer;
 }
-.menubar{
-  display: none;
 
-}
-@media (max-width:820px){
-  .menubar{
-    display: block;
-  }
-}
 @media (max-width:600px){
   .nestedMenu{
     padding: 0 16px 16px 16px;
