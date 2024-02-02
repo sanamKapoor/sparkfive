@@ -42,6 +42,10 @@ import AssetRelatedFilesList from "./asset-related-files-list";
 import downloadUtils from "../../../utils/download";
 import { sizeToZipDownload } from "../../../constants/download";
 
+import { events, shareLinkEvents } from '../../../constants/analytics';
+import useAnalytics from "../../../hooks/useAnalytics";
+import cookiesApi from "../../../utils/cookies";
+
 const getDefaultDownloadImageType = (extension) => {
   const defaultDownloadImageTypes = [
     {
@@ -127,6 +131,8 @@ const DetailOverlay = ({
   outsideDetailOverlay = false,
   sharedCode = "",
 }) => {
+  const { trackEvent, trackLinkEvent } = useAnalytics();
+
   const { hasPermission } = useContext(UserContext);
   const { user, cdnAccess, transcriptAccess } = useContext(UserContext);
   const { activeSortFilter } = useContext(FilterContext);
@@ -697,6 +703,21 @@ const DetailOverlay = ({
           updateDownloadingStatus("done", 0, 0);
         }
       }
+
+      // Track download asset event
+      if(isShare){
+        trackLinkEvent(
+          shareLinkEvents.DOWNLOAD_SHARED_ASSET,
+          {
+            email: cookiesApi.get('shared_email') || null,
+            teamId: cookiesApi.get('teamId') || null,
+            assetId: asset.id,
+          });
+      } else {
+        trackEvent(events.DOWNLOAD_ASSET, {
+          assetId: asset.id,
+        });
+      }
     } catch (e) {
       const errorResponse = (await e.response.data.text()) || "{}";
       const parsedErrorResponse = JSON.parse(errorResponse);
@@ -744,6 +765,21 @@ const DetailOverlay = ({
     if (currentAsset >= sizeToZipDownload || currentAsset.type === "video") {
       downloadSelectedAssets(id);
     } else {
+       // Track download asset event
+       if(isShare){
+        trackLinkEvent(
+          shareLinkEvents.DOWNLOAD_SHARED_ASSET,
+          {
+            email: cookiesApi.get('shared_email') || null,
+            teamId: cookiesApi.get('teamId') || null,
+            assetId: asset.id,
+          });
+      } else {
+        trackEvent(events.DOWNLOAD_ASSET, {
+          assetId: asset.id,
+        });
+      }
+
       downloadUtils.downloadFile(versionRealUrl, currentAsset.name);
     }
   };
@@ -1038,9 +1074,13 @@ const DetailOverlay = ({
                     text={"Share"}
                     type={"button"}
                     className={`container ${styles["only-desktop-button"]} primary`}
-                    onClick={openShareAsset}
+                    onClick={() => {
+                      trackEvent(events.SHARE_ASSET, {
+                        assetId: asset.id,
+                      });
+                      openShareAsset();
+                    }}
                   />
-
                   <div className={styles["only-mobile-button"]}>
                     <IconClickable
                       additionalClass={styles["only-mobile-button"]}
@@ -1319,6 +1359,8 @@ const DetailOverlay = ({
                 onSelectChange={onSelectChange}
                 onSizeInputChange={onSizeInputChange}
                 asset={assetDetail}
+                versionRealUrl={versionRealUrl}
+                versionThumbnailUrl={versionThumbnailUrl}
                 onResetImageSize={() => {
                   resetValues();
                   setDetailPosSize({

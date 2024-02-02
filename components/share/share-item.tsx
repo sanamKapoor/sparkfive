@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styles from "./share-item.module.css";
 
 import { Utilities } from "../../assets";
@@ -11,6 +11,11 @@ import DetailOverlay from "../common/asset/detail-overlay";
 import Button from "../common/buttons/button";
 import IconClickable from "../common/buttons/icon-clickable";
 
+import {events, shareLinkEvents} from '../../constants/analytics';
+import useAnalytics from '../../hooks/useAnalytics'
+import { UserContext } from "../../context";
+import cookiesApi from "../../utils/cookies";
+
 const ShareItem = ({
   asset,
   thumbailUrl,
@@ -20,6 +25,9 @@ const ShareItem = ({
   sharedCode = ""
 }) => {
   const [visibleOverlay, setVisibleOVerlay] = useState(false);
+
+  const { user } = useContext(UserContext);
+  const {trackLinkEvent} = useAnalytics();
 
   useEffect(() => {
     if (visibleOverlay) {
@@ -70,7 +78,14 @@ const ShareItem = ({
               className={"container primary"}
               text={"View Details"}
               type={"button"}
-              onClick={() => setVisibleOVerlay(true)}
+              onClick={() => {
+                trackLinkEvent(shareLinkEvents.VIEW_SHARED_ASSET, {
+                  assetId: asset.id,
+                  email: cookiesApi.get('shared_email') || null,
+                  teamId: cookiesApi.get('teamId') || null,
+                });
+                setVisibleOVerlay(true);
+              }}
             />
           </div>
         </div>
@@ -101,3 +116,4 @@ const ShareItem = ({
 };
 
 export default ShareItem;
+

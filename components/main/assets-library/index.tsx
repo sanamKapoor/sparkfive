@@ -34,6 +34,7 @@ import { initialActiveSortFilters } from "../../../config/data/filter";
 // Components
 
 const AssetsLibrary = () => {
+
   const [activeView, setActiveView] = useState("grid");
   const [showOverlayLoader, setShowOverlayLoader] = useState(false);
 

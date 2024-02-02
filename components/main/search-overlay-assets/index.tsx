@@ -9,6 +9,9 @@ import Button from "../../common/buttons/button";
 import Search from "../../common/inputs/search";
 import styles from "./index.module.css";
 
+import {events} from '../../../constants/analytics';
+import useAnalytics from '../../../hooks/useAnalytics';
+
 // Components
 const SearchOverlayAssets = ({
   closeOverlay,
@@ -34,6 +37,7 @@ const SearchOverlayAssets = ({
 
   const [filterParams, setFilterParams] = useState({});
   const [openFilters, setOpenFilters] = useState(false);
+  const {trackEvent} = useAnalytics();
 
   const getData = async (inputTerm, replace = true, _filterParams = filterParams) => {
     console.log({ inputTerm, replace, _filterParams });
@@ -107,6 +111,10 @@ const SearchOverlayAssets = ({
         const { data } = await folderApi.getFolders(query);
         setFolders(data, true, true);
       }
+
+      
+    trackEvent(events.SEARCH_ASSET, {searchTerm: inputTerm});
+
     } catch (err) {
       // TODO: Handle this error
       console.log(err);

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { TeamContext } from "../../../../../context";
 import styles from "./name-form.module.css";
@@ -7,10 +7,18 @@ import styles from "./name-form.module.css";
 import Button from "../../../../common/buttons/button";
 import FormInput from "../../../../common/inputs/form-input";
 import Input from "../../../../common/inputs/input";
+import { pages } from "../../../../../constants/analytics";
+import useAnalytics from "../../../../../hooks/useAnalytics";
 
 const NameForm: React.FC = () => {
   const { team, patchTeam } = useContext(TeamContext);
   const { control, handleSubmit, errors } = useForm();
+
+  const { pageVisit } = useAnalytics();
+
+  useEffect(() => {    
+    pageVisit(pages.COMPANY)
+  },[]);
 
   const onSubmit = (fieldData) => {
     const { company } = fieldData;

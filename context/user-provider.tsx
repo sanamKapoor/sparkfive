@@ -16,6 +16,9 @@ import requestsUtils from "../utils/requests";
 import { loadTheme, resetTheme } from "../utils/theme";
 
 import { defaultLogo } from "../constants/theme";
+import { events } from '../constants/analytics';
+
+import useAnalytics from '../hooks/useAnalytics';
 
 const allowedBase = [
   "/signup",
@@ -39,11 +42,13 @@ export default ({ children }) => {
   const [logo, setLogo] = useState<string>(defaultLogo);
   const [logoId, setLogoId] = useState<string>();
 
+  const { trackEvent, identify } = useAnalytics();
+
   const { setIsLoading } = useContext(LoadingContext);
 
   const router = useRouter();
 
-  const fetchUser = async (redirectLogin = false) => {
+  const fetchUser = async (trackUser = false, redirectLogin = false) => {
     // Skip fetching user if on collections page
     if (Router.pathname.indexOf("/collections") !== -1) return;
 
@@ -67,6 +72,7 @@ export default ({ children }) => {
         const query = url.getQueryStringFromObject(Router.query);
 
         const { data } = await userApi.getUserData();
+
         const teamResponse = await teamApi.getTeam();
         setCdnAccess(teamResponse.data.cdnAccess);
         setTranscriptAccess(teamResponse.data.transcript);
@@ -99,6 +105,15 @@ export default ({ children }) => {
           }
         } else {
           resetTheme();
+        }
+        
+        if(trackUser && data?.team && data?.team?.analytics){          
+          // Track loggedIn user data for analytics
+          identify({
+            id: data.id,
+            email: data.email,
+            teamId: data.team.id
+          });
         }
 
         if (!data.firstTimeLogin && Router.pathname.indexOf("/main/setup") === -1) {
@@ -140,10 +155,16 @@ export default ({ children }) => {
 
     // Reset theme
     resetTheme();
-
-    setUser(null);
     cookiesUtils.remove("jwt");
     requestsUtils.removeAuthToken();
+
+    // Track the logout event and remove the userId
+    trackEvent(events.LOGOUT, {
+      id: user?.id,
+      email: user?.email,
+    });
+
+    setUser(null);
     Router.replace("/login");
   };
 
@@ -177,7 +198,7 @@ export default ({ children }) => {
     if (twoFactor) {
       cookiesUtils.set("twoFactor", "true");
     }
-    await fetchUser();
+    await fetchUser(true);
   };
 
   useEffect(() => {

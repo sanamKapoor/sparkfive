@@ -1,0 +1,176 @@
+.tableHeader{
+    margin-top:81px;
+}
+.outerLayout{
+    width: calc(100% -218px);
+    margin-left:218px;
+    padding: 30px 40px;
+}
+.tableOuter {
+    border: 1px solid#DEDAD4;
+    padding: 16px;
+}
+.headerContainer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.inline{
+    display: flex;
+    align-items: center;
+}
+.inner-wrapper{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap:30px;
+    width: 100%;
+}
+.total-session{
+    border:1px solid 
+    #DEDAD4;
+    border-radius: 4px;
+    padding: 20px;
+}
+.mainContainer{
+    width: calc(100% -218px);
+    margin-left:218px;
+}
+.inner-container{
+    padding: 30px 40px;
+}
+.empty{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px 0;
+  }
+@media (max-width :1682px){
+    .inner-wrapper{
+        grid-template-columns: repeat(1,1fr);
+    }
+}
+
+@media (max-width:900px){
+    .tableHeader{
+        margin-top:144px;
+    }
+    .mainContainer{
+        margin-left: 0;
+    }
+    .inner-wrapper{
+        display: flex;
+        flex-direction: column;
+        gap:40px;
+    }
+}
+
+@media (max-width:820px){
+    .mainContainer{
+        width:100%;
+        margin-left:0;
+    }
+}
+
+.outer-wrapper-toggle {
+    width: 100%;
+    margin-left: 0;
+}
+
+.tableResponsive {
+    overflow-x: auto;
+    border: 1px solid#DEDAD4;
+    padding: 18px;
+}
+.dashboard-chart{
+    height:fit-content;
+}
+.heading {
+    font-weight: 600;
+    font-size: 22px;
+    color: #08135E;
+
+}
+
+.description {
+    font-weight: 400;
+    font-size: 12px;
+    color: #08135E;
+
+}
+
+.tableHeading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.heading-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.table-header-tabs {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.usernameWithImage {
+    display: flex;
+    align-items: center;
+}
+
+.image-wrapper {
+    margin-right: 8px;
+}
+
+.clear-sort {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    margin-top: 15px;
+}
+
+.teamContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+
+@media (max-width:820px) {
+    .tableResponsive {
+        display: block;
+    }
+
+}
+
+@media (min-width:475px) and (max-width:1280px) {
+    .table-header-tabs {
+        margin-bottom: 48px
+    }
+}
+
+@media (max-width:1336px){
+    .table-header-tabs{
+        margin-top:20px;
+        flex-wrap:wrap;
+    }
+}
+
+@media (max-width:600px){
+    .tableHeader{
+        margin-top:128px;
+    }
+}
+
+@media (max-width:475px) {
+    .mobile-wrap {
+        display: flex;
+        align-items: center;
+    }
+}

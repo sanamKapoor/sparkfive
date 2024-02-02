@@ -44,3 +44,7 @@
   height: 270px;
   max-height: 270px;
 }
+.analytics-icon{
+  max-width: 28px;
+  height:100%;
+}

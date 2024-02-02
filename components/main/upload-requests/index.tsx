@@ -8,7 +8,6 @@ import { Utilities } from '../../../assets';
 import GuestUploadApprovalOverlay from '../../../components/common/guest-upload-approval-overlay';
 import { LoadingContext, UserContext, TeamContext } from '../../../context';
 import { useMoveModal } from '../../../hooks/use-modal';
-import { useAssetDetailCollecion } from '../../../hooks/use-asset-detail-collection'
 import { useDebounce } from '../../../hooks/useDebounce';
 import assetApi from '../../../server-api/asset';
 import customFieldsApi from '../../../server-api/attribute';
@@ -36,7 +35,7 @@ import Base from '../../common/modals/base';
 import ConfirmModal from '../../common/modals/confirm-modal';
 import RenameModal from '../../common/modals/rename-modal';
 import CollectionSubcollectionListing from '../collection-subcollection-listing';
-import SingleCollectionSubcollectionListing from '../single-select-collection-subcollection'
+import SingleCollectionSubcollectionListing from '../single-select-collection-subcollection';
 import styles from './index.module.css';
 
 
@@ -248,10 +247,6 @@ const UploadRequest = () => {
     keyResultsFetch: keyResultsFetchAssetView,
     keyExists: keyExistsAssetView
   } = useAssetDetailCollecion(addFolderAssetView, updateAssetStateAssetView, tempFolders, deleteFolderAssetView)
-
-
-
-
 
 
   const updateName = async (value) => {

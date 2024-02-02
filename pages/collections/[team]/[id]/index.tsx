@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import FilterProvider from "../../../../context/filter-provider";
 
 // Components
@@ -8,9 +8,18 @@ import ShareCollectionMain from "../../../../components/share-collections";
 
 import AppLayout from "../../../../components/common/layouts/app-layout";
 import { AssetContext } from "../../../../context";
+import { pages } from "../../../../constants/analytics";
+import useAnalytics from "../../../../hooks/useAnalytics";
 
 const ShareFolder = () => {
   const { downloadingStatus } = useContext(AssetContext);
+
+const { pageVisit } = useAnalytics();
+
+useEffect(() => {    
+  pageVisit(pages.COLLECTIONS)
+},[]);
+
 
   return (
     <FilterProvider isPublic={true}>

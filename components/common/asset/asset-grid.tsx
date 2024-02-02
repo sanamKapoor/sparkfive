@@ -113,7 +113,7 @@ const AssetGrid = ({
   const [coordinates, setCoordinates] = useState({ x: 0, y: 0 })
   const [render, setRender] = useState(false);
   const ref = useRef(null);
-
+  
   useEffect(() => {
     const { assetId } = urlUtils.getQueryParameters();
     if (assetId) getInitialAsset(assetId);
@@ -583,6 +583,8 @@ const AssetGrid = ({
                     )}
 
                     {sortedAssets.map((assetItem, index) => {
+                      console.log({ assetItem });
+                      
                       if (assetItem.status !== "fail") {
                         return (
                           <li

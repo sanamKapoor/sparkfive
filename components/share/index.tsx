@@ -24,14 +24,19 @@ import Spinner from "../common/spinners/spinner";
 
 import { loadTheme } from "../../utils/theme";
 
-import { UserContext } from "../../context";
+import { ShareContext, UserContext } from "../../context";
 import { defaultLogo } from "../../constants/theme";
 
 import { sizeToZipDownload } from "../../constants/download";
 import downloadUtils from "../../utils/download";
 
+import { events, shareLinkEvents } from '../../constants/analytics';
+import useAnalytics from "../../hooks/useAnalytics"
+import cookiesApi from "../../utils/cookies";
+
 const AssetShare = () => {
   const { logo: themeLogo, setLogo: setThemeLogo } = useContext(UserContext);
+
   const [assets, setAssets] = useState([]);
   const [selectedAsset, setSelectedAsset] = useState(0);
   const [showDownloadPopup, setShowDownloadPopup] = useState(false);
@@ -44,6 +49,8 @@ const AssetShare = () => {
   const [error, setError] = useState(false);
   const [shareUserName, setShareUserName] = useState("");
   const [sharedCode, setSharedCode] = useState("");
+
+  const { trackLinkEvent } = useAnalytics();
 
   // Toggle select asset
   const toggleSelected = (id) => {
@@ -112,6 +119,16 @@ const AssetShare = () => {
 
       const selectedAssets = assets.filter((asset) => asset.isSelected);
 
+      selectedAssets.map(assetItem => {
+        // Track assets download event
+        trackLinkEvent(shareLinkEvents.DOWNLOAD_SHARED_ASSET, {
+          email: cookiesApi.get('shared_email') || null,
+          teamId: cookiesApi.get('teamId') || null,
+          assetId: assetItem.asset.id,
+        });
+        return assetItem;
+      })
+
       const downloadAsZip = async () => {
         let payload = {
           assetIds: selectedAssets.map((item) => item.asset.id),
@@ -142,7 +159,7 @@ const AssetShare = () => {
       }
 
       // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets.zip')
-    } catch (e) {}
+    } catch (e) { }
   };
 
   useEffect(() => {
@@ -172,6 +189,14 @@ const AssetShare = () => {
           setShareUserName(data.sharedBy);
           setSharedCode(code as string);
           setLogo(data.data.team?.workspaceIcon);
+          if (data?.theme?.teamId) cookiesApi.set('teamId', data?.theme?.teamId)
+
+          trackLinkEvent(shareLinkEvents.ACCESS_SHARED_LINK, {
+            link: window.location.href,
+            type: 'Asset',
+            teamId: data?.theme?.teamId,
+            email: cookiesApi.get('shared_email') || null,
+          });
         }
 
         // There is team theme set
@@ -203,6 +228,14 @@ const AssetShare = () => {
       setError(false);
       setLoading(false);
       setAssets(data.data);
+      cookiesApi.set('shared_email', email);
+      if (data?.theme?.teamId) cookiesApi.set('teamId', data?.theme?.teamId)
+      trackLinkEvent(shareLinkEvents.ACCESS_SHARED_LINK, {
+        link: window.location.href,
+        type: 'Asset',
+        email,
+        teamId: data?.theme?.teamId,
+      });
     }
 
     // There is team theme set

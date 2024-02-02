@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import dateCompare from "../utils/date-compare";
+import { dateCompare } from "../utils/date";
 
 export default function useSortedAssets(
   assets,

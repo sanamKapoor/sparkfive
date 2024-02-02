@@ -1,14 +1,16 @@
 import { format } from "date-fns";
 import filesize from "filesize";
-import { ChangeEvent, useContext, useEffect, useState } from "react";
-import React from "react";
+import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import HoverVideoPlayer from "react-hover-video-player";
 import { Utilities } from "../../../assets";
 import { ASSET_NAME_UPDATED, FAILED_TO_UPDATE_ASSET_NAME } from "../../../constants/messages";
-import { AssetContext, AssetDetailContext } from "../../../context";
+import { AssetContext, UserContext, AssetDetailContext } from "../../../context";
+import useAnalytics from "../../../hooks/useAnalytics";
 import assetApi from "../../../server-api/asset";
-import { getParsedExtension, removeExtension } from "../../../utils/asset";
+import AnalyticsService from "../../../utils/analytics-service";
+import { removeExtension } from "../../../utils/asset";
 import toastUtils from "../../../utils/toast";
+import RenameModal from "../../common/modals/rename-modal";
 import Button from "../buttons/button";
 import IconClickable from "../buttons/icon-clickable";
 import Spinner from "../spinners/spinner";
@@ -18,8 +20,8 @@ import AssetImg from "./asset-img";
 import AssetOptions from "./asset-options";
 import styles from "./asset-thumbail.module.css";
 import DetailOverlay from "./detail-overlay";
-import RenameModal from "../../common/modals/rename-modal";
-import update from "immutability-helper";
+import { events, shareLinkEvents } from "../../../constants/analytics";
+import cookiesApi from "../../../utils/cookies";
 import { useRouter } from "next/router";
 
 // Components
@@ -78,6 +80,7 @@ const AssetThumbail = ({
     setListUpdateFlag,
     setSubFoldersAssetsViewList,
   } = useContext(AssetContext);
+  const { user } = useContext(UserContext);
 
   const {
     setSharePath,
@@ -97,6 +100,8 @@ const AssetThumbail = ({
   const [isEditing, setIsEditing] = useState(false);
   const dateFormat = "MMM do, yyyy";
   const [assetRenameModalOpen, setAssetRenameModalOpen] = useState(false);
+
+  const { trackEvent, trackLinkEvent } = useAnalytics();
 
   useEffect(() => {
     setThumbnailName(assetName);
@@ -321,7 +326,32 @@ const AssetThumbail = ({
                       className={"container primary"}
                       text={"View Details"}
                       type={"button"}
-                      onClick={() => handleViewDetails("button")}
+                      onClick={() => {
+                        if(isShare){
+                          trackLinkEvent(shareLinkEvents.VIEW_SHARED_ASSET, {
+                            assetId: asset.id,
+                            email: cookiesApi.get('shared_email') || null,
+                            teamId: cookiesApi.get('teamId') || null,
+                          })
+                        } else {
+                          trackEvent(events.VIEW_ASSET, {
+                            assetId: asset.id,
+                          });
+                        }
+                        
+                        if (onView) {
+                          console.log("hello223")
+                          setVisible(true);
+                          onView(asset.id);
+                        } else {
+                          console.log("hello223456")
+                          setOverlayProperties({
+                            ...DEFAULT_DETAIL_PROPS,
+                            visible: !overlayProperties.visible,
+                          });
+                        }
+                      }}
+                      // onClick={() => handleViewDetails("button")}
                     />
                   </div>
                 </>
@@ -383,6 +413,8 @@ const AssetThumbail = ({
             <AssetOptions
               itemType={type}
               asset={asset}
+              thumbailUrl={thumbailUrl}
+              realUrl={realUrl}
               openArchiveAsset={openArchiveAsset}
               openDeleteAsset={openDeleteAsset}
               openMoveAsset={openMoveAsset}
@@ -401,6 +433,8 @@ const AssetThumbail = ({
             <AssetOptions
               itemType={type}
               asset={asset}
+              thumbailUrl={thumbailUrl}
+              realUrl={realUrl}
               openDeleteAsset={openDeleteAsset}
               downloadAsset={downloadAsset}
               isAssetRelated

@@ -87,8 +87,9 @@ export default function MyApp({ Component, pageProps }) {
     }
   }, [router.asPath]);
 
-  return (
+  
 
+  return (
     <LoadingContextProvider>
       <UserContextProvider>
         <SocketProvider>

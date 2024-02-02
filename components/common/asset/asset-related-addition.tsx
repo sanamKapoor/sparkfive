@@ -22,6 +22,8 @@ import { maximumAssociateFiles } from "../../../constants/asset-associate";
 import { ASSET_UPLOAD_APPROVAL } from "../../../constants/permissions";
 import Button from "../buttons/button";
 import ToggleableAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
+import useAnalytics from "../../../hooks/useAnalytics";
+import { events } from "../../../constants/analytics";
 
 export default function AssetRelatedAddition({
   assets: assetData = [],
@@ -40,6 +42,8 @@ export default function AssetRelatedAddition({
     setUploadingFileName,
     setUploadSourceType,
   } = useContext(AssetContext);
+
+  const { trackEvent } = useAnalytics();
 
   const fileBrowserRef = useRef(undefined);
 
@@ -189,6 +193,12 @@ export default function AssetRelatedAddition({
         }
 
         data = data.map((item) => {
+          // Track uploaded asset info
+          trackEvent(events.UPLOAD_ASSET, {
+            uploadType: 'Device',
+            assetId: item.asset.id,
+          });
+
           item.isSelected = true;
           return item;
         });
@@ -549,6 +559,11 @@ export default function AssetRelatedAddition({
 
         // Mark done
         const updatedAssets = data.map((asset) => {
+          // Track uploaded asset info
+          trackEvent(events.UPLOAD_ASSET, {
+            uploadType: 'Google Drive',
+            assetId: asset.asset.id,
+          });
           return { ...asset, status: "done" };
         });
 
@@ -617,6 +632,11 @@ export default function AssetRelatedAddition({
 
         // Mark done
         const updatedAssets = data.map((asset) => {
+          // Track uploaded asset info
+          trackEvent(events.UPLOAD_ASSET, {
+            uploadType: 'Dropbox',
+            assetId: asset.asset.id,
+          });
           return { ...asset, status: "done" };
         });
 

@@ -9,6 +9,9 @@ import NestedSidenavDropdown from "./nested-sidenav-dropdown-list";
 import NestedFirstlist from "./nested-sidenav-firstlist";
 import styles from "./nested-sidenav.module.css";
 
+import useAnalytics from "../../hooks/useAnalytics";
+import { events } from "../../constants/analytics";
+
 const NestedSidenav = ({ viewFolder }) => {
   const {
     sidebarOpen,
@@ -57,6 +60,11 @@ const NestedSidenav = ({ viewFolder }) => {
       ["mainFilter"]: value,
       sort,
     });
+
+    trackEvent(events.VIEW_TAB, {
+      tabName: value
+    })
+    
     if (window.innerWidth < 767) {
       setSidebarOpen(false);
     }

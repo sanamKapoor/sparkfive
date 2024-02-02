@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { AssetContext, FilterContext, ShareContext, UserContext } from "../../context";
 import folderApi from "../../server-api/folder";
 import shareCollectionApi from "../../server-api/share-collection";
-import { DEFAULT_CUSTOM_FIELD_FILTERS, DEFAULT_FILTERS, getAssetsFilters, getAssetsSort } from "../../utils/asset";
+import { getAssetsFilters, getAssetsSort } from "../../utils/asset";
 import requestUtils from "../../utils/requests";
 import toastUtils from "../../utils/toast";
 import styles from "./index.module.css";
@@ -24,6 +24,9 @@ import SharedPageSidenav from "./shared-nested-sidenav/shared-nested-sidenav";
 import { loadTheme } from "../../utils/theme";
 
 import { defaultLogo } from "../../constants/theme";
+import cookiesApi from "../../utils/cookies";
+import { shareLinkEvents } from "../../constants/analytics";
+import useAnalytics from "../../hooks/useAnalytics";
 
 const ShareFolderMain = () => {
   const router = useRouter();
@@ -87,6 +90,8 @@ const ShareFolderMain = () => {
 
   const [top, setTop] = useState("calc(55px + 5rem)");
 
+  const { trackLinkEvent } = useAnalytics();
+
   const submitPassword = async (password, email) => {
     try {
       const { data } = await folderApi.authenticateCollection({
@@ -94,8 +99,10 @@ const ShareFolderMain = () => {
         email,
         sharePath,
       });
+
       // Set axios headers
       requestUtils.setAuthToken(data.token, "share-authorization");
+      cookiesApi.set('shared_email', email);
 
       getFolderInfo(true);
     } catch (err) {
@@ -309,6 +316,7 @@ const ShareFolderMain = () => {
         },
         activeSubFolders,
       );
+      
       setSubFoldersViewList(subFolders, replace);
       setSidenavFolderList(subFolders?.results || []);
     } catch (err) {
@@ -350,8 +358,9 @@ const ShareFolderMain = () => {
   };
 
   const getFolderInfo = async (displayError = false) => {
-    try {
+    try {      
       const { data } = await shareCollectionApi.getFolderInfo({ sharePath });
+      
       setActivePasswordOverlay(false);
       setFolderInfo(data);
       setAdvancedConfig(data.customAdvanceOptions);
@@ -375,14 +384,23 @@ const ShareFolderMain = () => {
       }
 
       // There is team theme set
-      if (data.theme) {
+      if (data.theme) { 
+        if (data?.theme?.teamId) cookiesApi.set('teamId', data?.theme?.teamId)
+               
         // Load theme from team settings
-        const currentTheme = loadTheme(data.theme);
-
+        const currentTheme = loadTheme(data.theme);        
         // @ts-ignore
         setLogo(currentTheme.logoImage?.realUrl || defaultLogo);
       }
 
+      // Track event
+      trackLinkEvent(shareLinkEvents.ACCESS_SHARED_LINK, { 
+        link: window.location.href,
+        type: "Collection",
+        teamId: cookiesApi.get('teamId') || null,
+        email: cookiesApi.get('shared_email') || null,
+      });
+      
       setLoading(false);
     } catch (err) {
       console.log(err);
