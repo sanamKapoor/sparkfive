@@ -125,7 +125,6 @@ const AssetsLibrary = () => {
 
   const preparingAssets = useRef(true);
 
-
   // When tag, campaigns, collection changes, used for click on tag/campaigns/collection in admin attribute management
   useEffect(() => {
     if (!preparingAssets.current) return;
@@ -364,7 +363,7 @@ const AssetsLibrary = () => {
     assets: any,
     currentDataClone: any,
     totalSize: number,
-    folderId,
+    folderId: any,
     folderGroup = {},
     subFolderAutoTag = true,
   ) => {
@@ -396,6 +395,13 @@ const AssetsLibrary = () => {
 
         // At this point, file place holder will be removed
         setAssets([...newAssetPlaceholder, ...currentDataClone]);
+
+        if (activeSortFilter?.mainFilter === "SubCollectionView") {
+          setSubFoldersAssetsViewList({
+            ...subFoldersAssetsViewList,
+            results: [...newAssetPlaceholder, ...currentDataClone],
+          });
+        }
 
         // The final one
         if (i === assets.length - 1) {
@@ -477,6 +483,11 @@ const AssetsLibrary = () => {
 
         // At this point, file place holder will be removed
         setAssets([...assets, ...currentDataClone]);
+
+        if (activeSortFilter?.mainFilter === "SubCollectionView") {
+          setSubFoldersAssetsViewList({ ...subFoldersAssetsViewList, results: [...assets, ...currentDataClone] });
+        }
+
         setAddedIds(data.map((assetItem) => assetItem.asset.id));
 
         // Mark this asset as done
@@ -510,6 +521,13 @@ const AssetsLibrary = () => {
       // At this point, file place holder will be removed
       setAssets([...newAssetPlaceholder, ...currentDataClone]);
 
+      if (activeSortFilter?.mainFilter === "SubCollectionView") {
+        setSubFoldersAssetsViewList({
+          ...subFoldersAssetsViewList,
+          results: [...newAssetPlaceholder, ...currentDataClone],
+        });
+      }
+
       // The final one
       if (i === assets.length - 1) {
         return folderGroup;
@@ -524,6 +542,7 @@ const AssetsLibrary = () => {
     if (!hasPermission([ASSET_UPLOAD_APPROVAL])) {
       const currentDataClone = [...assets];
       const currenFolderClone = [...folders];
+      const subFolderClone = [...subFoldersAssetsViewList.results];
       try {
         let needsFolderFetch;
         const newPlaceholders: any = [];
@@ -587,9 +606,9 @@ const AssetsLibrary = () => {
           setSubFoldersAssetsViewList(
             {
               ...subFoldersAssetsViewList,
-              results: [...newPlaceholders],
+              results: [...newPlaceholders, ...subFolderClone],
             },
-            false,
+            true,
           );
         } else {
           setAssets([...newPlaceholders, ...currentDataClone]);
@@ -616,7 +635,7 @@ const AssetsLibrary = () => {
         showUploadProcess("done");
 
         if (activeSortFilter?.mainFilter === "SubCollectionView") {
-          setNeedsFetch("SubCollectionView");
+          // setNeedsFetch("SubCollectionView");
         } else if (needsFolderFetch) {
           setNeedsFetch("folders");
         }
@@ -761,10 +780,7 @@ const AssetsLibrary = () => {
     }
   };
 
-  const getSubCollectionsAssetData = async (
-    replace = true,
-    showAllAssets: boolean = false
-  ) => {
+  const getSubCollectionsAssetData = async (replace = true, showAllAssets: boolean = false) => {
     try {
       if (activeSortFilter.mainFilter !== "SubCollectionView") {
         return;
@@ -804,9 +820,7 @@ const AssetsLibrary = () => {
 
   const toggleSelected = (id: string) => {
     if (activeMode === "assets") {
-      const assetIndex = assets.findIndex(
-        (assetItem) => assetItem.asset.id === id
-      );
+      const assetIndex = assets.findIndex((assetItem) => assetItem.asset.id === id);
       if (assets[assetIndex].isSelected) {
         selectAllAssets(false);
       }
@@ -836,9 +850,9 @@ const AssetsLibrary = () => {
 
       if (folderIndex !== -1) {
         if (subFoldersViewList.results[folderIndex]?.isSelected) {
-          setSelectedAllSubFoldersAndAssets(false)
+          setSelectedAllSubFoldersAndAssets(false);
         }
-        setSelectedAllSubAssets(false)
+        setSelectedAllSubAssets(false);
         setSubFoldersViewList({
           ...subFoldersViewList,
           results: update(subFoldersViewList.results, {
@@ -860,7 +874,7 @@ const AssetsLibrary = () => {
       if (assetIndex !== -1) {
         setSelectedAllSubFoldersAndAssets(false);
         if (subFoldersAssetsViewList.results[assetIndex]?.isSelected) {
-          setSelectedAllSubAssets(false)
+          setSelectedAllSubAssets(false);
         }
 
         setSubFoldersAssetsViewList({
@@ -993,10 +1007,8 @@ const AssetsLibrary = () => {
           }),
         );
         setSidenavFolderList({
-          results: [
-            ...sidenavFolderList.filter((folder: any) => folder.id !== id),
-          ],
-          total: sidenavTotalCollectionCount - 1
+          results: [...sidenavFolderList.filter((folder: any) => folder.id !== id)],
+          total: sidenavTotalCollectionCount - 1,
         });
 
         toastUtils.success("Collection deleted successfully");

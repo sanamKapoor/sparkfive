@@ -180,7 +180,9 @@ const ShareFolderMain = () => {
     if (asPath) {
       // Get shareUrl from path
       const splitPath = asPath.split("collections/");
+
       const splitPathWithoutQuery = splitPath[1].split("?");
+
       setSharePath(splitPathWithoutQuery[0]);
       setContextPath(splitPathWithoutQuery[0]);
     }
@@ -211,7 +213,11 @@ const ShareFolderMain = () => {
 
     if (asPath) {
       const splitPath = asPath.split("collections/");
-      const newPath = splitPath[1];
+
+      const splitPathWithoutQuery = splitPath[1].split("?");
+      setSharePath(splitPathWithoutQuery[0]);
+
+      const newPath = splitPathWithoutQuery[0];
       if (newPath && newPath !== "[team]/[id]/[name]") {
         setSharePath((prevSharePath) => {
           return newPath;
