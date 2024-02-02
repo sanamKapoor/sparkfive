@@ -1,3 +1,5 @@
+// Data Collection
+
 export const pages = {
   LOGIN: "LOGIN",
   AUTH_CALLBACK: "AUTH_CALLBACK",
@@ -62,7 +64,9 @@ export const eventTypes = {
   PAGE: "PAGE",
 };
 
-export const analyticsLayoutSection = {
+// Data Presentation
+
+export const AnalyticsLayoutSection = {
   DASHBOARD: "DASHBOARD",
   ACCOUNT_USERS: "ACCOUNT_USERS",
   ACCOUNT_ASSETS: "ACCOUNT_ASSETS",
@@ -72,7 +76,7 @@ export const analyticsLayoutSection = {
   SHARED_LINK: "SHARED_LINK",
 };
 
-export const analyticsRoutes = {
+export const AnalyticsRoutes = {
   DASHBOARD: "/main/insights",
   ACCOUNT_USERS: "/main/insights/account/users",
   ACCOUNT_ASSETS: "/main/insights/account/assets",
@@ -82,7 +86,7 @@ export const analyticsRoutes = {
   EXTERNAL_LINK: "/main/insights/external/links",
 };
 
-export const analyticsActiveModal = {
+export const AnalyticsActiveModal = {
   USER_ACTIVITY: "activity",
   ASSET_CHART: "chart",
 };
@@ -112,15 +116,12 @@ export const ChartLines = {
   views: {
     label: 'Views',
     borderColor: "#E2407B",
-    // backgroundColor: "#fcecf2",
     backgroundColor:"rgba(252, 236, 242, 0.6)",
-  
     fill: true,
   },
   downloads: {
     label: 'Downloads',
     borderColor: "#2484F4",
-    // backgroundColor: "#a8aded",
     backgroundColor: "rgba(168, 173, 237, 0.6)",
 
     fill: true,

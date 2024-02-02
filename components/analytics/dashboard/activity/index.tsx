@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
+import { AnalyticsLayoutSection, InsightsApiEndpoint, TableBodySection } from "../../../../constants/analytics";
 import {
-  activityarrowColumns,
-  activitycolumns,
-  userActivityModalArrowColumns,
+    activitycolumns,
+    userActivityModalArrowColumns
 } from "../../../../data/analytics";
-import TableData from "../../common/table";
-import Heading from "../../common/header/heading";
-import styles from "../../index.module.css";
-import NoData from "../../common/no-data";
 import useInsights from "../../../../hooks/useInsights";
-import { InsightsApiEndpoint, TableBodySection, analyticsLayoutSection } from "../../../../constants/analytics";
 import ClearSort from "../../common/header/clear-sort";
+import Heading from "../../common/header/heading";
+import NoData from "../../common/no-data";
+import TableData from "../../common/table";
+import styles from "../../index.module.css";
 
 function Activity({ initialData }) {
   const { loading, sortBy, sortOrder, totalRecords, data, error, setSortBy, setSortOrder, setError } = useInsights({
-    section: analyticsLayoutSection.DASHBOARD,
+    section: AnalyticsLayoutSection.DASHBOARD,
     endpoint: InsightsApiEndpoint.USER_ACTIVITY
   });
   const [totalActivities, setTotalActivities] = useState(0);

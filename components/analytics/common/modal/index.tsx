@@ -1,28 +1,29 @@
-import React, { useEffect, useState } from "react";
 import { saveAs } from "file-saver";
-import styles from "./modal.module.css";
+import React, { useEffect, useState } from "react";
+import { insights } from "../../../../assets";
+import { calculateBeginDate } from "../../../../config/data/filter";
+import { AnalyticsActiveModal, InsightsApiEndpoint, TableBodySection } from "../../../../constants/analytics";
+import { SOMETHING_WENT_WRONG } from "../../../../constants/messages";
+import {
+    userActivityModalArrowColumns,
+    userActivityModalcolumns,
+} from "../../../../data/analytics";
+import AnalyticsApi from "../../../../server-api/analytics";
+import { getCSVFileName } from "../../../../utils/analytics";
+import DateFormatter from "../../../../utils/date";
+import Loader from "../../../common/UI/Loader/loader";
+import Button from "../../../common/buttons/button";
+import IconClickable from "../../../common/buttons/icon-clickable";
+import ChartComp from "../chart";
 import Datefilter from "../date-filter";
 import Download from "../download-button";
+import Heading from "../header/heading";
 import NoData from "../no-data";
 import Pagination from "../pagination";
 import TableData from "../table";
-import Button from "../../../common/buttons/button";
-import Loader from "../../../common/UI/Loader/loader";
-import IconClickable from "../../../common/buttons/icon-clickable";
-import { insights } from "../../../../assets";
-import {
-  userActivityModalArrowColumns,
-  userActivityModalcolumns,
-} from "../../../../data/analytics";
-import { calculateBeginDate } from "../../../../config/data/filter";
-import { InsightsApiEndpoint, TableBodySection, analyticsActiveModal, analyticsLayoutSection } from "../../../../constants/analytics";
-import { SOMETHING_WENT_WRONG } from "../../../../constants/messages";
-import AnalyticsApi from "../../../../server-api/analytics";
-import { getCSVFileName } from "../../../../utils/analytics";
 import toastUtils from "./../../../../utils/toast";
-import DateFormatter from "../../../../utils/date";
-import Heading from "../header/heading";
-import ChartComp from "../chart";
+import styles from "./modal.module.css";
+import DownloadChart from "../chart/download-button";
 
 const Modal = ({ section, setShowModal, id }: {
   section: string,
@@ -145,13 +146,13 @@ const Modal = ({ section, setShowModal, id }: {
 
   const init = () => {
     switch (section) {
-      case analyticsActiveModal.USER_ACTIVITY:
+      case AnalyticsActiveModal.USER_ACTIVITY:
         setApiEndpoint(`${InsightsApiEndpoint.USER_ACTIVITY}?userId=${id}`);
-        setActiveModalSection(analyticsActiveModal.USER_ACTIVITY);
+        setActiveModalSection(AnalyticsActiveModal.USER_ACTIVITY);
         break;
-      case analyticsActiveModal.ASSET_CHART:
+      case AnalyticsActiveModal.ASSET_CHART:
         setApiEndpoint(`${InsightsApiEndpoint.TEAM}?assetId=${id}`);
-        setActiveModalSection(analyticsActiveModal.ASSET_CHART);
+        setActiveModalSection(AnalyticsActiveModal.ASSET_CHART);
         break;
     }
   };
@@ -250,7 +251,7 @@ const Modal = ({ section, setShowModal, id }: {
                 <NoData message={error} />
               </>
               :
-              activeModalSection === analyticsActiveModal.ASSET_CHART
+              activeModalSection === AnalyticsActiveModal.ASSET_CHART
                 ?
                 <div className={`${styles["user-modal"]}`}>
                   <div className= {`${styles["user-chart-modal"]}`}>
@@ -262,6 +263,7 @@ const Modal = ({ section, setShowModal, id }: {
                       setFilter={handleFilter}
                       setCustomDates={handleCustomDate}
                     />
+                    <DownloadChart fileName={apiData?.asset?.name || 'Asset Chart'} />
                     <div className={`${styles["data-close-icon"]}`}>
                       <IconClickable
                         src={insights.insightClose}
@@ -271,9 +273,7 @@ const Modal = ({ section, setShowModal, id }: {
                       />
                     </div>
                   </div>
-
                   </div>
-                 
                   <ChartComp data={apiData} fileName={apiData?.asset?.name && (apiData?.asset?.name).split('.')[0]} />
                 </div>
                 :

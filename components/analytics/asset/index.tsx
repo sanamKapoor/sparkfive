@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { InsightsApiEndpoint, TABLE_REC_LEN, TableBodySection, analyticsLayoutSection } from "../../../constants/analytics";
-import { assetarrowColumns, assetColumns } from "../../../data/analytics";
+import { AnalyticsLayoutSection, InsightsApiEndpoint, TABLE_REC_LEN, TableBodySection } from "../../../constants/analytics";
+import { assetColumns, assetarrowColumns } from "../../../data/analytics";
+import useInsights from "../../../hooks/useInsights";
+import DateFilter from "../common/date-filter";
 import Download from "../common/download-button";
+import ClearSort from "../common/header/clear-sort";
+import DateRangeTitle from "../common/header/date-title";
+import Heading from "../common/header/heading";
+import InsightsHeader from "../common/headline";
 import NoData from "../common/no-data";
 import Pagination from "../common/pagination";
 import SearchButton from "../common/search";
 import TableData from "../common/table";
 import styles from "../index.module.css";
-import useInsights from "../../../hooks/useInsights";
-import InsightsHeader from "../common/headline";
-import Heading from "../common/header/heading";
-import DateRangeTitle from "../common/header/date-title";
-import DateFilter from "../common/date-filter";
-import ClearSort from "../common/header/clear-sort";
 
 function Asset({ initialData }) {
   let {
@@ -33,7 +33,7 @@ function Asset({ initialData }) {
     setDownloadCSV,
     setFilter,
     setCustomDates,
-  } = useInsights({ section: analyticsLayoutSection.ACCOUNT_ASSETS, endpoint: InsightsApiEndpoint.ASSET });
+  } = useInsights({ section: AnalyticsLayoutSection.ACCOUNT_ASSETS, endpoint: InsightsApiEndpoint.ASSET });
   const [emptyRows, setEmptyRows] = useState([]);
   const [totalAssets, setTotalAssets] = useState(0);
   const [totalAssetsData, setTotalAssetsData] = useState([]);

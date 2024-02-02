@@ -1,6 +1,6 @@
 import { createContext } from "react";
 import { calculateBeginDate } from "../config/data/filter";
-import { analyticsLayoutSection } from "../constants/analytics";
+import { AnalyticsLayoutSection } from "../constants/analytics";
 
 export const LoadingContext = createContext({
   isLoading: false,
@@ -9,7 +9,7 @@ export const LoadingContext = createContext({
 
 export const AnalyticsContext = createContext({
   apiEndpoint: "",
-  activeSection: analyticsLayoutSection.DASHBOARD,
+  activeSection: AnalyticsLayoutSection.DASHBOARD,
   search: '',
   filter: {
     endDate: new Date(),

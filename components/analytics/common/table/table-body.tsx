@@ -1,9 +1,8 @@
 import React from "react";
-import { TableBodySection, analyticsActiveModal } from "../../../../constants/analytics";
+import { AnalyticsActiveModal, TableBodySection } from "../../../../constants/analytics";
 import DateFormatter from "../../../../utils/date";
 import AssetIcon from "../../../common/asset/asset-icon";
 import styles from "./table-data.module.css";
-import { useRouter } from "next/router";
 
 const TableBody = ({ handleModals, data, tableFor, dashboardView }) => {
 
@@ -94,7 +93,7 @@ export const UserTableRows = ({ data, handleModals, dashboardView }) => {
             {!dashboardView && <td>{row.shares}</td>}
             <td>
               {row.name ? (
-                <button className={styles.actionButton} onClick={() => handleModals(row.userId, analyticsActiveModal.USER_ACTIVITY)}>
+                <button className={styles.actionButton} onClick={() => handleModals(row.userId, AnalyticsActiveModal.USER_ACTIVITY)}>
                   User Info
                 </button>
               ) : (
@@ -133,7 +132,7 @@ export const AssetTableRows = ({ data, handleModals }) => {
             <td>{row.shares}</td>
             <td>
               {row._id && (
-                <button className={styles.actionButton} onClick={() => handleModals(row._id, analyticsActiveModal.ASSET_CHART)}>
+                <button className={styles.actionButton} onClick={() => handleModals(row._id, AnalyticsActiveModal.ASSET_CHART)}>
                   View chart
                 </button>
               )}

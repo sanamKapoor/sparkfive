@@ -1,20 +1,20 @@
 // TableComponent.js
 
 import React, { useEffect, useState } from "react";
-import { InsightsApiEndpoint, TABLE_REC_LEN, TableBodySection, analyticsLayoutSection } from "../../../constants/analytics";
+import { AnalyticsLayoutSection, InsightsApiEndpoint, TABLE_REC_LEN, TableBodySection } from "../../../constants/analytics";
 import { UserTableColumns, arrowColumns } from "../../../data/analytics";
+import useInsights from "../../../hooks/useInsights";
+import DateFilter from "../common/date-filter";
 import Download from "../common/download-button";
+import ClearSort from "../common/header/clear-sort";
+import DateRangeTitle from "../common/header/date-title";
+import Heading from "../common/header/heading";
+import InsightsHeader from "../common/headline";
 import NoData from "../common/no-data";
 import Pagination from "../common/pagination";
 import SearchButton from "../common/search";
 import TableData from "../common/table";
 import styles from "../index.module.css";
-import useInsights from "../../../hooks/useInsights";
-import Heading from "../common/header/heading";
-import ClearSort from "../common/header/clear-sort";
-import DateFilter from "../common/date-filter";
-import InsightsHeader from "../common/headline";
-import DateRangeTitle from "../common/header/date-title";
 
 const Users = ({
   initialData,
@@ -37,7 +37,7 @@ const Users = ({
     setDownloadCSV,
     setFilter,
     setCustomDates,
-  } = useInsights({ section: analyticsLayoutSection.ACCOUNT_USERS, endpoint: InsightsApiEndpoint.USER });
+  } = useInsights({ section: AnalyticsLayoutSection.ACCOUNT_USERS, endpoint: InsightsApiEndpoint.USER });
   const [emptyRows, setEmptyRows] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalUsersData, setTotalUsersData] = useState([]);

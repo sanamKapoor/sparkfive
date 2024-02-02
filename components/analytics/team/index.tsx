@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react'
-import styles from "../index.module.css";
-import ChartComp from '../common/chart';
-import InsightsHeader from '../common/headline';
-import Heading from '../common/header/heading';
-import DateRangeTitle from '../common/header/date-title';
+import React, { useEffect, useState } from 'react';
+import { AnalyticsLayoutSection, InsightsApiEndpoint } from '../../../constants/analytics';
 import useInsights from '../../../hooks/useInsights';
-import { InsightsApiEndpoint, analyticsLayoutSection } from '../../../constants/analytics';
+import ChartComp from '../common/chart';
 import DateFilter from '../common/date-filter';
-import Download from '../common/download-button';
+import DateRangeTitle from '../common/header/date-title';
+import Heading from '../common/header/heading';
+import InsightsHeader from '../common/headline';
+import styles from "../index.module.css";
+import DownloadChart from '../common/chart/download-button';
 
 const Team = ({ initialData }) => {
 
   const { filter, customDates, setFilter, setCustomDates, setDownloadCSV, setData, data } = useInsights({
-    section: analyticsLayoutSection.TEAM,
+    section: AnalyticsLayoutSection.TEAM,
     endpoint: InsightsApiEndpoint.TEAM
   })
   const [chartData, setChartData] = useState({});
@@ -45,7 +45,7 @@ const Team = ({ initialData }) => {
                 customDates={customDates}
                 setCustomDates={setCustomDates}
               />
-              {/* <Download setDownloadCSV={setDownloadCSV} text='Chart' /> */}
+              <DownloadChart fileName='Team Engagement' />
             </div>
           </div>
           <ChartComp data={chartData} fileName='Team Engagement' />

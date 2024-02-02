@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import styles from "../../index.module.css";
-import Heading from '../../common/header/heading';
-import DateFilter from '../../common/date-filter';
+import React, { useEffect, useState } from 'react';
+import { AnalyticsLayoutSection, DashboardSections } from '../../../../constants/analytics';
 import useInsights from '../../../../hooks/useInsights';
-import { DashboardSections, InsightsApiEndpoint, analyticsLayoutSection } from '../../../../constants/analytics';
-import Team from '../../team';
 import ChartComp from '../../common/chart';
-import DownloadChart from '../../common/chart/download-button';
+import DateFilter from '../../common/date-filter';
+import Heading from '../../common/header/heading';
+import styles from "../../index.module.css";
 
 const TeamSession = ({ initialData }) => {
-  const { filter, setFilter, customDates, setCustomDates, data } = useInsights({ section: analyticsLayoutSection.DASHBOARD, endpoint: DashboardSections.TEAM });
+  const { filter, setFilter, customDates, setCustomDates, data } = useInsights({ section: AnalyticsLayoutSection.DASHBOARD, endpoint: DashboardSections.TEAM });
   const [chartData, setChartData] = useState({});
 
   useEffect(() => {
@@ -27,7 +25,6 @@ const TeamSession = ({ initialData }) => {
         <Heading mainText="Top Team Session" smallHeading={true} />
         <div className={`${styles["table-header-tabs"]}`}>
           <DateFilter filter={filter} setFilter={setFilter} customDates={customDates} setCustomDates={setCustomDates} />
-          <DownloadChart />
         </div>
       </div>
       <ChartComp data={chartData} fileName="Team Session" />

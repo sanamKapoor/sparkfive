@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import styles from "../../index.module.css";
-import useInsights from '../../../../hooks/useInsights';
-import { InsightsApiEndpoint, TableBodySection, analyticsLayoutSection } from '../../../../constants/analytics';
-import Heading from '../../common/header/heading';
-import DateFilter from '../../common/date-filter';
-import TableData from '../../common/table';
-import ClearSort from '../../common/header/clear-sort';
+import React, { useEffect, useState } from 'react';
+import { AnalyticsLayoutSection, InsightsApiEndpoint, TableBodySection } from '../../../../constants/analytics';
 import { assetColumns, assetarrowColumns } from '../../../../data/analytics';
+import useInsights from '../../../../hooks/useInsights';
+import DateFilter from '../../common/date-filter';
+import ClearSort from '../../common/header/clear-sort';
+import Heading from '../../common/header/heading';
 import SectionLink from '../../common/header/link';
+import TableData from '../../common/table';
+import styles from "../../index.module.css";
 
 const TopAssets = ({ initialData }) => {
-  const { filter, setFilter, customDates, setCustomDates, totalRecords, data, error, sortBy, setError, loading, sortOrder, setSortBy, setSortOrder } = useInsights({ section: analyticsLayoutSection.DASHBOARD, endpoint: InsightsApiEndpoint.ASSET });
+  const { filter, setFilter, customDates, setCustomDates, totalRecords, data, error, sortBy, setError, loading, sortOrder, setSortBy, setSortOrder } = useInsights({ section: AnalyticsLayoutSection.DASHBOARD, endpoint: InsightsApiEndpoint.ASSET });
   const [totalAssets, setTotalAssets] = useState(0);
   const [totalAssetsData, setTotalAssetsData] = useState([]);
 

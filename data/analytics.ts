@@ -1,6 +1,6 @@
-import { insights, Utilities } from "../assets";
-import { analyticsRoutes } from "../constants/analytics";
-import { NavItem } from "../interfaces/analytics"
+import { insights } from "../assets";
+import { AnalyticsRoutes } from "../constants/analytics";
+import { NavItem } from "../interfaces/analytics";
 
 export const NavItems: NavItem[] = [
   {
@@ -8,7 +8,7 @@ export const NavItems: NavItem[] = [
     parent: "Main",
     components: [
       {
-        route: analyticsRoutes.DASHBOARD,
+        route: AnalyticsRoutes.DASHBOARD,
         label: "Dashboard",
         image: insights.insightDashboard,
       },
@@ -19,17 +19,17 @@ export const NavItems: NavItem[] = [
     parent: "In Account",
     components: [
       {
-        route: analyticsRoutes.ACCOUNT_USERS,
+        route: AnalyticsRoutes.ACCOUNT_USERS,
         label: "Users",
         image: insights.insightUser,
       },
       {
-        route: analyticsRoutes.ACCOUNT_ASSETS,
+        route: AnalyticsRoutes.ACCOUNT_ASSETS,
         label: "Assets",
         image: insights.insightAsset,
       },
       {
-        route: analyticsRoutes.ACCOUNT_TEAM,
+        route: AnalyticsRoutes.ACCOUNT_TEAM,
         label: "Teams",
         image: insights.insightGroups,
       },
@@ -40,17 +40,17 @@ export const NavItems: NavItem[] = [
     parent: "External",
     components: [
       {
-        route: analyticsRoutes.EXTERNAL_USERS,
+        route: AnalyticsRoutes.EXTERNAL_USERS,
         label: "Users",
         image: insights.insightUser,
       },
       {
-        route: analyticsRoutes.EXTERNAL_ASSETS,
+        route: AnalyticsRoutes.EXTERNAL_ASSETS,
         label: "Assets",
         image: insights.insightAsset,
       },
       {
-        route: analyticsRoutes.EXTERNAL_LINK,
+        route: AnalyticsRoutes.EXTERNAL_LINK,
         label: "Shared link",
         image: insights.insightShare,
       },
