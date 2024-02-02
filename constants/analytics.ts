@@ -110,26 +110,27 @@ export const InsightsApiEndpoint = {
 export const ChartLines = {
   views: {
     label: 'Views',
-    borderColor: "pink",
-    backgroundColor: "#d199cd",
+    borderColor: "#E2407B",
+    backgroundColor: "#fcecf2",
+  
     fill: true,
   },
   downloads: {
     label: 'Downloads',
-    borderColor: "blue",
+    borderColor: "#2484F4",
     backgroundColor: "#a8aded",
     fill: true,
   },
   shares: {
     label: 'Shares',
     borderColor: "yellow",
-    backgroundColor: "#e1e39d",
+    backgroundColor:"rgba(255,255,0,0.1)",
     fill: true,
   },
   sessionCount: {
     label: 'Sessions',
-    borderColor: "green",
-    backgroundColor: "#9bc99d",
+    borderColor: "#10BDA5",
+    backgroundColor:"rgba(16,189,165,0.1)",
     fill: true,
   },
 };

@@ -18,6 +18,14 @@ const TeamSession = ({ initialData }) => {
   useEffect(() => {
     setChartData(initialData)
   }, [initialData])
+  const handleDownload = () => {
+    const canvas = document.getElementById("chart");
+    const url = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.download = "chart.png";
+    link.href = url;
+    link.click();
+  };
 
   return (
     <div className={styles.tableResponsive}>
@@ -25,6 +33,7 @@ const TeamSession = ({ initialData }) => {
         <Heading mainText="Top Team Session" smallHeading={true} />
         <div className={`${styles["table-header-tabs"]}`}>
           <DateFilter filter={filter} setFilter={setFilter} customDates={customDates} setCustomDates={setCustomDates} />
+          <button className={styles.downloadChart} onClick={handleDownload} >Download Chart</button>
         </div>
       </div>
       <ChartComp data={chartData} />

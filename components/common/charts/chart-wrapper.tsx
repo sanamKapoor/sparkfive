@@ -73,7 +73,8 @@ const ChartWrapper = ({ chartObj, data, width = 400,  height = 400 }) => {
 
   return (
     <div className={styles.wrapper} ref={wrapperRef}>
-      <button onClick={handleDownload}>Download Chart</button>
+      {/* moved to session>index.tsx */}
+      {/* <button className={styles.downloadChart} onClick={handleDownload}>Download Chart</button> */}
       <canvas id="chart" width={width} height={height} style={{ background: "white" }}></canvas>
     </div>
   );
