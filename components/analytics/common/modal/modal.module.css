@@ -159,6 +159,13 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
+    }
+  }
+  @media (max-width:900px){
+    .backdrop{
+      margin-left: 0;
+      width:100%;
     }
   }
   @media (max-width: 600px) {

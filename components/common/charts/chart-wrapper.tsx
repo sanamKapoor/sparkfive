@@ -61,7 +61,7 @@ const ChartWrapper = ({ chartObj, data, width = 400,  height = 400, fileName = '
 
   return (
     <div className={styles.wrapper} ref={wrapperRef}>
-      <canvas id="chart" width={width} height={height} style={{ background: "white" }}></canvas>
+      <canvas id="chart" width={width} height={height}></canvas>
     </div>
   );
 };

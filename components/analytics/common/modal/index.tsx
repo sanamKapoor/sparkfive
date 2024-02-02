@@ -263,7 +263,10 @@ const Modal = ({ section, setShowModal, id }: {
                       setFilter={handleFilter}
                       setCustomDates={handleCustomDate}
                     />
+                    <div style={{marginLeft:"20px"}}>
                     <DownloadChart fileName={apiData?.asset?.name || 'Asset Chart'} />
+                    </div>
+                
                     <div className={`${styles["data-close-icon"]}`}>
                       <IconClickable
                         src={insights.insightClose}

@@ -20,7 +20,7 @@ const TeamSession = ({ initialData }) => {
 
 
   return (
-    <div className={styles.tableResponsive}>
+    <div className={`${styles["tableResponsive"]} ${styles["dashboard-chart"]}`}>
       <div className={styles.headerContainer}>
         <Heading mainText="Top Team Session" smallHeading={true} />
         <div className={`${styles["table-header-tabs"]}`}>
