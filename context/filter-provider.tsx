@@ -58,6 +58,7 @@ export default ({ children, isPublic = false }) => {
   });
   const [renderFlag, setRenderFlag] = useState(false);
   const [term, setTerm] = useState("");
+  const [faceRecognitions, setFaceRecognitions] = useState([]);
 
   const loadAll = () => {
     loadTags();
