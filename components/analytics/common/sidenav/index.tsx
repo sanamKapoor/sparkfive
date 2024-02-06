@@ -33,7 +33,7 @@ export default function InsightsSideNav() {
         {NavItems.map((item) => {
           return (
             <>
-              <h6>{item.parent}</h6>
+              <h6 className={styles.upper}>{item.parent}</h6>
               {item.components.length > 0 && (
                 <ul>
                   {item.components.map((comp, index) => {

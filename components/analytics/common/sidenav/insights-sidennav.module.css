@@ -98,6 +98,9 @@
 .menubar{
   display: none;
 }
+.upper {
+  text-transform: uppercase;
+}
 @media (max-width:900px){
   .menubar{
     display: block;
