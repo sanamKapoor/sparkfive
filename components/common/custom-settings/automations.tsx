@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Utilities } from "../../../assets";
 import { LoadingContext, UserContext } from "../../../context";
 import teamAPI from "../../../server-api/team";
@@ -98,7 +98,8 @@ const Automations = () => {
         {user?.team?.faceRecognition && (
           <>
             <div className={`${styles.row} ${styles["no-border"]}`}>
-              <FaceRecognitionOperations />
+              {/*<FaceRecognitionOperations />*/}
+              <span className={`${styles.label}`}>Facial recognition</span>
               <div className={styles["field-radio-wrapper"]}>
                 <div className={styles.radio}>
                   <div>On</div>

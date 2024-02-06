@@ -6,7 +6,7 @@ import IconClickable from "../buttons/icon-clickable";
 import { Utilities } from "../../../assets";
 import React, { useContext, useEffect, useState } from "react";
 import Search from "../../main/user-settings/SuperAdmin/Search/Search";
-import folderApi from "../../../server-api/folder";
+import superAdminApi from "../../../server-api/super-admin";
 import recognitionApi from "../../../server-api/face-recognition";
 import { AssetContext } from "../../../context";
 
@@ -14,9 +14,10 @@ interface ConfirmModalProps {
   open: boolean;
   onClose: () => void;
   onFinish: (data: any) => void;
+  teamId: string;
 }
 
-const RecognitionCollectionModal: React.FC<ConfirmModalProps> = ({ open, onClose, onFinish }) => {
+const RecognitionCollectionModal: React.FC<ConfirmModalProps> = ({ open, onClose, onFinish, teamId }) => {
   const { setFaceRecognitionScanning } = useContext(AssetContext);
   const [selectedCollection, setSelectedCollection] = useState([]);
   const [folders, setFolders] = useState([]);
@@ -24,7 +25,7 @@ const RecognitionCollectionModal: React.FC<ConfirmModalProps> = ({ open, onClose
 
   const fetchCollection = async () => {
     try {
-      const { data } = await folderApi.getFoldersSimple();
+      const { data } = await superAdminApi.getFoldersSimple(teamId);
       setFolders(data);
       setOriginalFolders(data);
     } catch (err) {}
@@ -40,7 +41,7 @@ const RecognitionCollectionModal: React.FC<ConfirmModalProps> = ({ open, onClose
 
   const onRunRecognition = async () => {
     setFaceRecognitionScanning(true);
-    const { data } = await recognitionApi.bulkRecognitionInCollection({ ids: selectedCollection });
+    const { data } = await superAdminApi.faceRecognitionSpecificFolder(teamId, { ids: selectedCollection });
     onFinish(data?.unnameFace || []);
     setFaceRecognitionScanning(false);
   };
@@ -68,7 +69,7 @@ const RecognitionCollectionModal: React.FC<ConfirmModalProps> = ({ open, onClose
 
   useEffect(() => {
     fetchCollection();
-  }, []);
+  }, [teamId]);
   return (
     <Base
       modalIsOpen={open}
@@ -84,11 +85,11 @@ const RecognitionCollectionModal: React.FC<ConfirmModalProps> = ({ open, onClose
 
         <div className={"font-weight-600 m-b-16"}>Collection ({folders.length})</div>
 
-        {folders.map(({ id, name, childFolders, childOpen = false }, index) => {
+        {folders?.map(({ id, name, childFolders, childOpen = false }, index) => {
           return (
             <div key={index}>
               <div className={`${styles["option-item"]} m-b-16`}>
-                {childFolders.length > 0 && (
+                {childFolders && childFolders.length > 0 && (
                   <img
                     className={childOpen ? styles["folder-right-icon"] : styles["folder-normal-icon"]}
                     src={Utilities.caretRightSolid}

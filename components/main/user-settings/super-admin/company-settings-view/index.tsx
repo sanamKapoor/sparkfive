@@ -12,6 +12,7 @@ import toastUtils from "../../../../../utils/toast";
 import Input from "../../../../common/inputs/input";
 import PlanModal from "../../SuperAdmin/PlanModal";
 import OptionList from "../option-list";
+import FaceRecognitionOperations from "../../../../common/custom-settings/face-recognition-operations";
 
 interface CompanySettingsViewProps {
   onBack: () => void;
@@ -259,7 +260,9 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({ onBack, data,
         </div>
 
         <div className={`row align-flex-start ${styles.cdnEmbedding}`}>
-          <div className={"col-20 font-weight-600"}>Face Recognition</div>
+          <div className={"col-20 font-weight-600"}>
+            <FaceRecognitionOperations teamId={data.id} />
+          </div>
 
           <div className={"col-20"}>
             <OptionList

@@ -11,14 +11,16 @@ import EditRecognitionUserModal from "./edit-recognition-user-modal";
 import recognitionApi from "../../../server-api/face-recognition";
 import { LoadingContext } from "../../../context";
 import faceRecognitionApi from "../../../server-api/face-recognition";
+import superAdminApi from "../../../server-api/super-admin";
 import Spinner from "../spinners/spinner";
 
 interface ConfirmModalProps {
   open: boolean;
   onClose: () => void;
+  teamId: string;
 }
 
-const RecognitionUserListModal: React.FC<ConfirmModalProps> = ({ open, onClose }) => {
+const RecognitionUserListModal: React.FC<ConfirmModalProps> = ({ open, onClose, teamId }) => {
   // const { setIsLoading } = useContext(LoadingContext);
 
   const [currentEditUser, setCurrentEditUser] = useState<any>();
@@ -27,7 +29,7 @@ const RecognitionUserListModal: React.FC<ConfirmModalProps> = ({ open, onClose }
   const [loading, setIsLoading] = useState(false);
 
   const fetchFaceList = async () => {
-    const { data } = await faceRecognitionApi.list();
+    const { data } = await superAdminApi.getFaceList(teamId);
     return data.data;
   };
 

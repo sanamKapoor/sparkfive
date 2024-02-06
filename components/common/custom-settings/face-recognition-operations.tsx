@@ -7,9 +7,10 @@ import RecognitionUserListModal from "../modals/recognition-user-list-modal";
 import RecognitionBulkEditUserListModal from "../modals/recognition-bulk-edit-user-list-modal";
 import React, { useContext, useState } from "react";
 import recognitionApi from "../../../server-api/face-recognition";
+import superAdminApi from "../../../server-api/super-admin";
 import { AssetContext } from "../../../context";
 
-export default function FaceRecognitionOperations() {
+export default function FaceRecognitionOperations({ teamId }: Props) {
   const { setFaceRecognitionScanning } = useContext(AssetContext);
 
   const [showRecognitionCollection, setShowRecognitionCollection] = useState(false);
@@ -19,7 +20,7 @@ export default function FaceRecognitionOperations() {
 
   const onRunEntireAccount = async () => {
     setFaceRecognitionScanning(true);
-    const { data } = await recognitionApi.bulkRecognitionAll();
+    const { data } = await superAdminApi.bulkFaceRecognitionAll(teamId);
 
     // Set response data
     setFaceBulkEditList(data?.unnameFace || []);
@@ -36,7 +37,7 @@ export default function FaceRecognitionOperations() {
 
   return (
     <div className={styles.container}>
-      <span className={`${styles.label} m-r-8`}>Facial recognition</span>
+      <span className={`${styles.label} m-r-8 font-weight-600`}>Facial recognition</span>
       <ToggleableAbsoluteWrapper
         wrapperClass={styles["dropdown-wrapper"]}
         Wrapper={({ children }) => (
@@ -81,6 +82,7 @@ export default function FaceRecognitionOperations() {
           // Show bulk edit list
           setShowBulkEditListModal(true);
         }}
+        teamId={teamId}
       />
 
       <RecognitionUserListModal
@@ -88,6 +90,7 @@ export default function FaceRecognitionOperations() {
         onClose={() => {
           setShowUserList(false);
         }}
+        teamId={teamId}
       />
 
       <RecognitionBulkEditUserListModal
@@ -99,4 +102,8 @@ export default function FaceRecognitionOperations() {
       />
     </div>
   );
+}
+
+interface Props {
+  teamId: string;
 }
