@@ -6,7 +6,7 @@ import styles from "./table-data.module.css";
 
 const TableBody = ({ handleModals, data, tableFor, dashboardView }) => {
 
-  const renderTableData = () => {    
+  const renderTableData = () => {        
     switch (tableFor) {
       case TableBodySection.DASHBOARD_ASSETS:
         return <AssetTableDashboardRows data={data} />

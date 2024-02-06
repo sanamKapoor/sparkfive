@@ -97,7 +97,7 @@ function Asset({ initialData }) {
                   {sortBy && <ClearSort onClick={handleClearSorting} />}
                   <TableData
                     columns={assetColumns}
-                    data={totalAssetsData && emptyRows.length > 0 ? [...totalAssetsData, ...emptyRows] : null}
+                    data={totalAssetsData ? [...totalAssetsData, ...emptyRows] : null}
                     apiData={totalAssetsData}
                     arrowColumns={assetarrowColumns}
                     tableLoading={loading}

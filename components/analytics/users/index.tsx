@@ -96,7 +96,7 @@ const Users = ({
                   {sortBy && <ClearSort onClick={handleClearSorting} />}
                   <TableData
                     columns={UserTableColumns}
-                    data={totalUsersData && emptyRows.length > 0 ? [...totalUsersData, ...emptyRows] : null}
+                    data={totalUsersData ? [...totalUsersData, ...emptyRows] : null}
                     apiData={totalUsersData}
                     arrowColumns={arrowColumns}
                     tableLoading={loading}
