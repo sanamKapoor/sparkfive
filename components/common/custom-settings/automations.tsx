@@ -13,7 +13,7 @@ import FaceRecognitionOperations from "./face-recognition-operations";
 
 const Automations = () => {
   const { setIsLoading: setLoading } = useContext(LoadingContext);
-  const { advancedConfig, setAdvancedConfig, faceRecognitionSettings, setFaceRecognitionSettings } =
+  const { advancedConfig, setAdvancedConfig, faceRecognitionSettings, setFaceRecognitionSettings, user } =
     useContext(UserContext);
   const [customFields, setCustomFields] = useState([]);
 
@@ -95,78 +95,82 @@ const Automations = () => {
           </div>
         </div>
 
-        <div className={`${styles.row} ${styles["no-border"]}`}>
-          <FaceRecognitionOperations />
-          <div className={styles["field-radio-wrapper"]}>
-            <div className={styles.radio}>
-              <div>On</div>
-              <IconClickable
-                src={faceRecognitionSettings.active ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-                additionalClass={styles["select-icon"]}
-                onClick={() => saveRecognitionConfig({ ...faceRecognitionSettings, active: true })}
-              />
-            </div>
-            <div className={`${styles.radio} ${styles.automation}`}>
-              <div>Off</div>
-              <IconClickable
-                src={!faceRecognitionSettings.active ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
-                additionalClass={styles["select-icon"]}
-                onClick={() => saveRecognitionConfig({ ...faceRecognitionSettings, active: false })}
-              />
-            </div>
-          </div>
-        </div>
-
-        {faceRecognitionSettings.active && (
-          <div className={styles["facial-box"]}>
-            <div className={"m-b-16"}>Facial recognition Labels</div>
-            <div className={styles["radio-row"]}>
-              <IconClickable
-                src={
-                  faceRecognitionSettings.labelType === "tag"
-                    ? Utilities.radioButtonEnabled
-                    : Utilities.radioButtonNormal
-                }
-                additionalClass={styles["select-icon"]}
-                onClick={() => saveRecognitionConfig({ ...faceRecognitionSettings, labelType: "tag" })}
-              />
-              <div className={"m-l-8 font-weight-300"}>Tags</div>
-            </div>
-            <div className={styles["radio-row"]}>
-              <IconClickable
-                src={
-                  faceRecognitionSettings.labelType === "customAttribute"
-                    ? Utilities.radioButtonEnabled
-                    : Utilities.radioButtonNormal
-                }
-                additionalClass={styles["select-icon"]}
-                onClick={() => saveRecognitionConfig({ ...faceRecognitionSettings, labelType: "customAttribute" })}
-              />
-              <div className={"m-l-8 font-weight-300"}> Custom Fields</div>
+        {user?.team?.faceRecognition && (
+          <>
+            <div className={`${styles.row} ${styles["no-border"]}`}>
+              <FaceRecognitionOperations />
+              <div className={styles["field-radio-wrapper"]}>
+                <div className={styles.radio}>
+                  <div>On</div>
+                  <IconClickable
+                    src={faceRecognitionSettings.active ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                    additionalClass={styles["select-icon"]}
+                    onClick={() => saveRecognitionConfig({ ...faceRecognitionSettings, active: true })}
+                  />
+                </div>
+                <div className={`${styles.radio} ${styles.automation}`}>
+                  <div>Off</div>
+                  <IconClickable
+                    src={!faceRecognitionSettings.active ? Utilities.radioButtonEnabled : Utilities.radioButtonNormal}
+                    additionalClass={styles["select-icon"]}
+                    onClick={() => saveRecognitionConfig({ ...faceRecognitionSettings, active: false })}
+                  />
+                </div>
+              </div>
             </div>
 
-            {faceRecognitionSettings.labelType === "customAttribute" && (
-              <div className={styles["custom-field-row"]}>
-                <div className={"m-b-16"}>Custom Fields</div>
-                {customFields.map(({ id, name }, index) => {
-                  return (
-                    <div className={styles["radio-row"]} key={index}>
-                      <IconClickable
-                        src={
-                          faceRecognitionSettings.customAttribute === id
-                            ? Utilities.radioButtonEnabled
-                            : Utilities.radioButtonNormal
-                        }
-                        additionalClass={styles["select-icon"]}
-                        onClick={() => saveRecognitionConfig({ ...faceRecognitionSettings, customAttribute: id })}
-                      />
-                      <div className={"m-l-8 font-weight-300"}>{name}</div>
-                    </div>
-                  );
-                })}
+            {faceRecognitionSettings.active && (
+              <div className={styles["facial-box"]}>
+                <div className={"m-b-16"}>Facial recognition Labels</div>
+                <div className={styles["radio-row"]}>
+                  <IconClickable
+                    src={
+                      faceRecognitionSettings.labelType === "tag"
+                        ? Utilities.radioButtonEnabled
+                        : Utilities.radioButtonNormal
+                    }
+                    additionalClass={styles["select-icon"]}
+                    onClick={() => saveRecognitionConfig({ ...faceRecognitionSettings, labelType: "tag" })}
+                  />
+                  <div className={"m-l-8 font-weight-300"}>Tags</div>
+                </div>
+                <div className={styles["radio-row"]}>
+                  <IconClickable
+                    src={
+                      faceRecognitionSettings.labelType === "customAttribute"
+                        ? Utilities.radioButtonEnabled
+                        : Utilities.radioButtonNormal
+                    }
+                    additionalClass={styles["select-icon"]}
+                    onClick={() => saveRecognitionConfig({ ...faceRecognitionSettings, labelType: "customAttribute" })}
+                  />
+                  <div className={"m-l-8 font-weight-300"}> Custom Fields</div>
+                </div>
+
+                {faceRecognitionSettings.labelType === "customAttribute" && (
+                  <div className={styles["custom-field-row"]}>
+                    <div className={"m-b-16"}>Custom Fields</div>
+                    {customFields.map(({ id, name }, index) => {
+                      return (
+                        <div className={styles["radio-row"]} key={index}>
+                          <IconClickable
+                            src={
+                              faceRecognitionSettings.customAttribute === id
+                                ? Utilities.radioButtonEnabled
+                                : Utilities.radioButtonNormal
+                            }
+                            additionalClass={styles["select-icon"]}
+                            onClick={() => saveRecognitionConfig({ ...faceRecognitionSettings, customAttribute: id })}
+                          />
+                          <div className={"m-l-8 font-weight-300"}>{name}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             )}
-          </div>
+          </>
         )}
       </div>
     </div>

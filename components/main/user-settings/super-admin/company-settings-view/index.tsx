@@ -42,6 +42,7 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({ onBack, data,
     transcript: data?.transcript,
     ocr: data?.ocr,
     themeCustomization: data?.themeCustomization || false,
+    faceRecognition: data?.faceRecognition || false,
   });
   const [showPlanModal, setShowPlanModal] = useState<boolean>(false);
 
@@ -173,7 +174,7 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({ onBack, data,
                 </label>
                 <Input
                   id={"link"}
-                  onChange={(e) => { }}
+                  onChange={(e) => {}}
                   value={settings.subdomain}
                   additionalClasses={"font-14"}
                   placeholder={"Link URL"}
@@ -257,7 +258,22 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({ onBack, data,
           <div className={"col-20 align-self-flex-end"}></div>
         </div>
 
-        <div className={styles.featuresbtn}>
+        <div className={`row align-flex-start ${styles.cdnEmbedding}`}>
+          <div className={"col-20 font-weight-600"}>Face Recognition</div>
+
+          <div className={"col-20"}>
+            <OptionList
+              setValue={(value) => setSettings({ ...settings, faceRecognition: value })}
+              data={type}
+              oneColumn={false}
+              value={settings.faceRecognition}
+            />
+          </div>
+
+          <div className={"col-20 align-self-flex-end"}></div>
+        </div>
+
+        <div className={`${styles.featuresbtn} m-b-32`}>
           <Button
             className={"container exclude-min-height primary"}
             type={"button"}
