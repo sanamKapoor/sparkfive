@@ -30,6 +30,7 @@
   /*aspect-ratio: 1 / 1;*/
   width: initial;
   max-height: 100%;
+  background: #F8F8F8
 }
 
 @media screen and (max-height: 760px) {
@@ -143,7 +144,6 @@
   /* flex-direction: column; */
   position: relative;
   flex-direction: column;
-
 }
 
 .img-wrapper>img,
