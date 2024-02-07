@@ -2,7 +2,7 @@ import React from 'react'
 import { insights } from "../../../../assets"
 import styles from "./no-data.module.css"
 
-function NoData({ message = '', wrapper = true }) {
+function NoData({ message = '', wrapper = true }) {  
   return (
   <section className={styles.wrapper}>
   <div className={wrapper ? `${styles.innerBox}` : ''}>
