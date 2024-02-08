@@ -184,7 +184,7 @@ export const UserActivityRows = ({ data, dashboardView }) => {
               </td>
               <td>
                 <div style={{ display: "flex" }}>
-                  <span className={`${styles["user-name"]}`}>
+                  <span>
                     {activityDate ? DateFormatter.analyticsDateFormatter(activityDate) : ""}
                   </span>
                 </div>
@@ -204,7 +204,7 @@ export const UserActivityRows = ({ data, dashboardView }) => {
               </td>
               <td>
                 <div style={{ display: "flex" }}>
-                  <span className={`${styles["user-name"]}`}>
+                  <span>
                     {activityDate ? DateFormatter.analyticsDateFormatter(activityDate) : ""}
                   </span>
                 </div>

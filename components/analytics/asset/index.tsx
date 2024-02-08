@@ -26,6 +26,7 @@ function Asset({ initialData }) {
     customDates,
     page,
     sortOrder,
+    downloadCSV,
     setPage,
     setSortBy,
     setSortOrder,
@@ -44,7 +45,7 @@ function Asset({ initialData }) {
       setTotalAssets(totalRecords);
       setTotalAssetsData(data);
     } else {
-      if(!loading){
+      if(!loading && !downloadCSV){
         setTotalAssets(0)
         setTotalAssetsData([])
       }

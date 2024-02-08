@@ -30,6 +30,7 @@ const Users = ({
     customDates,
     page,
     sortOrder,
+    downloadCSV,
     setPage,
     setSortBy,
     setSortOrder,
@@ -48,7 +49,7 @@ const Users = ({
       setTotalUsers(totalRecords);
       setTotalUsersData(data);
     } else {
-      if(!loading){
+      if(!loading && !downloadCSV){
         setTotalUsers(0)
         setTotalUsersData([])
       }
