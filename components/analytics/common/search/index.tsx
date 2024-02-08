@@ -11,7 +11,7 @@ const AnalyticsSearch = ({ label, setSearch }: {
   const [input, setInput] = useState("");
   const debouncedSearchTerm = useDebounce(input, 500);
 
-  const handleSearch = (e) => {
+  const handleSearch = (e) => { 
     setInput(e.target.value.trim());
   }
 
@@ -21,7 +21,7 @@ const AnalyticsSearch = ({ label, setSearch }: {
 
   return (
     <>
-      <form className={styles.search}>
+      <form className={styles.search} onSubmit={e => e.preventDefault()}>
         <div className={`${styles['search-wrapper']}`}>
           <input
             type="text"

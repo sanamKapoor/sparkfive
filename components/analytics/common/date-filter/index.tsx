@@ -71,6 +71,14 @@ export default function DateFilter({
     setCustomDates(true);
   }
 
+  const handleClosePopup = () => {
+    if(customDates){
+      setShowCustomRange(false)
+    } else {
+      handleCustomDateSelector()
+    }
+  }
+
   useEffect(() => {
     if (customDates && filter !== null && showCustomRange) {
       setCustomDateVal({
@@ -152,7 +160,7 @@ export default function DateFilter({
           <div className={`${styles["date-picker-top"]}`}>
             <div className={`${styles["left-side"]}`}>Date Range</div>
             <div className={`${styles["right-side"]}`}>
-              <IconClickable src={insights.insightClose} additionalClass={styles["close-icon"]} onClick={handleCustomDateSelector} />
+              <IconClickable src={insights.insightClose} additionalClass={styles["close-icon"]} onClick={handleClosePopup} />
             </div>
           </div>
           <div className={`${styles["date-filters"]}`}>

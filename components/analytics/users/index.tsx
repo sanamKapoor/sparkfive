@@ -47,8 +47,13 @@ const Users = ({
       setEmptyRows(Array.from({ length: Math.max(TABLE_REC_LEN - (data ? data.length : 0), 0) }, (_, index) => ({})));
       setTotalUsers(totalRecords);
       setTotalUsersData(data);
+    } else {
+      if(!loading){
+        setTotalUsers(0)
+        setTotalUsersData([])
+      }
     }
-  }, [totalRecords, data]);
+  }, [totalRecords, data, loading]);
 
   const handleClearSorting = () => {
     setSortBy("");
@@ -96,7 +101,7 @@ const Users = ({
                   {sortBy && <ClearSort onClick={handleClearSorting} />}
                   <TableData
                     columns={UserTableColumns}
-                    data={totalUsersData && emptyRows.length > 0 ? [...totalUsersData, ...emptyRows] : null}
+                    data={totalUsersData ? [...totalUsersData, ...emptyRows] : null}
                     apiData={totalUsersData}
                     arrowColumns={arrowColumns}
                     tableLoading={loading}

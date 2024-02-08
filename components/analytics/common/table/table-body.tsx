@@ -6,7 +6,7 @@ import styles from "./table-data.module.css";
 
 const TableBody = ({ handleModals, data, tableFor, dashboardView }) => {
 
-  const renderTableData = () => {    
+  const renderTableData = () => {        
     switch (tableFor) {
       case TableBodySection.DASHBOARD_ASSETS:
         return <AssetTableDashboardRows data={data} />
@@ -83,7 +83,7 @@ export const UserTableRows = ({ data, handleModals, dashboardView }) => {
             {!dashboardView && <td className={`${styles["user-role"]}`}>{row.roleId}</td>}
             <td>
               <div style={{ display: "flex" }}>
-                <span className={`${styles["user-name"]}`}>
+                <span>
                   {row.lastSession ? DateFormatter.analyticsDateFormatter(row.lastSession) : ""}
                 </span>
               </div>
