@@ -24,6 +24,8 @@ const NestedSidenav = ({ viewFolder }) => {
     setActiveFolder,
   } = useContext(AssetContext);
 
+  const { trackEvent } = useAnalytics();
+
   const { setActiveSortFilter, activeSortFilter } = useContext(FilterContext) as {
     setActiveSortFilter: Function;
     activeSortFilter: any;

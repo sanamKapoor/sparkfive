@@ -2,16 +2,18 @@ import { useContext } from "react";
 import { eventTypes } from "../constants/analytics";
 import { TeamContext, UserContext } from "../context";
 import analyticsApi from "../server-api/analytics";
+import cookiesUtils from "../utils/cookies";
 
 const useAnalytics = () => {
   const { user } = useContext(UserContext);
   const { team } = useContext(TeamContext);
+  const adminJWT = cookiesUtils.get("adminToken");
 
   const isTrackingEnabled = user?.team?.analytics || team?.analytics;
 
   // For all page track (No Auth)
   const pageVisit = (title: string) => {
-    if (isTrackingEnabled) {
+    if (isTrackingEnabled && !adminJWT) {
       analyticsApi.captureAnalytics({
         title,
         eventType: eventTypes.PAGE,
@@ -26,8 +28,8 @@ const useAnalytics = () => {
   };
 
   // For all events (Auth)
-  const trackEvent = (eventName: string, infoObject?: Record<string, unknown>) => {
-    if (isTrackingEnabled) {
+  const trackEvent = (eventName: string, infoObject?: Record<string, unknown>) => {    
+    if (isTrackingEnabled && !adminJWT) {
       analyticsApi.captureAnalytics({
         eventType: eventTypes.TRACK,
         actionName: eventName,
