@@ -6,7 +6,7 @@ import styles from "./table-data.module.css";
 
 const TableBody = ({ handleModals, data, tableFor, dashboardView }) => {
 
-  const renderTableData = () => {        
+  const renderTableData = () => {
     switch (tableFor) {
       case TableBodySection.DASHBOARD_ASSETS:
         return <AssetTableDashboardRows data={data} />
@@ -162,7 +162,7 @@ export const UserActivityRows = ({ data, dashboardView }) => {
         if (dashboardView) {
           return (
             <tr key={row._id}>
-              {row?.user?.name && (
+              {row?.user?.name ? (
                 <div className={styles["usernameWithImage"]}>
                   <div className={`${styles["image-wrapper"]}`}>
                     {row.user.profilePhoto !== null ? (
@@ -173,7 +173,14 @@ export const UserActivityRows = ({ data, dashboardView }) => {
                   </div>
                   <span className={`${styles["user-name"]}`}>{row.user.name}</span>
                 </div>
-              )}
+              ) :
+                <div className={styles["usernameWithImage"]}>
+                  <div className={`${styles["image-wrapper"]}`}>
+                      <div className={styles.userAvatar}>NA</div>
+                  </div>
+                  <span className={`${styles["user-name"]}`}>Deleted User</span>
+                </div>
+              }
               <td>
                 {" "}
                 <div style={{ display: "flex" }}>
