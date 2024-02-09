@@ -104,16 +104,21 @@
 @media (max-width:900px){
   .menubar{
     display: block;
-    position: absolute;
-    top:94px;
+    position: fixed;
+    top:81px;
     width: 100%;
+    background: #fff;
+    z-index: 9;
     border-bottom: 1px solid #DEDAD4;
   }
 }
 
 @media (max-width:600px){
   .menubar{
-    top:68px;
+    top:55px;
+    position: fixed;
+    background: #fff;
+    z-index: 9;
   }
 
 }

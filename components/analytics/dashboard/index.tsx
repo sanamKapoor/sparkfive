@@ -19,6 +19,8 @@ function Dashboard({ data }) {
         <TopAssets initialData={data.find(d => d.section === DashboardSections.ASSET)} />
         </section>
       </div >
+      
+  
     <div className={`${styles["inner-container"]}`}>
       <section className={`${styles["inner-wrapper"]}`}>
         <UserEngagment initialData={data.find(d => d.section === DashboardSections.USER)} />
