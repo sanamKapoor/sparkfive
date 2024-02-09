@@ -15,10 +15,10 @@ const useAnalytics = () => {
       analyticsApi.captureAnalytics({
         title,
         eventType: eventTypes.PAGE,
-        userId: user?.id || null,
-        teamId: user?.team?.id || team?.id || null,
+        userId: user?.id || '',
+        teamId: user?.team?.id || team?.id || '',
         url: window.location.href,
-        origin: window.location.origin,
+        domain: window.location.origin,
         path: window.location.pathname,
         search: window.location.search,
       });

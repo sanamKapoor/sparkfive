@@ -169,17 +169,17 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
               { (user?.team?.analytics && user?.roleId === 'admin') && <HeaderLink
                 active={Router.pathname.indexOf("insights") !== -1}
                 href="/main/insights"
-                img={Router.pathname.indexOf("insights") !== -1 ? Navigation.assetsSelected : Navigation.insights}
+                img={Router.pathname.indexOf("insights") !== -1 ? Navigation.insightSelected : Navigation.insights}
                 imgHover={Navigation.insights}
                 text="Insights"
               />}
-              <HeaderLink
+              {/* <HeaderLink
                 active={Router.pathname.indexOf("templates") !== -1}
                 href="/main/templates"
                 img={Router.pathname.indexOf("templates") !== -1 ? Navigation.assetsSelected : Navigation.assets}
                 imgHover={Navigation.assetsSelected}
                 text="Templates"
-              />
+              /> */}
               {plan?.type === "marketing_hub" && (
                 <HeaderLink
                   active={Router.pathname.indexOf("schedule") !== -1}
