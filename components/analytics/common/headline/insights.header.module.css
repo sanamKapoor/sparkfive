@@ -4,6 +4,9 @@
   /* width: calc(100% - 218px);
   margin-left: 218px; */
   border-bottom: 1px solid #dedad4;
+  position:fixed;
+  background:#fff;
+  z-index: 99;
 }
 .header-on-toggle{
   width: 100%;
@@ -48,9 +51,22 @@
   cursor: pointer;
 }
 
+@media (max-width:900px){
+  .header{
+    top:138px;
+
+  }
+
+
+}
+
 @media (max-width:600px){
   .nestedMenu{
     padding: 0 16px 16px 16px;
+
+  }
+  .header{
+    top:112px
 
   }
 }

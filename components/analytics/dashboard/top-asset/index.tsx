@@ -35,7 +35,7 @@ const TopAssets = ({ initialData }) => {
   }, [initialData]);
 
   return (
-    <div className={styles.tableResponsive}>
+    <div className={`${styles["tableResponsive"]} ${styles["asset-dashboard"]}`}>
       <div className={styles.headerContainer}>
         <div>
           <Heading mainText="Top Assets" smallHeading={true} />
