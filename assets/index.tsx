@@ -81,6 +81,7 @@ export const Navigation = {
   reports: require("./Icons/Navigation/icn-nav-reports-#E9EEFA.svg"),
   reportsSelected: require("./Icons/Navigation/icn-nav-reports-white.svg"),
   insights:require("./Icons/Navigation/insights.svg"),
+  insightSelected:require("./Icons/Navigation/insight-light.svg"),
 
 };
 export const insights={

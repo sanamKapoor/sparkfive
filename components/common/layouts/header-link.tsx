@@ -19,18 +19,7 @@ const HeaderLink = ({ img, imgHover, href, text, active = false }) => {
           <div className={styles.text}>{text}</div>
         </li>
       </a>
-      <a className={styles.ref}>
-        <li
-          className={`${styles.link} ${active && styles.active}`}
-          onMouseOver={() => setSrcimg(imgHover)}
-          onMouseOut={() => setSrcimg(img)}
-        >
-          <img className={styles.icon} src={srcimg} />
-          <div className={styles.text}>{text}</div>
-        </li>
-      </a>
-
-      </div>
+    </div>
      
     </Link>
   );

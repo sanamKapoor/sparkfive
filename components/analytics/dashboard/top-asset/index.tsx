@@ -61,7 +61,7 @@ const TopAssets = ({ initialData }) => {
         dashboardView={true}
       />
     </div>
-  );
+  )
 }
 
 export default TopAssets
