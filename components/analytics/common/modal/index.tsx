@@ -274,7 +274,10 @@ const Modal = ({ section, setShowModal, id }: {
                     </div>
                   </div>
                   </div>
+                  <div className={`${styles["modal-chart-container"]}`}>
                   <ChartComp data={apiData} fileName={apiData?.asset?.name && (apiData?.asset?.name).split('.')[0]} />
+                  </div>
+                
                 </div>
                 :
                 <div className={`${styles["user-modal"]}`}>

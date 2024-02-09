@@ -52,6 +52,16 @@
   margin-top: 70px;
 }
 
+.dashboard-chart-container{
+  height:380px;
+  margin-top:20px;
+}
+.team-chart-container{
+  height:800px;
+  padding-top:50px;
+
+}
+
 @media (max-width: 1682px) {
   .inner-wrapper {
     grid-template-columns: repeat(1, 1fr);
@@ -69,6 +79,14 @@
     display: flex;
     flex-direction: column;
     gap: 40px;
+  }
+  .dashboard-chart-container{
+    height: unset;
+    margin-top:0;
+  }
+  .team-chart-container{
+    height: unset;
+    padding-top: 0;
   }
 }
 

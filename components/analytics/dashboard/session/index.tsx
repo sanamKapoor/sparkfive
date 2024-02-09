@@ -27,7 +27,10 @@ const TeamSession = ({ initialData }) => {
           <DateFilter filter={filter} setFilter={setFilter} customDates={customDates} setCustomDates={setCustomDates} />
         </div>
       </div>
+      <div className={`${styles["dashboard-chart-container"]}`}>
       <ChartComp data={chartData} fileName="Team Session" />
+      </div>
+    
     </div>
   );
 }

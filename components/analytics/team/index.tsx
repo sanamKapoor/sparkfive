@@ -48,7 +48,10 @@ const Team = ({ initialData }) => {
               <DownloadChart fileName='Team Engagement' />
             </div>
           </div>
+          <div className={`${styles["team-chart-container"]}`}>
           <ChartComp data={chartData} fileName='Team Engagement' />
+          </div>
+         
         </div>
       </section>
       </div>
