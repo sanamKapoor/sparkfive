@@ -26,6 +26,7 @@ function Asset({ initialData }) {
     customDates,
     page,
     sortOrder,
+    downloadCSV,
     setPage,
     setSortBy,
     setSortOrder,
@@ -43,8 +44,13 @@ function Asset({ initialData }) {
       setEmptyRows(Array.from({ length: Math.max(TABLE_REC_LEN - (data ? data.length : 0), 0) }, (_, index) => ({})));
       setTotalAssets(totalRecords);
       setTotalAssetsData(data);
+    } else {
+      if(!loading && !downloadCSV){
+        setTotalAssets(0)
+        setTotalAssetsData([])
+      }
     }
-  }, [totalRecords, data]);
+  }, [totalRecords, data, loading]);
 
   const handleClearSorting = () => {
     setSortBy("");

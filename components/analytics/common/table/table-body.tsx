@@ -83,7 +83,7 @@ export const UserTableRows = ({ data, handleModals, dashboardView }) => {
             {!dashboardView && <td className={`${styles["user-role"]}`}>{row.roleId}</td>}
             <td>
               <div style={{ display: "flex" }}>
-                <span className={`${styles["user-name"]}`}>
+                <span>
                   {row.lastSession ? DateFormatter.analyticsDateFormatter(row.lastSession) : ""}
                 </span>
               </div>
@@ -184,7 +184,7 @@ export const UserActivityRows = ({ data, dashboardView }) => {
               </td>
               <td>
                 <div style={{ display: "flex" }}>
-                  <span className={`${styles["user-name"]}`}>
+                  <span>
                     {activityDate ? DateFormatter.analyticsDateFormatter(activityDate) : ""}
                   </span>
                 </div>
@@ -204,7 +204,7 @@ export const UserActivityRows = ({ data, dashboardView }) => {
               </td>
               <td>
                 <div style={{ display: "flex" }}>
-                  <span className={`${styles["user-name"]}`}>
+                  <span>
                     {activityDate ? DateFormatter.analyticsDateFormatter(activityDate) : ""}
                   </span>
                 </div>

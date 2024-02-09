@@ -41,17 +41,22 @@ export async function getServerSideProps({ req, res, query }) {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${cookies.get("jwt")}`
   }
-  let payload: Record<string, unknown> = {
-    filter: {
-      beginDate: calculateBeginDate(7, 1),
-      endDate: new Date(),
-    },
-  };
 
   let result: Array<any> = [];
   for (const endpoint in DashboardSections) {
+    let payload: Record<string, unknown> = {};
 
-    if (endpoint !== DashboardSections.TEAM) {
+    if(DashboardSections[endpoint] !== DashboardSections.USER_ACTIVITY){
+      payload = {
+        ...payload,
+        filter: {
+          beginDate: calculateBeginDate(7, 1),
+          endDate: new Date(),
+        },
+      }
+    }
+
+    if (DashboardSections[endpoint] !== DashboardSections.TEAM) {
       payload = {
         ...payload,
         page: 1,
@@ -59,7 +64,7 @@ export async function getServerSideProps({ req, res, query }) {
         sortBy: "",
         sortOrder: true,
       }
-    }
+    }    
 
     const res = await AnalyticsApiHelperServerRender(DashboardSections[endpoint], payload, headers);
     if (!res.ok) {

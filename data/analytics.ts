@@ -68,7 +68,7 @@ export const UserTableColumns = [
   "Shares",
   "Actions",
 ];
-export const DashboardUserColumns = ["User name", "Sessions", "Last session date", "Actions"];
+export const DashboardUserColumns = ["User name", "Last session date", "Sessions", "Actions"];
 export const arrowColumns = [
   {
     label: "User name",

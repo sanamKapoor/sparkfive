@@ -4,6 +4,7 @@ import NoData from "../no-data";
 import TableBody from "./table-body";
 import styles from "./table-data.module.css";
 import TableHeader from "./table-header";
+import Loader from "../../../common/UI/Loader/loader";
 
 export default function TableData({
   columns,
@@ -51,7 +52,7 @@ export default function TableData({
             />
           }
         </table>
-        {tableLoading ? <div className={styles.backdrop}></div> : null}
+        {tableLoading ? <div className={styles.backdrop}><Loader /></div> : null}
       </div>
       {
         showModal && <Modal section={activeModalFor} setShowModal={setShowModal} id={activeId} />
