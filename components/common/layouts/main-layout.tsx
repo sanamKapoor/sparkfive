@@ -50,7 +50,6 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
       label: "Insights",
       onClick: () => { 
         router.push("/main/insights")
-
       },
     })
   }
