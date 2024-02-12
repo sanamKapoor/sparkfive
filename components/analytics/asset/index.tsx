@@ -87,7 +87,7 @@ function Asset({ initialData }) {
                   <DateRangeTitle filter={filter} />
                 </div>
                 <div className={`${styles["table-header-tabs"]}`}>
-                  <SearchButton label="Search User" setSearch={setSearch} />
+                  <SearchButton label="Search Asset" setSearch={setSearch} />
                   <DateFilter
                     filter={filter}
                     setFilter={setFilter}

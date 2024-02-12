@@ -10,3 +10,37 @@
     cursor:pointer;
   
   }
+  .downloadIcon{
+    height: 32px;
+    width: 32px;
+    border: 1px solid #DEDAD4;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    justify-content: center
+  } 
+
+  
+  .downloadIcon{
+    display: none;
+  }
+  .download{
+    width:13px;
+    height:14px;
+  }
+  
+  @media screen and (max-width: 575px) {
+    .csvBtn {
+      display: none;
+      margin-left: 0;
+    }
+    .downloadIcon {
+      display: block;
+      display: flex;
+      align-items: center;
+    }
+    .downloadChart{
+      display: none;
+    }
+  }
+  

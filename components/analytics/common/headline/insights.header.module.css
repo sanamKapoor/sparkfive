@@ -28,7 +28,7 @@
   color: var(--color-prim-navy);
 }
 .tabletop{
-  padding: 16px;
+  padding: 16px 38px;
 }
 .nestedMenu{
   display: flex;

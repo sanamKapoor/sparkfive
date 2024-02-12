@@ -555,6 +555,15 @@ console
     margin-left: 0;
   }
 }
+@media (max-width:475px){
+  .apply-btn-disable{
+    min-width: 110px;
+  }
+  .cancel-btn{
+    min-width: 110px;
+  }
+
+}
 @media screen and (max-width: 400px) {
  .mobile-select {
     width: 100%;

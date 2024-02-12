@@ -22,7 +22,7 @@ const TeamSession = ({ initialData }) => {
   return (
     <div className={`${styles["tableResponsive"]} ${styles["dashboard-chart"]}`}>
       <div className={styles.headerContainer}>
-        <Heading mainText="Total Team Session" smallHeading={true} />
+        <Heading mainText="Total Team Sessions" smallHeading={true} />
         <div className={`${styles["table-header-tabs"]}`}>
           <DateFilter filter={filter} setFilter={setFilter} customDates={customDates} setCustomDates={setCustomDates} />
         </div>
@@ -30,7 +30,6 @@ const TeamSession = ({ initialData }) => {
       <div className={`${styles["dashboard-chart-container"]}`}>
       <ChartComp data={chartData} fileName="Team Session" />
       </div>
-    
     </div>
   );
 }

@@ -126,9 +126,9 @@
     justify-content: center;
   }
 }
-
+/* 
 @media (max-width:420px){
   .menu-dropdown{
     display: none;
   }
-}
+} */

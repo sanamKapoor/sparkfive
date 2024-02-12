@@ -171,6 +171,16 @@
       margin-left: 0;
       width:100%;
     }
+    .user-modal-outer{
+      width:96%;
+    }
+    .table-header-tabs {
+      margin-bottom: 0px;
+    }
+    .modal-chart-container{
+      height:unset;
+      margin-top: 12px;
+    }
   }
   @media (max-width: 600px) {
     .heading-wrap {
@@ -214,3 +224,8 @@
     }
   }
   
+  @media (max-width:500px){
+    .user-modal-outer{
+      width:90%;
+    }
+  }
