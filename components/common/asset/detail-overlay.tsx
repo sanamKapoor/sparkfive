@@ -910,6 +910,9 @@ const DetailOverlay = ({
       if (subcollectionAssets[newIndx]) {
         closeOverlay();
         setDetailOverlayId(subcollectionAssets[newIndx].asset.id);
+        trackEvent(events.VIEW_ASSET, {
+          assetId: subcollectionAssets[newIndx].asset.id,
+        });
         if (newIndx === subcollectionAssets.length - 1) {
           loadMore();
         }
@@ -921,6 +924,9 @@ const DetailOverlay = ({
       if (assets[newIndx]) {
         closeOverlay();
         setDetailOverlayId(assets[newIndx].asset.id);
+        trackEvent(events.VIEW_ASSET, {
+          assetId: assets[newIndx].asset.id,
+        });
         if (newIndx === assets.length - 1) {
           loadMore();
         }

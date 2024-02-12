@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import { useContext, useRef, useState } from "react";
 import { GeneralImg, Navigation } from "../../../assets";
 import { ASSET_UPLOAD_APPROVAL, SETTINGS_TEAM, SUPERADMIN_ACCESS } from "../../../constants/permissions";
@@ -23,6 +23,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
   const { user, logOut, hasPermission, logo } = useContext(UserContext);
   const { isLoading } = useContext(LoadingContext);
   const pageListRef = useRef(null);
+  const router = useRouter();
 
   const { plan } = useContext(TeamContext);
 
@@ -32,20 +33,24 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
     {
       id: "assets",
       label: "Assets",
-      onClick: () => { },
+      onClick: () => { 
+        router.push("/main/assets")
+      },
     },
-    {
-      id: "templates",
-      label: "Templates",
-      onClick: () => { },
-    },
+    // {
+    //   id: "templates",
+    //   label: "Templates",
+    //   onClick: () => { },
+    // },
   ]
 
   if(user?.team?.analytics && user?.roleId === 'admin') {
     menuOptions.push({
       id: "insights",
       label: "Insights",
-      onClick: () => { },
+      onClick: () => { 
+        router.push("/main/insights")
+      },
     })
   }
 
