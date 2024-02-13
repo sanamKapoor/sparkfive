@@ -42,7 +42,9 @@ const TopAssets = ({ initialData }) => {
           <SectionLink title='View All' link="/main/insights/account/assets" />
         </div>
         <div className={`${styles["table-header-tabs"]}`}>
+        <div className={`${styles["button-wrapper"]}`}>
           <DateFilter filter={filter} setFilter={setFilter} customDates={customDates} setCustomDates={setCustomDates} />
+          </div>
         </div>
       </div>
       {totalAssetsData?.length > 0 && sortBy && <ClearSort onClick={handleClearSorting} />}

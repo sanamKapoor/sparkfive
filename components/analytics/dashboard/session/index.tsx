@@ -24,7 +24,9 @@ const TeamSession = ({ initialData }) => {
       <div className={styles.headerContainer}>
         <Heading mainText="Total Team Sessions" smallHeading={true} />
         <div className={`${styles["table-header-tabs"]}`}>
+        <div className={`${styles["button-wrapper"]}`}>
           <DateFilter filter={filter} setFilter={setFilter} customDates={customDates} setCustomDates={setCustomDates} />
+          </div>
         </div>
       </div>
       <div className={`${styles["dashboard-chart-container"]}`}>

@@ -11,7 +11,15 @@
   .table {
     width: 100%;
     border-collapse: collapse;
+   
   }
+
+  @media (min-width:1200px){
+    .table{
+      table-layout: fixed;
+    }
+  }
+  
   .table th{
     background:#F6EFE4 ;
     color:#08135E;

@@ -39,6 +39,7 @@ const Team = ({ initialData }) => {
                 <DateRangeTitle filter={filter} />
             </div>
             <div className={`${styles["table-header-tabs"]}`}>
+              <div className={`${styles["button-wrapper"]}`}>
               <DateFilter
                 filter={filter}
                 setFilter={setFilter}
@@ -46,6 +47,8 @@ const Team = ({ initialData }) => {
                 setCustomDates={setCustomDates}
               />
               <DownloadChart fileName='Team Engagement' />
+              </div>
+             
             </div>
           </div>
           <div className={`${styles["team-chart-container"]}`}>

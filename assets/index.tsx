@@ -108,10 +108,12 @@ export const insights={
   flipUpDown:require("./Icons/insights/up-down-insight.svg"),
   paginationDisableLeft:require("./Icons/insights/pagination-disable-left.svg"),
   paginationDisableRight:require("./Icons/insights/pagination-disable-right.svg"),
+  toggleClose:require("./Icons/insights/toggle-close.svg"),
 }
 
 export const Utilities = {
   images: require("./Icons/Utilities/nestedCollection/images.svg"),
+  radio:require("./Icons/Utilities/radio.svg"),
   vedio: require("./Icons/Utilities/nestedCollection/vedio.svg"),
   product: require("./Icons/Utilities/nestedCollection/product.svg"),
   archive: require("./Icons/Utilities/nestedCollection/archived.svg"),

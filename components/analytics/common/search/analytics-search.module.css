@@ -42,6 +42,7 @@
   @media(max-width:1280px){
     .search {
       order:2;
+      
     }
   }
   @media (max-width: 575px) {
@@ -55,5 +56,15 @@
       max-width: 100% !important;
       width: 100% !important;
     }
+    .search {
+      order:2;
+      width: 100%;
+      
+    }
+    .search-wrapper{
+      min-width: 100%;
+      width: 100%;
+    }
+  
   }
   

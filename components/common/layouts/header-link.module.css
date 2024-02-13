@@ -35,3 +35,10 @@
 @media (max-width:600px){
   .ref{margin-right: auto;}
 }
+@media (max-width:475px){
+  .text {
+   display: none;
+  }
+  
+
+}

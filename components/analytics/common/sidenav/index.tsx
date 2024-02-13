@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import styles from "./insights-sidennav.module.css";
 import { NavItems } from "../../../../data/analytics";
 import { useRouter } from "next/router";
-import { Utilities } from "../../../../assets";
+import { Utilities, insights } from "../../../../assets";
+import IconClickable from "../../../common/buttons/icon-clickable";
 
 export default function InsightsSideNav() {
   const router = useRouter();
@@ -12,6 +13,10 @@ export default function InsightsSideNav() {
     if(window.innerWidth < 901) setShowNav(false);
     router.push(route);
   };
+  const handleCloseNav = () => {
+    setShowNav(false);
+  };
+
 
   useEffect(() => {
     setShowNav(window.innerWidth > 900 ? true : false);
@@ -28,11 +33,18 @@ export default function InsightsSideNav() {
             <span>Menu</span>
           </div>
         </div>
+      
       </div>
       {showNav && <section className={styles.container}>
         {NavItems.map((item) => {
           return (
             <>
+            <div  className={`${styles["responsive-device"]}`}>
+            <div className={`${styles["close-icon"]}`}>
+            <IconClickable   additionalClass={styles.toggleClose} src={insights.toggleClose} onClick={handleCloseNav} />
+            </div>
+            </div>
+         
               <h6 className={styles.upper}>{item.parent}</h6>
               {item.components.length > 0 && (
                 <ul>

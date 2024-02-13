@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import DayPickerInput from "react-day-picker/DayPickerInput";
 
 import styles from "./date-filter.module.css";
@@ -7,18 +7,18 @@ import Button from "../../../common/buttons/button";
 import { calculateBeginDate } from "../../../../config/data/filter";
 import DateUtils from "../../../../utils/date";
 import IconClickable from "../../../common/buttons/icon-clickable";
+import { Utilities } from "../../../../assets";
 
-export default function DateFilter({
-  filter, setFilter, customDates, setCustomDates
-}) {
+export default function DateFilter({ filter, setFilter, customDates, setCustomDates,setShowBackdrop }) {
   const [activeFilter, setActiveFilter] = useState("7d");
   const [activeDays, setActiveDays] = useState(7);
   const [showCustomRange, setShowCustomRange] = useState(false);
   const [customDateVal, setCustomDateVal] = useState({
-    endDate: '',
-    beginDate: ''
+    endDate: "",
+    beginDate: "",
   });
-  const [dateError, setDateError] = useState('');
+  const [dateError, setDateError] = useState("");
+  const [selectedRadio, setSelectedRadio] = useState("");
 
   const handleFilterClick = (filter, days) => {
     setShowCustomRange(false);
@@ -27,21 +27,20 @@ export default function DateFilter({
     if (days !== activeDays) {
       setFilter({
         endDate: new Date(),
-        beginDate: calculateBeginDate(days, 1)
-      })
+        beginDate: calculateBeginDate(days, 1),
+      });
     }
     setActiveDays(days);
   };
 
-
   const handleCustomDateSelector = () => {
     if (showCustomRange) {
-      handleFilterClick("7d", 7)
+      handleFilterClick("7d", 7);
     } else {
       setActiveFilter("custom");
       setCustomDateVal({
-        endDate: '',
-        beginDate: ''
+        endDate: "",
+        beginDate: "",
       });
     }
     setShowCustomRange(!showCustomRange);
@@ -63,44 +62,48 @@ export default function DateFilter({
 
   const handleApplyCustomDate = () => {
     if (!customDateVal.beginDate || !customDateVal.endDate) {
-      setDateError('Invalid Dates.');
+      setDateError("Invalid Dates.");
       return;
     }
     setActiveDays(DateUtils.daysBetweenDates(customDateVal.beginDate, customDateVal.endDate));
     setFilter(customDateVal);
     setCustomDates(true);
-  }
+  };
 
   const handleClosePopup = () => {
-    if(customDates){
-      setShowCustomRange(false)
+    if (customDates) {
+      setShowCustomRange(false);
     } else {
-      handleCustomDateSelector()
+      handleCustomDateSelector();
     }
-  }
+  };
+  const handleRadioSelect = (value) => {
+    setSelectedRadio(value === selectedRadio ? "" : value);
+  };
+  
 
   useEffect(() => {
     if (customDates && filter !== null && showCustomRange) {
       setCustomDateVal({
         beginDate: filter.beginDate.toDateString(),
-        endDate: filter.endDate.toDateString()
-      })
+        endDate: filter.endDate.toDateString(),
+      });
     }
-  }, [customDates, showCustomRange])
+  }, [customDates, showCustomRange]);
 
   useEffect(() => {
     const timeOut = setTimeout(() => {
-      setDateError('')
-    }, 4000)
+      setDateError("");
+    }, 4000);
 
     return () => {
-      clearTimeout(timeOut)
-    }
-  }, [dateError])
+      clearTimeout(timeOut);
+    };
+  }, [dateError]);
 
   useEffect(() => {
-    setDateError('')
-  }, [])
+    setDateError("");
+  }, []);
 
   return (
     <div className={styles.dateOuterBox}>
@@ -147,6 +150,7 @@ export default function DateFilter({
         </div>
       </section>
       {/* mobile-view */}
+      <div className={styles.test}>
       <section className={`${styles["calender-filer-outer"]}`}>
         <div className={`${styles["calender-filer"]}`}>
           <div className={styles.calenderDate} onClick={handleCustomDateSelector}>
@@ -160,28 +164,90 @@ export default function DateFilter({
           <div className={`${styles["date-picker-top"]}`}>
             <div className={`${styles["left-side"]}`}>Date Range</div>
             <div className={`${styles["right-side"]}`}>
-              <IconClickable src={insights.insightClose} additionalClass={styles["close-icon"]} onClick={handleClosePopup} />
+              <IconClickable
+                src={insights.insightClose}
+                additionalClass={styles["close-icon"]}
+                onClick={handleClosePopup}
+              />
             </div>
           </div>
+          <div className={`${styles["date-range-mobile"]}`}>
+              <div className={styles.radioButtons}>
+                <div
+                  className={`${styles.circle} ${selectedRadio === "7d" && styles.active}`}
+                  onClick={() => handleRadioSelect("7d")}
+                >
+                  {selectedRadio === "7d" && <img src={Utilities.radio} />}
+                </div>
+                <label className={styles.radioLabel} htmlFor="7d">
+                  7 Day
+                </label>
+              </div>
+              <div className={styles.radioButtons}>
+                <div
+                  className={`${styles.circle} ${selectedRadio === "7d" && styles.active}`}
+                  onClick={() => handleRadioSelect("7d")}
+                >
+                  {selectedRadio === "7d" && <img src={Utilities.radio} />}
+                </div>
+                <label className={styles.radioLabel} htmlFor="7d">
+                  1 Month
+                </label>
+              </div>
+              <div className={styles.radioButtons}>
+                <div
+                  className={`${styles.circle} ${selectedRadio === "7d" && styles.active}`}
+                  onClick={() => handleRadioSelect("7d")}
+                >
+                  {selectedRadio === "7d" && <img src={Utilities.radio} />}
+                </div>
+                <label className={styles.radioLabel} htmlFor="7d">
+                  6 Month
+                </label>
+              </div>
+              <div className={styles.radioButtons}>
+                <div
+                  className={`${styles.circle} ${selectedRadio === "7d" && styles.active}`}
+                  onClick={() => handleRadioSelect("7d")}
+                >
+                  {selectedRadio === "7d" && <img src={Utilities.radio} />}
+                </div>
+                <label className={styles.radioLabel} htmlFor="7d">
+                  Custom Range
+                </label>
+              </div>
+            </div>
+            
+         
           <div className={`${styles["date-filters"]}`}>
             <div className={styles.dummy}>
-              <label className={styles.label} htmlFor="">From Date</label>
+              <label className={styles.label} htmlFor="">
+                From Date
+              </label>
               <DayPickerInput
                 onDayChange={(day) => handleStartDay(day)}
-                value={customDateVal.beginDate !== null ? DateUtils.parseDateToStringForAnalytics(customDateVal.beginDate) : ''}
+                value={
+                  customDateVal.beginDate !== null
+                    ? DateUtils.parseDateToStringForAnalytics(customDateVal.beginDate)
+                    : ""
+                }
                 dayPickerProps={{
                   disabledDays: {
                     before: calculateBeginDate(365, 1),
                     after: customDateVal.endDate ? new Date(customDateVal.endDate) : new Date(),
-                  }
+                  },
                 }}
               />
             </div>
             <div className={styles.dummy}>
-              <label className={styles.label} htmlFor="">To Date</label>
+              <label className={styles.label} htmlFor="">
+                To Date
+              </label>
               <DayPickerInput
                 onDayChange={(day) => handleEndDay(day)}
-                value={customDateVal.endDate !== null ? DateUtils.parseDateToStringForAnalytics(customDateVal.endDate) : ''}
+                value={
+                  customDateVal.endDate !== null ? DateUtils.parseDateToStringForAnalytics(customDateVal.endDate) : ""
+                }
                 dayPickerProps={{
                   className: styles.calendar,
                   disabledDays: {
@@ -194,11 +260,18 @@ export default function DateFilter({
           </div>
           {dateError && <small>{dateError}</small>}
           <div className={`${styles["datepicker-buttons-outer"]}`}>
-            <Button text={"Apply"} className={(!customDateVal.beginDate || !customDateVal.endDate) ? "apply-btn-disable" : "apply-btn"} onClick={handleApplyCustomDate} disabled={!customDateVal.beginDate || !customDateVal.endDate}></Button>
+            <Button
+              text={"Apply"}
+              className={!customDateVal.beginDate || !customDateVal.endDate ? "apply-btn-disable" : "apply-btn"}
+              onClick={handleApplyCustomDate}
+              disabled={!customDateVal.beginDate || !customDateVal.endDate}
+            ></Button>
             <Button text={"Cancel"} className={"cancel-btn"} onClick={handleCustomDateSelector}></Button>
           </div>
         </div>
       )}
+      </div>
+     
     </div>
   );
 }
