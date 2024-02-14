@@ -1,12 +1,12 @@
-import update from "immutability-helper";
-import { useRouter } from "next/router";
-import { useContext, useEffect, useRef, useState } from "react";
+import update from 'immutability-helper';
+import { useRouter } from 'next/router';
+import { useContext, useEffect, useRef, useState } from 'react';
 
-import { validation } from "../constants/file-validation";
-import { AssetContext, SocketContext } from "../context";
-import assetApi from "../server-api/asset";
-import { convertTimeFromSeconds, getFolderKeyAndNewNameByFileName } from "../utils/upload";
-import useHistory from "../hooks/use-history"
+import { validation } from '../constants/file-validation';
+import { AssetContext, SocketContext } from '../context';
+import assetApi from '../server-api/asset';
+import { convertTimeFromSeconds, getFolderKeyAndNewNameByFileName } from '../utils/upload';
+
 interface Asset {
   id: string;
   name: string;
@@ -146,6 +146,10 @@ export default ({ children }) => {
   const [assetDragType, setAssetDragType] = useState("")
 
   const [droppableId, setDroppableId] = useState("");
+
+  const [collectionDragFlag, setCollectionDragFlag] = useState(false);
+  const [collectionDragId, setCollectionDragId] = useState("");
+  const [collectionParentDragId, setCollectionParentDragId] = useState("");
 
   const setPlaceHolders = (type, replace = true) => {
     if (type === "asset") {
@@ -564,7 +568,6 @@ export default ({ children }) => {
 
   // Reset active folders if user navigate to other pages
   useEffect(() => {
-
     const handleRouteChange = (url, { shallow }) => {
       const parts = localStorage.getItem('history')?.split('/');
       if (parts && parts.length > 3 && parts[1] === 'main' && parts[2] === 'assets') {
@@ -576,7 +579,6 @@ export default ({ children }) => {
         localStorage.setItem("history", url)
       }
     };
-
     router.events.on("routeChangeStart", handleRouteChange);
     // If the component is unmounted, unsubscribe
     // from the event with the `off` method:
@@ -699,7 +701,13 @@ export default ({ children }) => {
     setAssetDragId,
     setAssetDragType,
     droppableId,
-    setDroppableId
+    setDroppableId,
+    collectionDragFlag,
+    setCollectionDragFlag,
+    collectionDragId,
+    setCollectionDragId,
+    collectionParentDragId,
+    setCollectionParentDragId
   };
   return <AssetContext.Provider value={assetsValue}>{children}</AssetContext.Provider>;
 };

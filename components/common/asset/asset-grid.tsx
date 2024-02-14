@@ -1,37 +1,37 @@
-import { boxesIntersect, useSelectionContainer, SelectableGroup } from "@air/react-drag-to-select";
-import copyClipboard from "copy-to-clipboard";
-import update from "immutability-helper";
-import fileDownload from "js-file-download";
-import { CSSProperties, useContext, useEffect, useMemo, useRef, useState } from "react";
-import React from "react";
-import { Waypoint } from "react-waypoint";
+import { boxesIntersect, useSelectionContainer } from '@air/react-drag-to-select';
+import copyClipboard from 'copy-to-clipboard';
+import update from 'immutability-helper';
+import fileDownload from 'js-file-download';
+import { CSSProperties, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React from 'react';
+import { Waypoint } from 'react-waypoint';
 
-import { sizeToZipDownload } from "../../../constants/download";
-import { ASSET_ACCESS, ASSET_UPLOAD_APPROVAL } from "../../../constants/permissions";
-import { AssetContext, FilterContext, LoadingContext, UserContext } from "../../../context";
-import useSortedAssets from "../../../hooks/use-sorted-assets";
-import assetApi from "../../../server-api/asset";
-import folderApi from "../../../server-api/folder";
-import shareApi from "../../../server-api/share-collection";
-import { checkIfUserCanEditThumbnail } from "../../../utils/asset";
-import downloadUtils from "../../../utils/download";
-import toastUtils from "../../../utils/toast";
-import urlUtils from "../../../utils/url";
-import SubCollection from "../../Sub-collection/sub-collection";
-import Button from "../buttons/button";
-import FilterView from "../filter-view";
-import FolderGridItem from "../folder/folder-grid-item";
-import useDropzone from "../misc/dropzone";
-import ChangeThumbnail from "../modals/change-thumnail-modal";
-import ConfirmModal from "../modals/confirm-modal";
-import AssetAddition from "./asset-addition";
-import styles from "./asset-grid.module.css";
-import AssetTableHeader from "./Asset-table-header/asset-table-header";
-import AssetThumbail from "./asset-thumbail";
-import AssetUpload from "./asset-upload";
-import DetailOverlay from "./detail-overlay";
-import FolderTableHeader from "./Folder-table-header/folder-table-header";
-import SpinnerOverlay from "../spinners/spinner-overlay";
+import { sizeToZipDownload } from '../../../constants/download';
+import { ASSET_ACCESS, ASSET_UPLOAD_APPROVAL } from '../../../constants/permissions';
+import { AssetContext, FilterContext, LoadingContext, UserContext } from '../../../context';
+import useSortedAssets from '../../../hooks/use-sorted-assets';
+import assetApi from '../../../server-api/asset';
+import folderApi from '../../../server-api/folder';
+import shareApi from '../../../server-api/share-collection';
+import { checkIfUserCanEditThumbnail } from '../../../utils/asset';
+import downloadUtils from '../../../utils/download';
+import toastUtils from '../../../utils/toast';
+import urlUtils from '../../../utils/url';
+import SubCollection from '../../Sub-collection/sub-collection';
+import Button from '../buttons/button';
+import FilterView from '../filter-view';
+import FolderGridItem from '../folder/folder-grid-item';
+import useDropzone from '../misc/dropzone';
+import ChangeThumbnail from '../modals/change-thumnail-modal';
+import ConfirmModal from '../modals/confirm-modal';
+import SpinnerOverlay from '../spinners/spinner-overlay';
+import AssetAddition from './asset-addition';
+import styles from './asset-grid.module.css';
+import AssetTableHeader from './Asset-table-header/asset-table-header';
+import AssetThumbail from './asset-thumbail';
+import AssetUpload from './asset-upload';
+import DetailOverlay from './detail-overlay';
+import FolderTableHeader from './Folder-table-header/folder-table-header';
 
 interface Box {
   left: number;
@@ -91,6 +91,9 @@ const AssetGrid = ({
     setAssetDragId,
     setAssetDragType,
     setDroppableId,
+    setCollectionDragFlag,
+    setCollectionDragId,
+    setCollectionParentDragId
   } = useContext(AssetContext);
 
   const { advancedConfig, hasPermission, user } = useContext(UserContext);
@@ -490,6 +493,13 @@ const AssetGrid = ({
           return asset; // Return the original object for non-matching IDs
         });
         setSubFoldersAssetsViewList({ ...subFoldersAssetsViewList, results: updatedAssets });
+        setSubFoldersViewList({
+          next, total,
+          results: results.map((folder: any) => ({
+            ...folder,
+            isSelected: false,
+          })),
+        });
       }
     }
   }
@@ -545,7 +555,6 @@ const AssetGrid = ({
             height,
             id: item.id,
           })
-
         });
       } else if (sortedAssets?.length) {
         const containerRect = elementsContainerRef.current.getBoundingClientRect();
@@ -570,6 +579,8 @@ const AssetGrid = ({
   //------Drag-Select-area-------End======//
 
   //Handle the dynamically stopage of filters at top of page position on scroll down  
+
+
   const filterRef = useRef<HTMLDivElement>(null);
 
   const getStyling = useMemo((): CSSProperties => {
@@ -611,6 +622,10 @@ const AssetGrid = ({
     } else if (childFolder.current === "") {
       toastUtils.error("You can't move collection with sub-collection");
     }
+    setCollectionDragFlag(false);// Global state in for collection drag when
+    setCollectionDragId("");// Global state in for collection drag
+    setCollectionParentDragId("")
+    setDroppableId("")
   };
 
   const isAdmin = () => {
@@ -626,6 +641,8 @@ const AssetGrid = ({
   const handleDragStart = (e, folder) => {
     if (!folder?.childFolders?.length > 0) {
       onDragStart(e);
+      setCollectionDragFlag(true);
+      setCollectionDragId(e.currentTarget.id)
     }
   };
 
@@ -775,13 +792,11 @@ const AssetGrid = ({
                       if (assetItem.status !== "fail") {
                         return (
                           <li
-                            className={`${styles["grid-item"]} ${styles["asset-image-outer"]} ${activeView === "grid" ? styles["grid-item-new"] : ""
-                              }
+                            className={`${styles["grid-item"]} ${styles["asset-image-outer"]} ${activeView === "grid" ? styles["grid-item-new"] : ""}
                             ${activeView === "grid" && styles["list-wrapper-asset"]}
                             `}
                             key={index}
                             id={assetItem.asset?.id}
-                            // ref={(el) => (itemsRef.current[index] = assetItem)}
                             onClick={(e) => handleFocusChange(e, assetItem.asset.id)}
                             style={{ width: `$${widthCard} px` }}
                             draggable={isDraggable()}
@@ -840,7 +855,6 @@ const AssetGrid = ({
                           onClick={(e) => handleFocusChange(e, folder.id)}
                           ref={ref}
                           style={{ width: `$${widthCard} px` }}
-
                         >
                           <FolderGridItem
                             {...folder}

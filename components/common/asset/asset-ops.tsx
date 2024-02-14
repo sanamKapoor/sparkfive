@@ -553,7 +553,6 @@ export default ({ getAssets }) => {
         } else {
           assetIds = selectedAssets.map((assetItem) => assetItem.asset.id).join(",");
         }
-
         // Select all assets without pagination
         if (selectedAllAssets || selectedAllSubAssets) {
           filters = {
@@ -566,19 +565,15 @@ export default ({ getAssets }) => {
             }),
             selectedAll: "1",
           };
-
           if (term) {
             // @ts-ignore
             filters.term = term;
             console.log(`Set term`);
           }
-
           filters.advSearchFrom = searchFilterParams?.advSearchFrom;
-
           // @ts-ignore
           delete filters.page;
         }
-
         const result = await assetApi.generateAndSendShareUrl(
           {
             recipients,
@@ -589,15 +584,12 @@ export default ({ getAssets }) => {
           },
           filters,
         );
-
         if (showStatusToast) {
           toastUtils.success("Assets shared succesfully");
         }
-
         if (closeAfterDone) {
           closeModalAndClearOpAsset();
         }
-
         resolve(result);
       } catch (err) {
         console.log(err);

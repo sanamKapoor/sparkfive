@@ -113,7 +113,7 @@ const DetailOverlay = ({
     asset,
     availableNext = true,
     sharedCode = "",
-    isShare,
+    isShare = false,
     sharePath,
     completeAsset,
     loadMore = () => { },
@@ -131,7 +131,7 @@ const DetailOverlay = ({
         }
     }
 
-    const { user, cdnAccess, transcriptAccess, hasPermission, advancedConfig } = useContext(UserContext);
+    const { user, cdnAccess, transcriptAccess, hasPermission } = useContext(UserContext);
 
     const { activeOperation, assets, setAssets, folders, needsFetch, updateDownloadingStatus, setDetailOverlayId, setOperationAssets,
         setHeaderName,
@@ -149,12 +149,11 @@ const DetailOverlay = ({
         operationAsset,
         operationFolder,
         operationAssets,
-        setCurrentViewAsset,
         setActiveFolder,
         setActiveSubFolders
     } = useContext(AssetContext);
 
-    const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext);
+    const { activeSortFilter } = useContext(FilterContext);
 
     const [assetDetail, setAssetDetail] = useState(undefined);
 
@@ -180,7 +179,7 @@ const DetailOverlay = ({
     const [versionRealUrl, setVersionRealUrl] = useState(realUrl);
     const [versionThumbnailUrl, setVersionThumbnailUrl] = useState(thumbailUrl);
     const [previewUrl, setPreviewUrl] = useState(null);
-    const resizeSizes = getResizeSize(currentAsset.dimensionWidth, currentAsset.dimensionHeight);
+    const resizeSizes = getResizeSize(currentAsset?.dimensionWidth, currentAsset?.dimensionHeight);
 
     const [detailPosSize, setDetailPosSize] = useState({
         x: 0,
@@ -190,8 +189,8 @@ const DetailOverlay = ({
     });
 
     const [defaultSize, setDefaultSize] = useState({
-        width: currentAsset.dimensionWidth,
-        height: currentAsset.dimensionHeight,
+        width: currentAsset?.dimensionWidth,
+        height: currentAsset?.dimensionHeight,
     });
 
     const [notes, setNotes] = useState([]);
@@ -209,6 +208,7 @@ const DetailOverlay = ({
     const [activeAssetId, setActiveAssetId] = useState("");
 
     const renameValue = useRef("");
+
     const setRenameValue = (value) => {
         renameValue.current = value;
     };
@@ -294,11 +294,11 @@ const DetailOverlay = ({
             })
             if (folder) {
                 setActiveCollection(folder);
-                const assetIndx = subcollectionAssets.findIndex((item) => item.asset && item.asset.id === asset.id);
+                const assetIndx = subcollectionAssets.findIndex((item) => item.asset && item.asset.id === currentAsset.id);
                 setAssetIndex(assetIndx);
             } else if (currentFolder) {
                 setActiveCollection(currentFolder);
-                const assetIndx = subcollectionAssets.findIndex((item) => item.asset && item.asset.id === asset.id);
+                const assetIndx = subcollectionAssets.findIndex((item) => item.asset && item.asset.id === currentAsset.id);
                 setAssetIndex(assetIndx);
             }
         } else if (activeFolder && activeSubFolders === "") {
@@ -307,11 +307,11 @@ const DetailOverlay = ({
             })
             if (folder) {
                 setActiveCollection(folder);
-                const assetIndx = assets.findIndex((item) => item.asset && item.asset.id === asset.id);
+                const assetIndx = assets.findIndex((item) => item.asset && item.asset.id === currentAsset.id);
                 setAssetIndex(assetIndx);
             } else if (currentFolder) {
                 setActiveCollection(currentFolder);
-                const assetIndx = assets.findIndex((item) => item.asset && item.asset.id === asset.id);
+                const assetIndx = assets.findIndex((item) => item.asset && item.asset.id === currentAsset.id);
                 setAssetIndex(assetIndx);
             }
         }
@@ -398,7 +398,6 @@ const DetailOverlay = ({
     const getDetail = async (curAsset?) => {
         try {
             const asset = curAsset || currentAsset;
-            console.log(isShare, typeof isShare)
             if (isShare) {
                 const { data } = await shareApi.getAssetById(asset.id, { sharePath, sharedCode });
 
@@ -715,7 +714,6 @@ const DetailOverlay = ({
         } catch (e) {
             const errorResponse = (await e.response.data.text()) || "{}";
             const parsedErrorResponse = JSON.parse(errorResponse);
-            console.log(`Error in detail - overlay`);
             updateDownloadingStatus("error", 0, 0, parsedErrorResponse.message || "Internal Server Error. Please try again.");
         }
     };
@@ -873,28 +871,24 @@ const DetailOverlay = ({
     };
 
     const navigateOverlay = (navBy) => {
-        if (activeSortFilter.mainFilter === "SubCollectionView") {
-            const currentIndx = subcollectionAssets.findIndex((item) => asset && item.asset && item.asset.id === asset.id);
+        if (activeSubFolders !== "" && activeFolder !== "") {
+            const currentIndx = subcollectionAssets.findIndex((item) => asset && item.asset && item.asset.id === currentAsset.id);
+            const newIndx = currentIndx + navBy;
+
+            setAssetIndex(newIndx);
+            setCurrentAsset({
+                ...subcollectionAssets[newIndx].asset, thumbailUrl: subcollectionAssets[newIndx].thumbailUrl
+            });
+            setDetailOverlayId(subcollectionAssets[newIndx].asset.id);
+        }
+        else if (activeFolder !== "" && activeFolder === "") {
+            const currentIndx = assets.findIndex((item) => asset && item.asset && item.asset.id === currentAsset.id);
             const newIndx = currentIndx + navBy;
             setAssetIndex(newIndx);
-            if (subcollectionAssets[newIndx]) {
-                onCloseOverlay();
-                setDetailOverlayId(subcollectionAssets[newIndx].asset.id);
-                if (newIndx === subcollectionAssets.length - 1) {
-                    loadMore();
-                }
-            }
-        } else {
-            const currentIndx = assets.findIndex((item) => asset && item.asset && item.asset.id === asset.id);
-            const newIndx = currentIndx + navBy;
-            setAssetIndex(newIndx);
-            if (assets[newIndx]) {
-                onCloseOverlay();
-                setDetailOverlayId(assets[newIndx].asset.id);
-                if (newIndx === assets.length - 1) {
-                    loadMore();
-                }
-            }
+            setCurrentAsset({
+                ...subcollectionAssets[newIndx].asset, thumbailUrl: subcollectionAssets[newIndx].thumbailUrl
+            });
+            setDetailOverlayId(assets[newIndx].asset.id);
         }
     };
 
@@ -957,7 +951,10 @@ const DetailOverlay = ({
         if (changedVersion) {
             refreshVersion(changedVersion);
         }
-        if (activeFolder !== "" && activeSubFolders !== "") {
+        if (activeFolder === "" && activeSubFolders !== "" && isShare) {
+            setActiveFolder("");
+            setActiveSubFolders(activeFolder);
+        } else if (activeFolder !== "" && activeSubFolders !== "") {
             setActiveFolder("");
             setActiveSubFolders(activeFolder);
             if (!isShare) setHeaderName(headerName);
@@ -1088,7 +1085,6 @@ const DetailOverlay = ({
 
                 resolve(result);
             } catch (err) {
-                console.log(err);
                 if (showStatusToast) {
                     toastUtils.error("Could not share assets, please try again later.");
                 }
@@ -1191,8 +1187,6 @@ const DetailOverlay = ({
             onCloseOverlay()
             toastUtils.success("Assets deleted successfully");
         } catch (err) {
-            console.log("🚀 ~ deleteAsset ~ err:", err)
-            // TODO: Error handling
             toastUtils.error("Could not delete assets, please try again later.");
         }
     };
@@ -1339,11 +1333,8 @@ const DetailOverlay = ({
                                     ),
                             )}
                         </div>
-                        <div
-                            className={`${!isShare ? styles["img-wrapper"] : styles["share-img-wrapper"]}${activeFolder && ` ${styles["active-folderimg"]}`
-                                } `}
-                            style={{ height: `calc(100 % - ${noteHeight}px)` }}
-                        >
+                        <div className={`${!isShare ? styles["img-wrapper"] : styles["share-img-wrapper"]}${activeFolder && ` ${styles["active-folderimg"]}`
+                            } `} style={{ height: `calc(100 % - ${noteHeight}px)` }}>
                             {assetDetail.type === "image" && (
                                 <>
                                     {mode === "detail" && (
@@ -1429,7 +1420,6 @@ const DetailOverlay = ({
                                             />
                                             Sorry, your browser doesn't support video playback.
                                         </video>}
-
                                         {(!previewUrl && currentAsset.extension !== "mp4") && <AssetImg
                                             name={assetDetail.name}
                                             assetImg={""}
@@ -1442,12 +1432,12 @@ const DetailOverlay = ({
                                 )
                             }
                             {
-                                activeFolder && activeSubFolders !== "" && (
+                                activeCollection?.assetsCount !== undefined && activeFolder && activeSubFolders !== "" && (
                                     <div className={styles.arrows}>
                                         <div>
                                             {subcollectionAssets.length &&
                                                 subcollectionAssets[0].asset &&
-                                                subcollectionAssets[0].asset.id !== asset.id && (
+                                                subcollectionAssets[0].asset.id !== currentAsset.id && (
                                                     <span className={styles["arrow-prev"]}>
                                                         <IconClickable src={Utilities.arrowPrev} onClick={() => navigateOverlay(-1)} />
                                                     </span>
@@ -1455,12 +1445,11 @@ const DetailOverlay = ({
                                             {availableNext &&
                                                 subcollectionAssets.length &&
                                                 subcollectionAssets[subcollectionAssets.length - 1].asset &&
-                                                subcollectionAssets[subcollectionAssets.length - 1].asset.id !== asset.id && (
+                                                subcollectionAssets[subcollectionAssets.length - 1].asset.id !== currentAsset.id && (
                                                     <span className={styles["arrow-next"]}>
                                                         <IconClickable src={Utilities.arrowNext} onClick={() => navigateOverlay(1)} />
                                                     </span>
-                                                )
-                                            }
+                                                )}
                                         </div>
                                         <span>
                                             {(assetIndex % activeCollection?.assetsCount) + 1} of {activeCollection?.assetsCount} in{" "}
@@ -1470,18 +1459,18 @@ const DetailOverlay = ({
                                 )
                             }
                             {
-                                activeFolder && activeSubFolders === "" && (
+                                activeCollection?.assetsCount !== undefined && activeFolder && activeSubFolders === "" && (
                                     <div className={styles.arrows}>
                                         <div>
                                             {assets.length &&
                                                 assets[0].asset &&
-                                                assets[0].asset.id !== asset.id && (
+                                                assets[0].asset.id !== currentAsset.id && (
                                                     <span className={styles["arrow-prev"]}>
                                                         <IconClickable src={Utilities.arrowPrev} onClick={() => navigateOverlay(-1)} />
                                                     </span>
                                                 )}
                                             {availableNext && assets.length && assets[assets.length - 1].asset &&
-                                                assets[assets.length - 1].asset.id !== asset.id && (
+                                                assets[assets.length - 1].asset.id !== currentAsset.id && (
                                                     <span className={styles["arrow-next"]}>
                                                         <IconClickable src={Utilities.arrowNext} onClick={() => navigateOverlay(1)} />
                                                     </span>

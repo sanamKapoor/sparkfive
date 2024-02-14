@@ -19,6 +19,7 @@ import AssetIcon from './asset-icon';
 import AssetImg from './asset-img';
 import AssetOptions from './asset-options';
 import styles from './asset-thumbail.module.css';
+import DetailOverlay from './detail-overlay';
 // import Cookies from 'universal-cookie';
 // Components
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
@@ -106,15 +107,6 @@ const AssetThumbail = ({
     setOverlayProperties({ visible: true, side: "comments" });
   };
 
-  const onCloseOverlay = (changedVersion, outsideDetailOverlayAsset) => {
-    if (outsideDetailOverlayAsset) {
-      onCloseDetailOverlay(outsideDetailOverlayAsset);
-    } else if (changedVersion) {
-      handleVersionChange(changedVersion);
-    }
-    setOverlayProperties({ ...DEFAULT_DETAIL_PROPS, visible: false });
-  };
-
   // HAndle the New action Button Change name for assets
   const renameAsset = () => {
     setAssetRenameModalOpen(true);
@@ -157,7 +149,6 @@ const AssetThumbail = ({
         toastUtils.success("Asset name updated");
       } else {
         const activeAsset = assets.find((asst) => asst?.asset?.id === asset?.id);
-
         const editedName = `${newValue}.${activeAsset?.asset?.extension}`;
         const data = await assetApi.updateAsset(asset.id, {
           updateData: { name: isAssetACopy ? editedName + " - COPY" : editedName },
@@ -199,10 +190,9 @@ const AssetThumbail = ({
           ...DEFAULT_DETAIL_PROPS,
           visible: !overlayProperties.visible,
         });
+        console.log(activeSubFolders)
         if (!overlayProperties.visible) {
-          console.log(isShare, "isShare")
           if (isShare) {
-            console.log("hello")
             router.push({
               pathname: `/collections/assetDetail/${asset.id}`,
               query: { isShare, sharePath, sharedCode: "", headerName, activeFolder, availableNext, activeSubFolders }
@@ -350,20 +340,17 @@ const AssetThumbail = ({
               {format(new Date(asset.createdAt), dateFormat)}
             </div>
           </div>
-
           {activeView === "list" && (
             <div className={`${styles["modified-date"]} ${activeView === "list" && styles["modified-date-list"]}`}>
               {" "}
               {format(new Date(asset.createdAt), dateFormat)}
             </div>
           )}
-
           {activeView === "list" && (
             <div className={styles.extension}>
               <span className={styles.format}>{asset.extension}</span>
             </div>
           )}
-
           {!isUploading && showAssetOption && (
             <AssetOptions
               itemType={type}

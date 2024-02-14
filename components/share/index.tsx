@@ -6,7 +6,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 
 import { sizeToZipDownload } from '../../constants/download';
 import { defaultLogo } from '../../constants/theme';
-import { UserContext } from '../../context';
+import { ShareContext, UserContext } from '../../context';
 import assetApi from '../../server-api/asset';
 import downloadUtils from '../../utils/download';
 import { loadTheme } from '../../utils/theme';
@@ -20,6 +20,7 @@ import AssetDownloadProcess from './asset-download-process';
 import styles from './index.module.css';
 import ShareItem from './share-item';
 import ShareOperationButtons from './share-operation-buttons';
+
 interface Box {
   left: number;
   top: number;
@@ -27,18 +28,16 @@ interface Box {
   height: number;
   id: string;
 }
-// Styles
-// Components
+
 // Contexts
 const AssetShare = () => {
+  const { email, setEmail } = useContext(ShareContext);
   const { logo: themeLogo, setLogo: setThemeLogo } = useContext(UserContext);
+
   const [assets, setAssets] = useState([]);
   const [selectedAsset, setSelectedAsset] = useState(0);
   const [showDownloadPopup, setShowDownloadPopup] = useState(false);
   const [downloadStatus, setDownloadStatus] = useState("");
-  const [downloadingPercent, setDownloadingPercent] = useState(30);
-  const interval = useRef();
-  const [email, setEmail] = useState("");
   const [logo, setLogo] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -49,6 +48,9 @@ const AssetShare = () => {
   const selectableItems = useRef<Box[]>([]);
   const elementsContainerRef = useRef<HTMLDivElement | null>(null);
   const selectionArea = useRef(null);
+
+
+
 
   // Toggle select asset
   const toggleSelected = (id) => {
@@ -85,46 +87,23 @@ const AssetShare = () => {
   const zipping = () => {
     setDownloadStatus("zipping");
     setShowDownloadPopup(true);
-    // simulateProcess();
   };
 
   const done = () => {
     setDownloadStatus("done");
-    // cancelSimulatedProcess
   };
 
-  const simulateProcess = () => {
-    // @ts-ignore
-    interval.current = setInterval(() => {
-      if (downloadingPercent < 100) {
-        setDownloadingPercent(downloadingPercent + 10);
-      }
-    }, 1000);
-  };
-
-  const cancelSimulatedProcess = () => {
-    if (interval.current) {
-      clearInterval(interval.current);
-      setDownloadingPercent(0);
-    }
-  };
-
-  // Download select assets
   // Download select assets
   const downloadSelectedAssets = async () => {
     try {
       const { shareJWT, code } = urlUtils.getQueryParameters();
-
       const selectedAssets = assets.filter((asset) => asset.isSelected);
-
       const downloadAsZip = async () => {
         let payload = {
           assetIds: selectedAssets.map((item) => item.asset.id),
         };
-
         // Show processing bar
         zipping();
-
         const { data } = await assetApi.shareDownload(payload, {
           shareJWT,
           code,
@@ -145,8 +124,6 @@ const AssetShare = () => {
       } else {
         downloadAsZip();
       }
-
-      // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets.zip')
     } catch (e) { }
   };
 
@@ -160,17 +137,17 @@ const AssetShare = () => {
 
       // Allow get by both shareJWT or code (shareJWT has problem with very long at url issue)
       if (shareJWT || code) {
-        const { data } = await assetApi.getSharedAssets({ shareJWT, code });
+        const { data } = await assetApi.getSharedAssets({ shareJWT, email, code });
         if (data.error) {
           setError(true);
           setLoading(false);
           setLogo(data.data.team.workspaceIcon);
           setShareUserName(data.data.user.name);
-
           if (data.errorMessage !== "Email is required") {
             toastUtils.error(data.errorMessage);
           }
         } else {
+          console.log(code, "code")
           setError(false);
           setLoading(false);
           setAssets(data.data);
@@ -183,7 +160,6 @@ const AssetShare = () => {
         if (data.theme) {
           // Load theme from team settings
           const currentTheme = loadTheme(data.theme);
-
           // @ts-ignore
           setThemeLogo(currentTheme.logoImage?.realUrl || defaultLogo);
         }
@@ -208,26 +184,25 @@ const AssetShare = () => {
       setError(false);
       setLoading(false);
       setAssets(data.data);
+      setShareUserName(data.sharedBy);
+      setSharedCode(code as string);
+      setLogo(data.data.team?.workspaceIcon);
     }
 
     // There is team theme set
     if (data.theme) {
       // Load theme from team settings
       const currentTheme = loadTheme(data.theme);
-
-      console.log(`Current sync theme`, currentTheme);
-      // @ts-ignore
-      console.log(`Logo: `, currentTheme.logoImage?.realUrl || defaultLogo);
       // @ts-ignore
       setThemeLogo(currentTheme.logoImage?.realUrl || defaultLogo);
     } else {
       // Load theme from local storage
       const currentTheme = loadTheme();
-      console.log(`Current logo theme`, currentTheme);
       // @ts-ignore
       setThemeLogo(currentTheme.logoImage?.realUrl || defaultLogo);
     }
   };
+
   const onSelectionChange = (box) => {
     if (elementsContainerRef.current) {
       const containerRect = elementsContainerRef.current.getBoundingClientRect();
@@ -239,6 +214,7 @@ const AssetShare = () => {
       selectionArea.current = scrollAwareBox
     }
   };
+
   const bulkToggle = async (idsToFind) => {
     const updatedAssets = assets.map((asset, index) => {
       // Check if the object's ID is in the idsToFind array
@@ -267,17 +243,17 @@ const AssetShare = () => {
           indexesToSelect.push(item.id);
         }
       })
-      console.log("🚀 ~ selectableItems.current.forEach ~ indexesToSelect:", indexesToSelect)
       if (indexesToSelect.length > 0) {
         bulkToggle(indexesToSelect);
       }
     },
     selectionProps: {
       style: {
-        border: "2px dashed purple",
+        border: "2px solid darkblue",
         borderRadius: 4,
-        backgroundColor: "brown",
+        backgroundColor: "lightskyblue",
         opacity: 0.5,
+        zIndex: 9999
       },
     },
     isEnabled: true,
@@ -287,7 +263,7 @@ const AssetShare = () => {
     if (elementsContainerRef.current && assets?.length) {
       const containerRect = elementsContainerRef.current.getBoundingClientRect();
       const liElements = elementsContainerRef.current.querySelectorAll('li');
-      console.log("🚀 ~ useEffect ~ liElements:", liElements)
+
       selectableItems.current = new Array();
       Array.from(liElements).forEach((item) => {
         const { left, top, width, height } = item.getBoundingClientRect();
@@ -381,7 +357,6 @@ const AssetShare = () => {
             onClose={() => {
               setShowDownloadPopup(false);
             }}
-            downloadingPercent={downloadingPercent}
             selectedAsset={selectedAsset}
           />
         )}

@@ -66,14 +66,17 @@ const AssetMoveCopyModal = ({
 };
 
 const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
-
   const {
+    folders,
+    setFolders,
     sidenavTotalCollectionCount,
     sidenavFolderList,
     sidenavFolderNextPage,
     setSidenavFolderList,
     sidenavFolderChildList,
     setSidenavFolderChildList,
+    subFoldersViewList: { results: SubFolders, next, total },
+    setSubFoldersViewList,
     listUpdateFlag,
     setListUpdateFlag,
     activeFolder,
@@ -91,6 +94,12 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     setDroppableId,
     setSubFoldersAssetsViewList,
     subFoldersAssetsViewList: { results: assets, next: nextAsset, total: totalAssets },
+    collectionDragFlag,
+    setCollectionDragFlag,
+    collectionDragId,
+    setCollectionDragId,
+    collectionParentDragId,
+    setCollectionParentDragId
   } = useContext(AssetContext);
 
   const { activeSortFilter } = useContext(FilterContext) as {
@@ -99,7 +108,6 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
   };
 
   const { user } = useContext(UserContext);
-
   const [showDropdownIds, setShowDropdownIds] = useState(new Array);
   const [showDropdown, setShowDropdown] = useState(new Array(sidenavFolderList.length).fill(false));
 
@@ -157,6 +165,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
       updatedShowDropdown[index] = !isDropdownOpen;
       return updatedShowDropdown;
     });
+
   };
 
   const keyExists = (key: string) => {
@@ -262,6 +271,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     }
   };
 
+  //------------ Drag folder --------------------------------//
   const isAdmin = () => {
     return user?.role?.id === "admin" || user?.role?.id === "super_admin";
   };
@@ -276,7 +286,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     return false;
   };
 
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, parentId: string, shouldDrag: boolean) => {
+  const handleDragStart = (e, parentId: string, shouldDrag: boolean) => {
     draggable.current = shouldDrag;
     selectedParentId.current = parentId;
     childFolderId.current = e.currentTarget.id;
@@ -284,12 +294,20 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    if (assetDragFlag && droppableId !== e.currentTarget.id) {// asset drop from sub-collection page and asset page drop handling state from main page
+    // asset drop from sub-collection page and asset page drop handling state from main page
+    if (assetDragFlag && droppableId !== e.currentTarget.id) {
       setDroppableId(e.currentTarget.id)
       setDroppableFolderName(e?.currentTarget?.dataset?.name || "...")
-    } else {
+    } else if (
+      collectionDragFlag && droppableId !== e.currentTarget.id
+      && !e?.currentTarget?.dataset?.parentid
+      && collectionDragId !== e.currentTarget.id
+      && collectionParentDragId !== e.currentTarget.id
+    ) {// Collection drop from sub-collection page and collection page drop handling state from main page
+      setDroppableId(e.currentTarget.id)
+      setDroppableFolderName(e?.currentTarget?.dataset?.name || "...")
+    } else { // Collection drop from sidenav only Restriction parent and 
       if (droppableId !== e.currentTarget.id  // Checking the Id droppable Is not same 
-        && childFolderId.current !== e.currentTarget.id // Checking the selected folder is not same as droppable identifier
         && draggable.current // Check if the droppable is active or not if its parent with no child folder or is child folder
         && !e?.currentTarget?.dataset?.parentid // Check if the droppable folder is  parent or not
         && e.currentTarget.id !== selectedParentId.current // Check if the droppable folder is not same as selected folder parentId 
@@ -301,13 +319,17 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
         setDroppableId("")
       }
     }
-  }
+  };
 
+  //-------- reset state default -------- //
   const resetMoveModalState = () => {
     childFolderId.current = "";
     selectedParentId.current = "";
     setDroppableId("");
     setMoveModalFlag(false);
+    setCollectionDragFlag(false);
+    setCollectionDragId("");
+    setCollectionParentDragId("")
     setLoader(false);
   };
 
@@ -321,7 +343,9 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     setActionType("")
     setDroppableFolderName("")
   };
+  //-------- end -------- //
 
+  // ------- toast for success and error messages -------- //
   const moveCollectionSuccess = () => {
     resetMoveModalState();
     setListUpdateFlag(true);
@@ -333,11 +357,15 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     resetAssetModalState()
     toastUtils.error(errorMessage);
   };
+  // ------- toast end  -------- //
 
+  // handling the move Collection in side bar only 
   const handleDragEnd = () => {
     if (isAdmin()) {
       if (droppableId && childFolderId.current && droppableId !== childFolderId.current) {
         setMoveModalFlag(true);
+      } else if (childFolderId.current === droppableId) {
+        moveCollectionError("You can't move collection into a same collection");
       } else if (!droppableId && draggable.current) {
         moveCollectionError("You can't move collection into a subcollection");
       } else if (!draggable.current) {
@@ -346,18 +374,41 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     }
   };
 
+  const filterFolderInList = (folderList, updatedFolder) => {
+    return folderList.filter((folder) => {
+      return folder.id === updatedFolder.id ? false : true;
+    });
+  };
+
   const moveCollection = async () => {
     try {
       setLoader(true);
-      await folderApi.updateParent({
+      const folderIdToUpdate = collectionDragFlag ? collectionDragId : childFolderId.current;
+      const data = await folderApi.updateParent({
         parentId: droppableId,
-        folderId: childFolderId.current,
+        folderId: folderIdToUpdate,
       });
+      if (data) {
+        const updatedFolders = activeSortFilter.mainFilter === "SubCollectionView"
+          ? filterFolderInList(SubFolders, data.data)
+          : filterFolderInList(folders, data.data);
+
+        if (activeSortFilter.mainFilter === "SubCollectionView") {
+          setSubFoldersViewList({
+            next,
+            total: total - 1,
+            results: updatedFolders,
+          });
+        } else {
+          setFolders(updatedFolders);
+        }
+      }
       moveCollectionSuccess();
     } catch (err) {
-      moveCollectionError("You can't move collection. Please try again later");
+      moveCollectionError("You can't move the collection. Please try again later.");
     }
   };
+
 
   const closeMoveModal = () => {
     resetMoveModalState();
@@ -366,7 +417,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
   };
   //--------------Asset drop ------ handling--------------------------------//
 
-  // For assets drop only
+  // For assets drop only and collection Drop from main listing page to sidebar 
   const handleDrop = (e) => {
     if (isAdmin() && assetDragFlag) {
       if (assetDragId && droppableId) {
@@ -374,6 +425,15 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
         setActionType((assetDragType === 'move' || activeFolder !== "") ? 'move' : 'copy');
       } else {
         moveCollectionError('Could not move/copy assets, please try again later.');
+      }
+    } else if (isAdmin() && collectionDragFlag) {
+      if (collectionDragId && droppableId) {
+        console.log("hello")
+        if (collectionDragId === droppableId) {
+          moveCollectionError("You can't move collection into a same collection");
+        } else {
+          setMoveModalFlag(true);
+        }
       }
     }
   };
@@ -408,7 +468,6 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
       total: totalAssets,
       results: [...newAssets],
     });
-
   };
 
   const handleMoveError = (err: Error, errorMessage: string) => {
@@ -431,12 +490,13 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
         confirmText={(assetDragType === 'move' || activeFolder !== "") ? 'Move' : 'Copy'}
         subText={
           (assetDragType === 'move' || activeFolder !== "")
-            ? 'The assets will be moved into the new collection(s) and will be removed from their current collection(s)'
+            ? 'The assets will be moved into the new collection and will be removed from their current collection'
             : 'The assets will be duplicated and added into the new collection'
         }
         actionType={actionType}
         folderName={droppableFolderName}
       />
+
       <ConfirmModal
         message={"Make Collection a Subcollection"}
         modalIsOpen={moveModalFlag}
@@ -445,6 +505,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
         confirmText={"Make Subcollection"}
         subText="The selected collection will be moved from its current location and made a subcollection of the selected parent collection"
       />
+
       <ReusableHeading
         description="All Collections"
         text="All Collections"
@@ -461,7 +522,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
         return (
           <>
             <div>
-              <div data-drag="false" key={index} className={`${styles["flex"]} ${item.id === droppableId ? styles.dropBox : ""}  ${styles.nestedbox} `}
+              <div data-drag="false" key={index} className={`${styles["flex"]} ${item.id === droppableId ? styles.dropBox : ""}  ${styles.nestedbox}`}
                 draggable={true}
                 onDragStart={(e) => handleDragStart(e, "", item?.childFolders?.length > 0 ? false : true)}
                 onDragEnd={handleDragEnd}
@@ -489,7 +550,8 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
                     className={styles.w100}
                     onClick={() => {
                       vewFolderSidenavStateActive(item.id, true, "", item.name, item)
-                    }} data-drag="false"
+                    }}
+                    data-drag="false"
                   >
                     <div className={styles.mainWrapper} data-drag="false">
                       <div className={styles.flex} data-drag="false">
@@ -598,6 +660,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
           )}
         </div>
       )}
+
     </div >
   );
 };

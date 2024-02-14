@@ -171,8 +171,6 @@ export const AssetContext = createContext({
 
   // Sub Collection select All Folders and assets in subCollection
   selectedAllSubFoldersAndAssets: false,
-
-
   setSelectedAllSubFoldersAndAssets: (value) => { },
   selectedAllSubAssets: false,
   setSelectedAllSubAssets: (value) => { },
@@ -197,8 +195,13 @@ export const AssetContext = createContext({
   assetDragType: "",
   setAssetDragType: (value) => { },
   setDroppableId: (value) => { },
-  droppableId: ""
-
+  droppableId: "",
+  collectionDragFlag: false,
+  setCollectionDragFlag: (value) => { },
+  collectionDragId: "",
+  setCollectionDragId: (value) => { },
+  collectionParentDragId: "",
+  setCollectionParentDragId: (value) => { },
 });
 
 export const TeamContext = createContext({
@@ -296,6 +299,8 @@ export const ShareContext = createContext({
   folderInfo: undefined,
   setFolderInfo: (folderInfo) => { },
   activePasswordOverlay: true,
+  email: "",
+  setEmail: (value) => { },
   setActivePasswordOverlay: (value) => { },
 });
 

@@ -13,7 +13,7 @@ import styles from "./index.module.css";
 const SearchOverlayAssets = ({
   closeOverlay,
   importEnabled = false,
-  importAssets = () => {},
+  importAssets = () => { },
   sharePath = "",
   activeFolder = "",
   isFolder,
@@ -25,7 +25,6 @@ const SearchOverlayAssets = ({
     setPlaceHolders,
     nextPage,
     selectAllAssets,
-    selectedAllAssets,
     setFolders,
     setSubFoldersViewList,
   } = useContext(AssetContext);
@@ -36,81 +35,79 @@ const SearchOverlayAssets = ({
   const [openFilters, setOpenFilters] = useState(false);
 
   const getData = async (inputTerm, replace = true, _filterParams = filterParams) => {
-    console.log({ inputTerm, replace, _filterParams });
     try {
-      const loadAssets = async () => {
-        let fetchFn = assetApi.getAssets;
-        if (sharePath) {
-          fetchFn = shareCollectionApi.getAssets;
-        }
-        setPlaceHolders("asset", replace);
-        if (Object.keys(_filterParams).length > 0) {
-          setFilterParams(_filterParams);
-          setSearchFilterParams(_filterParams);
-        }
-        const params: any = {
-          term: inputTerm,
-          stage: activeSortFilter?.mainFilter === "archived" ? "archived" : "draft",
-          page: replace ? 1 : nextPage,
-          sharePath,
-          ..._filterParams,
-        };
-        // search from inside collection
-        if (activeFolder) {
-          params.folderId = activeFolder;
-        }
-        const { data } = await fetchFn(params);
-        setAssets(data, replace);
-      };
       if (mode === "assets") {
-        let fetchFn = assetApi.getAssets;
-        if (sharePath) {
-          fetchFn = shareCollectionApi.getAssets;
-        }
-        setPlaceHolders("asset", replace);
-        if (Object.keys(_filterParams).length > 0) {
-          setFilterParams(_filterParams);
-          setSearchFilterParams(_filterParams);
-        }
-        const params: any = {
-          term: inputTerm,
-          stage: activeSortFilter?.mainFilter === "archived" ? "archived" : "draft",
-          page: replace ? 1 : nextPage,
-          sharePath,
-          ..._filterParams,
-        };
-        // search from inside collection
-        if (activeFolder) {
-          params.folderId = activeFolder;
-        }
-        const { data } = await fetchFn(params);
-        setAssets(data, replace);
+        await fetchAssets(inputTerm, replace, _filterParams);
       } else if (mode === "SubCollectionView") {
-        setSearchFilterParams(_filterParams);
-
-        let query = {
-          page: 1,
-          sortField: activeSortFilter.sort?.field || "createdAt",
-          sortOrder: activeSortFilter.sort?.order || "desc",
-          term: inputTerm,
-        };
-        const { data: subFolders } = await folderApi.getSubFolders(query, activeFolder);
-
-        setSubFoldersViewList(subFolders, true);
+        await fetchSubFolders(inputTerm);
       } else if (mode === "folders") {
-        let query = {
-          page: 1,
-          sortField: activeSortFilter.sort?.field || "createdAt",
-          sortOrder: activeSortFilter.sort?.order || "desc",
-          term: inputTerm,
-        };
-        const { data } = await folderApi.getFolders(query);
-        setFolders(data, true, true);
+        await fetchFolders(inputTerm);
       }
     } catch (err) {
-      // TODO: Handle this error
       console.log(err);
     }
+  };
+
+  const fetchAssets = async (inputTerm, replace, _filterParams) => {
+    let fetchFn = assetApi.getAssets;
+    if (sharePath) {
+      fetchFn = shareCollectionApi.getAssets;
+    }
+    setPlaceHolders("asset", replace);
+    if (Object.keys(_filterParams).length > 0) {
+      setFilterParams(_filterParams);
+      setSearchFilterParams(_filterParams);
+    }
+    const params = {
+      term: inputTerm,
+      stage: activeSortFilter?.mainFilter === "archived" ? "archived" : "draft",
+      page: replace ? 1 : nextPage,
+      sharePath,
+      ..._filterParams,
+    };
+
+    if (activeFolder) {
+      params.folderId = activeFolder;
+    }
+
+    const { data } = await fetchFn(params);
+    setAssets(data, replace);
+  };
+
+  const fetchSubFolders = async (inputTerm) => {
+    let fetchFn = folderApi.getSubFolders;
+    if (sharePath) {
+      fetchFn = shareCollectionApi.getSubFolders;
+    }
+
+    const query = {
+      page: 1,
+      sortField: activeSortFilter.sort?.field || "createdAt",
+      sortOrder: activeSortFilter.sort?.order || "desc",
+      term: inputTerm,
+      sharePath,
+    };
+
+    const { data: subFolders } = await fetchFn(query, activeFolder);
+    setSubFoldersViewList(subFolders, true);
+  };
+
+  const fetchFolders = async (inputTerm) => {
+    let fetchFn = folderApi.getFolders;
+    if (sharePath) {
+      fetchFn = shareCollectionApi.getFolders;
+    }
+
+    const query = {
+      page: 1,
+      sortField: activeSortFilter.sort?.field || "createdAt",
+      sortOrder: activeSortFilter.sort?.order || "desc",
+      term: inputTerm,
+      sharePath,
+    };
+
+    const { data } = await fetchFn(query);
+    setFolders(data, true, true);
   };
 
   useEffect(() => {
@@ -120,14 +117,6 @@ const SearchOverlayAssets = ({
   }, [isFolder]);
 
   const selectedAssets = assets.filter((asset) => asset.isSelected);
-
-  let totalSelectAssets = selectedAssets.length;
-  // Hidden pagination assets are selected
-  if (selectedAllAssets) {
-    // Get assets is not selected on screen
-    const currentUnSelectedAssets = assets.filter((asset) => !asset.isSelected);
-    //  let totalSelectAssets = totalAssets - currentUnSelectedAssets.length;
-  }
 
   // Close search modal
   const closeSearchModal = () => {

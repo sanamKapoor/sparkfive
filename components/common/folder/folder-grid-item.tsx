@@ -1,24 +1,23 @@
-import { format } from "date-fns";
-import fileDownload from "js-file-download";
-import React, { ChangeEvent, useContext, useState } from "react";
+import { format } from 'date-fns';
+import fileDownload from 'js-file-download';
+import React, { ChangeEvent, useContext, useState } from 'react';
 
-import { Utilities } from "../../../assets";
-import { COLLECTION_NAME_UPDATED, FAILED_TO_UPDATE_COLLECTION_NAME } from "../../../constants/messages";
-import { AssetContext } from "../../../context";
-import folderApi from "../../../server-api/folder";
-import shareFolderApi from "../../../server-api/share-collection";
-import toastUtils from "../../../utils/toast";
-import RenameModal from "../../common/modals/rename-modal";
-import gridStyles from "../asset//asset-grid.module.css";
-import AssetIcon from "../asset/asset-icon";
-import AssetImg from "../asset/asset-img";
-import Button from "../buttons/button";
-import IconClickable from "../buttons/icon-clickable";
-import ConfirmModal from "../modals/confirm-modal";
-import styles from "./folder-grid-item.module.css";
-import FolderOptions from "./folder-options";
-import MoveCollectionModal from "../modals/move-collection-modal";
-import SpinnerOverlay from "../spinners/spinner-overlay";
+import { Utilities } from '../../../assets';
+import { AssetContext } from '../../../context';
+import folderApi from '../../../server-api/folder';
+import shareFolderApi from '../../../server-api/share-collection';
+import toastUtils from '../../../utils/toast';
+import RenameModal from '../../common/modals/rename-modal';
+import gridStyles from '../asset//asset-grid.module.css';
+import AssetIcon from '../asset/asset-icon';
+import AssetImg from '../asset/asset-img';
+import Button from '../buttons/button';
+import IconClickable from '../buttons/icon-clickable';
+import ConfirmModal from '../modals/confirm-modal';
+import MoveCollectionModal from '../modals/move-collection-modal';
+import SpinnerOverlay from '../spinners/spinner-overlay';
+import styles from './folder-grid-item.module.css';
+import FolderOptions from './folder-options';
 
 // Context
 // Components
@@ -46,9 +45,6 @@ const FolderGridItem = ({
   thumbnailExtension,
   thumbnails,
   activeView,
-  isThumbnailNameEditable = false,
-  focusedItem,
-  setFocusedItem,
   folderType,
   mode,
   childFolders,
@@ -118,21 +114,17 @@ const FolderGridItem = ({
     // Show processing bar
     try {
       updateDownloadingStatus("zipping", 0, assetsCount);
-
+      let api: any;
       let payload = {
         folderIds: [id],
       };
-
       let filters = {
         estimateTime: 1,
       };
-
-      let api = folderApi;
-
+      api = folderApi;
       if (isShare) {
         api = shareFolderApi;
       }
-
       // Add sharePath property if user is at share collection page
       if (sharePath) {
         filters["sharePath"] = sharePath;
@@ -145,43 +137,6 @@ const FolderGridItem = ({
       updateDownloadingStatus("done", 0, 0);
     } catch (err) {
       updateDownloadingStatus("error", 0, 0);
-    }
-  };
-
-  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setThumbnailName(e.target.value);
-  };
-
-  const updateNameOnBlur = async (e) => {
-    console.log("onBlurr", e);
-    setFocusedItem(null);
-    setIsEditing(false);
-    //fire api only if name is changed
-
-    if (thumbnailName && name !== thumbnailName) {
-      try {
-        const data = await folderApi.updateFolder(id, {
-          name: e.target.value,
-        });
-
-        if (data) {
-          setFolders(
-            folders.map((folder) => {
-              if (folder.id === data.data.id) {
-                return { ...folder, name: data.data.name };
-              } else {
-                return folder;
-              }
-            }),
-          );
-        }
-
-        toastUtils.success(COLLECTION_NAME_UPDATED);
-      } catch (e) {
-        toastUtils.error(FAILED_TO_UPDATE_COLLECTION_NAME);
-      }
-    } else {
-      setThumbnailName(name);
     }
   };
 
@@ -310,7 +265,7 @@ const FolderGridItem = ({
                 <AssetImg assetImg={thumbnailPath} imgClass="maxHeight userEvents" style={{ maxWidth: "330px !important" }} />
               )}
               {thumbnailExtension && !thumbnailPath && (
-                <AssetIcon  extension={thumbnailExtension} imgClass="maxHeight userEvents" />
+                <AssetIcon extension={thumbnailExtension} imgClass="maxHeight userEvents" />
               )}
               {!thumbnailPath &&
                 !thumbnailExtension &&
@@ -319,7 +274,7 @@ const FolderGridItem = ({
                     {preview.assetImg || preview.name === "empty" ? (
                       <AssetImg imgClass="userEvents" {...preview} />
                     ) : (
-                      <AssetIcon imgClass="userEvents"  extension={preview.extension} isCollection={true} />
+                      <AssetIcon imgClass="userEvents" extension={preview.extension} isCollection={true} />
                     )}
                   </div>
                 ))}
@@ -340,20 +295,7 @@ const FolderGridItem = ({
             </>
           </div>
           {
-            // isThumbnailNameEditable &&
-            // isEditing &&
-            // focusedItem &&
-            // focusedItem === id ? (
-            //   <input
-            //     className={`normal-text ${styles["editable-field"]} ${
-            //       activeView === "list" && styles["list-editable-field"]
-            //     } ${gridStyles["editable-input"]}`}
-            //     value={thumbnailName}
-            //     onChange={handleNameChange}
-            //     onBlur={updateNameOnBlur}
-            //     autoFocus
-            //   />
-            // ) : (
+
             <span
               data-drag="false"
               id="editable-preview"
@@ -363,7 +305,6 @@ const FolderGridItem = ({
             >
               {thumbnailName}
             </span>
-            // )
           }
         </div>
       </div>

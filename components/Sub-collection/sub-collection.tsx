@@ -1,4 +1,4 @@
-import React, { CSSProperties, useContext, useEffect, useRef, useState } from 'react';
+import React, { CSSProperties, HtmlHTMLAttributes, useContext, useEffect, useRef, useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import { Utilities } from '../../assets';
@@ -12,9 +12,9 @@ import FolderTableHeader from '../common/asset/Folder-table-header/folder-table-
 import Button from '../common/buttons/button';
 import FilterView from '../common/filter-view';
 import FolderGridItem from '../common/folder/folder-grid-item';
-import styles from '../new-subcollection-design/Sub-collection/sub-collection.module.css';
 import ConfirmModal from '../common/modals/confirm-modal';
 import SpinnerOverlay from '../common/spinners/spinner-overlay';
+import styles from '../new-subcollection-design/Sub-collection/sub-collection.module.css';
 
 interface Box {
   left: number;
@@ -54,6 +54,7 @@ const SubCollection = ({
   elementsAssetContainerRef,
   elementsFolderContainerRef
 }: any) => {
+
   const {
     setActiveSubFolders,
     subFoldersViewList: { results, next, total },
@@ -66,10 +67,16 @@ const SubCollection = ({
     setAssetDragFlag,
     setAssetDragId,
     setAssetDragType,
-    setDroppableId
+    setDroppableId,
+    collectionDragFlag,
+    setCollectionDragFlag,
+    setCollectionDragId,
+    setCollectionParentDragId
   } = useContext(AssetContext);
+
   const { user } = useContext(UserContext);
 
+  const [droppableFolderName, setDroppableFolderName] = useState("")
   const [collectionHide, setCollectionHide] = useState(false);
   const [assetsHide, setAssetsHide] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
@@ -81,11 +88,16 @@ const SubCollection = ({
 
   //End of logic for Sorting in subCollection view
   const loadingAssetsFolders = assets.length > 0 && assets[assets.length - 1].isLoading;
+  // State for Dropping assets
+  const childAsset = useRef("");
+  const parentFolder = useRef("");
+  const [moveModalFlag, setMoveModalFlag] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   useEffect(() => {
     return () => {
       setActiveSubFolders("");
-      setSubFoldersAssetsViewList({ results: [], next: 0, total: 0 });
+      // setSubFoldersAssetsViewList({ results: [], next: 0, total: 0 });
       setShowSubCollectionContent(false);
     };
   }, []);
@@ -150,7 +162,6 @@ const SubCollection = ({
   const getStyling = (): CSSProperties => {
     return isSticky ? { position: "fixed", width: "calc(100% - 350px)", top: bottom1, zIndex: 1200 } : {};
   }
-
   //Handle the selctable Item for the drag selct area at initial load and load more functionality 
   useEffect(() => {
     if (elementsFolderContainerRef.current && sortedFolders?.length && sortedAssets?.length === 0) {
@@ -188,10 +199,6 @@ const SubCollection = ({
     }
   }, [sortedFolders?.length, activeView, sortedAssets?.length]);
   //------Drag-Select-area-------End======//
-  const childAsset = useRef("");
-  const parentFolder = useRef("");
-  const [moveModalFlag, setMoveModalFlag] = useState(false);
-  const [loader, setLoader] = useState(false);
 
   const isAdmin = () => {
     return user?.role?.id === "admin" || user?.role?.id === "super_admin";
@@ -214,26 +221,31 @@ const SubCollection = ({
   };
 
   const handleDrop = (e) => {
-    if (isAdmin()) {
+    if (isAdmin() && !collectionDragFlag) { // Check for checking for admin and collection drag flag false in case we try to move sub-collection in collection only asset will be moving
       onDragDrop(e);
+    } else if (collectionDragFlag) {
+      resetMoveState();
+      toastUtils.error("Could not move sub-collection into another sub-collection.")
     }
   };
 
   const onDragDrop = async (evt) => {
     const element = evt.currentTarget
     parentFolder.current = element.id
+    setDroppableFolderName(element.dataset.name)
     if (childAsset.current !== "" && childAsset.current !== parentFolder.current) {
       setMoveModalFlag(true)
     } else if (childAsset.current === "") {
       resetMoveState();
       toastUtils.error("Could not move assets, please try again later.");
+    } else {
+      setAssetDragFlag(false);
+      setAssetDragId("");
+      setAssetDragType("")
+      setDroppableId("")
+      setDroppableFolderName("");
     }
-    setAssetDragFlag(false);
-    setAssetDragId("");
-    setAssetDragType("")
-    setDroppableId("")
   };
-
 
   const resetMoveState = () => {
     childAsset.current = "";
@@ -244,7 +256,12 @@ const SubCollection = ({
     setAssetDragFlag(false);// Global state for start the dragging in side nav
     setAssetDragType("");// Global state in for asset if move or copy 
     setDroppableId("") //Global state in sidenav for droppbale 
+    setCollectionDragFlag(false);// Global state in for collection drag when
+    setCollectionDragId("");// Global state in for collection drag
+    setCollectionParentDragId("")
+    setDroppableFolderName("");// local state in for drag when
   };
+
   const removeSelectedFromList = () => {
     const newAssets = assets.filter((existingAsset) => {
       return existingAsset?.asset?.id !== childAsset.current
@@ -256,6 +273,7 @@ const SubCollection = ({
     });
     resetMoveState();
   };
+
   const handleMoveError = (err) => {
     resetMoveState();
 
@@ -265,6 +283,7 @@ const SubCollection = ({
       toastUtils.error("Could not move assets, please try again later.");
     }
   };
+
   const moveReplaceAssets = async () => {
     try {
       setLoader(true);
@@ -282,6 +301,12 @@ const SubCollection = ({
   const closeMoveModal = () => {
     resetMoveState();
   }
+
+  const handleCollectionDragStart = (e: React.DragEvent<HTMLLIElement>, parentId: string) => {
+    setCollectionDragFlag(true);
+    setCollectionDragId(e.currentTarget.id)
+    setCollectionParentDragId(parentId)
+  };
 
   return (
     <>
@@ -302,7 +327,6 @@ const SubCollection = ({
           </div>
         </div>
       )}
-      {/* <DragSelection /> */}
       {!collectionHide && (
         <>
           {/* list wrapper for list view */}
@@ -321,6 +345,9 @@ const SubCollection = ({
                     ref={ref}
                     style={{ width: `$${widthCard}px` }}
                     onDrop={(e) => handleDrop(e)}
+                    onDragStart={(e) => { handleCollectionDragStart(e, folder?.parentId || "") }}
+                    draggable={isDraggable()}
+                    data-name={folder?.name || ""}
                   >
                     <FolderGridItem
                       {...folder}
@@ -487,12 +514,12 @@ const SubCollection = ({
         </>
       }
       <ConfirmModal
-        message={"Move 1 asset to ..."}
+        message={`Move 1 asset to ${droppableFolderName}`}
         modalIsOpen={moveModalFlag}
         closeModal={() => closeMoveModal()}
         confirmAction={moveReplaceAssets}
         confirmText={"Move"}
-        subText="The assets will be moved into the new collection(s) and will be removed from their current collection(s)"
+        subText="The assets will be moved into the new collection and will be removed from their current collection"
       />
     </>
   )

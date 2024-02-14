@@ -27,7 +27,7 @@ const NestedSidenav = ({ viewFolder }) => {
   ) as { setActiveSortFilter: Function; activeSortFilter: any };
   const {
     advancedConfig,
-    user: { team },
+    user,
   } = useContext(UserContext) as { advancedConfig: any; user: any };
 
   const headingClick = (value: string, description: string) => {
@@ -56,7 +56,6 @@ const NestedSidenav = ({ viewFolder }) => {
     setLastUploadedFolder(undefined);
     //setting the HeaderName
     setHeaderName(description);
-    console.log("in heading click")
     setActiveFolder("");
     setActiveSubFolders("");
     setActiveSortFilter({
@@ -74,7 +73,7 @@ const NestedSidenav = ({ viewFolder }) => {
       <div className={styles["sidenav-content"]}>
         <ReusableHeading
           customStyle={{ padding: "0px 23px 0px 0px" }}
-          text={`${team?.company}`}
+          text={`${user?.team?.company}`}
           headingClick={headingClick}
           icon={
             <img

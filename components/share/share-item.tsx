@@ -14,7 +14,6 @@ import styles from './share-item.module.css';
 const ShareItem = ({
   asset,
   thumbailUrl,
-  realUrl,
   isSelected = false,
   toggleSelected = () => { },
   sharedCode = ""

@@ -16,7 +16,6 @@ export async function getServerSideProps({ req, res, query }) {
         const { assetId, isShare, sharePath, sharedCode, activeFolder, availableNext, activeSubFolders, headerName } = query;
         const cookies = new Cookies(req.headers.cookie, { path: '/' });
         // Adding custom headers to the fetch request
-        console.log(JSON.stringify(query), "hello")
         const share = isShare === 'true' ? true : false
         const headers = {
             'Content-Type': 'application/json', // Add any headers you need
@@ -24,9 +23,7 @@ export async function getServerSideProps({ req, res, query }) {
         };
         // Using fetch to get data from the API with custom headers
         let apiUrl = `${process.env.SERVER_BASE_URL}/assets/${assetId} `;
-        if (share) {
-            apiUrl = `${process.env.SERVER_BASE_URL}/share-collections/assets/${assetId}?${querystring.encode({ sharePath, sharedCode })}`;
-        }
+
         const fetchRes = await fetch(apiUrl, { headers });
         // Checking if the response was successful
         if (!fetchRes.ok) {
@@ -45,13 +42,12 @@ export async function getServerSideProps({ req, res, query }) {
                 isShare: share,
                 sharedCode: sharedCode,
                 activeFolder: activeFolder,
-                availableNext: availableNext,
+                availableNext: availableNext === "true" ? true : false,
                 completeAsset: data,
                 headerName: headerName,
                 activeSubFolders: activeSubFolders,
             },
         };
-
     } catch (error) {
         return {
             props: {

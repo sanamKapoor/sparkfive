@@ -1,28 +1,18 @@
-import { useContext, useEffect, useState } from "react";
-import { isMobile } from "react-device-detect";
+import { useContext, useEffect, useState } from 'react';
+import React from 'react';
+import { isMobile } from 'react-device-detect';
 
-import React from "react";
-import { Utilities } from "../../../assets";
-import {
-  ASSET_UPLOAD_APPROVAL,
-  ASSET_UPLOAD_NO_APPROVAL,
-} from "../../../constants/permissions";
-import { AssetContext, UserContext } from "../../../context";
-import selectOptions from "../../../utils/select-options";
-import AssetAddition from "../../common/asset/asset-addition";
-import {
-  default as SearchOverlay,
-  default as SearchOverlayAssets,
-} from "../../main/search-overlay-assets";
-import NavHeading from "../../topbar-newnavigation/NavHeading";
-import Button from "../buttons/button";
-import Dropdown from "../inputs/dropdown";
-import Select from "../inputs/select";
-import styles from "./top-bar.module.css";
-
-import { useRouter } from "next/router";
-
-import { DEFAULT_FILTERS } from "../../../utils/asset";
+import { Utilities } from '../../../assets';
+import { ASSET_UPLOAD_APPROVAL, ASSET_UPLOAD_NO_APPROVAL } from '../../../constants/permissions';
+import { AssetContext, UserContext } from '../../../context';
+import selectOptions from '../../../utils/select-options';
+import AssetAddition from '../../common/asset/asset-addition';
+import SearchOverlay, { default as SearchOverlayAssets } from '../../main/search-overlay-assets';
+import NavHeading from '../../topbar-newnavigation/NavHeading';
+import Button from '../buttons/button';
+import Dropdown from '../inputs/dropdown';
+import Select from '../inputs/select';
+import styles from './top-bar.module.css';
 
 const TopBar = ({
   activeSortFilter,
@@ -34,41 +24,28 @@ const TopBar = ({
   activeFolder = "",
   isShare = false,
   deletedAssets,
-  singleCollection = false,
-  sharedAdvanceConfig,
   amountSelected = 0,
   mode,
   showAssetAddition = true,
   activeSearchOverlay,
   closeSearchOverlay,
-  setDetailOverlayId,
-  setCurrentViewAsset,
   sharePath,
   isFolder,
 }: any) => {
   const {
-    selectedAllAssets,
     selectAllAssets,
     selectAllFolders,
-    selectedAllFolders,
     setLastUploadedFolder,
-    folders,
-    setActiveFolder,
     sidebarOpen,
     setSidebarOpen,
-    selectedAllSubFoldersAndAssets,
     setSelectedAllSubFoldersAndAssets,
     activeSubFolders,
     setSelectedAllSubAssets
   } = useContext(AssetContext);
-  const router = useRouter();
 
   const { hasPermission, advancedConfig } = useContext(UserContext) as any;
-  const [hideFilterElements] = useState(advancedConfig.hideFilterElements);
-  const [showTabs, setShowTabs] = useState(isMobile ? false : true);
   const [showViewDropdown, setShowViewDropdown] = useState(false);
 
-  const [tabs, setTabs] = useState(selectOptions.views);
 
   const setSortFilterValue = (key: string, value: string) => {
 
@@ -90,54 +67,11 @@ const TopBar = ({
     // And uploaded folder needed to show at first
     setLastUploadedFolder(undefined);
 
-    // if (reset) {
-    //   setActiveSortFilter({
-    //     ...activeSortFilter,
-    //     [key]: value,
-    //     sort,
-    //     ...DEFAULT_FILTERS,
-    //   });
-    // } else {
     setActiveSortFilter({
       ...activeSortFilter,
       [key]: value,
       sort,
     });
-    // }
-  };
-
-  const toggleSelectAll = () => {
-    selectAllAssets(!selectedAllAssets);
-  };
-  const toggleSelectAllFolders = () => {
-    selectAllFolders(!selectedAllFolders);
-  };
-  const toggleSelectSubCollection = () => {
-    setSelectedAllSubFoldersAndAssets(!selectedAllSubFoldersAndAssets);
-  };
-
-  const setTabsVisibility = () => {
-    const filterElements = sharedAdvanceConfig
-      ? sharedAdvanceConfig.hideFilterElements
-      : hideFilterElements;
-
-    const _tabs = selectOptions.views.filter((tab) => {
-      let tabName = tab.text.toLowerCase();
-      let shouldShow = true;
-      if (filterElements && filterElements.hasOwnProperty(tabName)) {
-        shouldShow = !filterElements[tabName];
-      }
-      return shouldShow;
-    });
-    setTabs(_tabs);
-  };
-
-  useEffect(() => {
-    setTabsVisibility();
-  }, [sharedAdvanceConfig]);
-
-  const handleOpenFilter = () => {
-    //TODO
   };
 
   return (
@@ -148,7 +82,6 @@ const TopBar = ({
     >
       <div
         className={styles["filter-mobile"]}
-        onClick={() => handleOpenFilter()}
       >
         <img src={Utilities.filterBlue} alt={"filter"} />
       </div>
@@ -215,18 +148,20 @@ const TopBar = ({
               </div>
             </div>
           )}
-          {activeSearchOverlay && !(isShare && isFolder) && (
-            <SearchOverlay
-              closeOverlay={closeSearchOverlay}
-              activeFolder={
-                mode === "SubCollectionView" ? activeSubFolders : activeFolder
-              }
-              mode={mode}
-              sharePath={sharePath}
-              isFolder={isFolder}
-              onClickOutside={undefined}
-            />
-          )}
+          {activeSearchOverlay &&
+            // !(isShare && isFolder) && 
+            (
+              <SearchOverlay
+                closeOverlay={closeSearchOverlay}
+                activeFolder={
+                  mode === "SubCollectionView" ? activeSubFolders : activeFolder
+                }
+                mode={mode}
+                sharePath={sharePath}
+                isFolder={isFolder}
+                onClickOutside={undefined}
+              />
+            )}
           {(amountSelected === 0 || mode === "folders") &&
             showAssetAddition &&
             hasPermission([

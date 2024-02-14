@@ -321,15 +321,6 @@ const AssetsLibrary = () => {
     return () => clearTimeout(timer);
   }, [loadingAssets]);
 
-  const clearFilters = (data = {}) => {
-    setActiveSortFilter({
-      ...activeSortFilter,
-      ...DEFAULT_FILTERS,
-      ...DEFAULT_CUSTOM_FIELD_FILTERS(activeSortFilter),
-      ...data,
-    });
-  };
-
   const updateSortFilterByAdvConfig = async (params: any = {}) => {
     let defaultTab = getDefaultTab();
     const filters = Object.keys(router.query);

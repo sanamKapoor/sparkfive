@@ -1,33 +1,26 @@
-import update from "immutability-helper";
-import { useRouter } from "next/router";
+import update from 'immutability-helper';
+import { useRouter } from 'next/router';
+import { useContext, useEffect, useState } from 'react';
 
-import { isMobile } from "react-device-detect";
-import { useContext, useEffect, useState } from "react";
-import { AssetContext, FilterContext, ShareContext, UserContext } from "../../context";
-import folderApi from "../../server-api/folder";
-import shareCollectionApi from "../../server-api/share-collection";
-import { DEFAULT_CUSTOM_FIELD_FILTERS, DEFAULT_FILTERS, getAssetsFilters, getAssetsSort } from "../../utils/asset";
-import requestUtils from "../../utils/requests";
-import toastUtils from "../../utils/toast";
-import styles from "./index.module.css";
+import { AssetContext, FilterContext, ShareContext, UserContext } from '../../context';
+import folderApi from '../../server-api/folder';
+import shareCollectionApi from '../../server-api/share-collection';
+import { getAssetsFilters, getAssetsSort } from '../../utils/asset';
+import requestUtils from '../../utils/requests';
+import selectOptions from '../../utils/select-options';
+import toastUtils from '../../utils/toast';
+import AssetGrid from '../common/asset/asset-grid';
+import AssetOps from '../common/asset/asset-ops';
+import TopBar from '../common/asset/top-bar';
+import Spinner from '../common/spinners/spinner';
+import styles from './index.module.css';
+import PasswordOverlay from './password-overlay';
+import NestedFirstlist from './shared-nested-sidenav/shared-nested-firstlist';
+import SharedPageSidenav from './shared-nested-sidenav/shared-nested-sidenav';
 
 // Components
-import AssetGrid from "../common/asset/asset-grid";
-import AssetOps from "../common/asset/asset-ops";
-import TopBar from "../common/asset/top-bar";
-import PasswordOverlay from "./password-overlay";
-
-import selectOptions from "../../utils/select-options";
-import Spinner from "../common/spinners/spinner";
-import SharedPageSidenav from "./shared-nested-sidenav/shared-nested-sidenav";
-
-import { loadTheme } from "../../utils/theme";
-
-import { defaultLogo } from "../../constants/theme";
-
 const ShareFolderMain = () => {
   const router = useRouter();
-
   const {
     assets,
     setAssets,
@@ -57,14 +50,11 @@ const ShareFolderMain = () => {
     selectedAllSubAssets,
     setSelectedAllSubAssets,
     selectedAllSubFoldersAndAssets,
-    setSidebarOpen,
     sidebarOpen,
   } = useContext(AssetContext);
 
   const { user, advancedConfig, setAdvancedConfig, setLogo } = useContext(UserContext);
-
   const { folderInfo, setFolderInfo, activePasswordOverlay, setActivePasswordOverlay } = useContext(ShareContext);
-
   const {
     activeSortFilter,
     setActiveSortFilter,
@@ -79,96 +69,9 @@ const ShareFolderMain = () => {
   const [activeView, setActiveView] = useState("grid");
   const [sharePath, setSharePath] = useState("");
   const [activeMode, setActiveMode] = useState("assets");
-  const [openFilter, setOpenFilter] = useState(activeMode === "assets" && !isMobile ? true : false);
-  const [parentFolders, setParentFolders] = useState([]);
-
-  const [sidenavFolderList, setSidenavFolderList] = useState([]);
   const [widthCard, setWidthCard] = useState(0);
 
   const [top, setTop] = useState("calc(55px + 5rem)");
-
-  const submitPassword = async (password, email) => {
-    try {
-      const { data } = await folderApi.authenticateCollection({
-        password,
-        email,
-        sharePath,
-      });
-      // Set axios headers
-      requestUtils.setAuthToken(data.token, "share-authorization");
-
-      getFolderInfo(true);
-    } catch (err) {
-      console.log(err);
-      toastUtils.error("Wrong password or invalid link, please try again");
-    }
-  };
-
-  const getFolders = async (replace = true) => {
-    try {
-      if (replace) {
-        setAddedIds([]);
-      }
-
-      setPlaceHolders("folder", replace);
-
-      const { field, order } = activeSortFilter.sort;
-      const queryParams = {
-        page: replace ? 1 : nextPage,
-        sortField: field,
-        sortOrder: order,
-        sharePath,
-      };
-
-      if (!replace && addedIds.length > 0) {
-        // @ts-ignore
-        queryParams.excludeIds = addedIds.join(",");
-      }
-      if (activeSortFilter.filterFolders?.length > 0) {
-        // @ts-ignore
-        queryParams.folders = activeSortFilter.filterFolders.map((item) => item.value).join(",");
-      }
-      const { data } = await shareCollectionApi.getFolders({
-        ...queryParams,
-        ...(term && { term }),
-      });
-
-      let assetList = { ...data, results: data.results };
-
-      setFolders(assetList, replace);
-
-    } catch (err) {
-      //TODO: Handle error
-      console.log(err);
-    }
-  };
-
-  const setInitialLoad = async (folderInfo) => {
-    if (!firstLoaded && folderInfo && folderInfo.customAdvanceOptions) {
-      setFirstLoaded(true);
-
-      const mode = folderInfo.singleSharedCollectionId ? !folderInfo?.sharedFolder?.parentId ? "SubCollectionView" : "all" : "folders";
-
-      let sort = { ...activeSortFilter.sort };
-      if (mode === "folders") {
-        sort =
-          folderInfo.customAdvanceOptions.collectionSortView === "alphabetical"
-            ? selectOptions.sort[3]
-            : selectOptions.sort[1];
-      } else {
-        sort =
-          folderInfo.customAdvanceOptions.assetSortView === "alphabetical"
-            ? selectOptions.sort[3]
-            : selectOptions.sort[1];
-      }
-
-      setActiveSortFilter({
-        ...activeSortFilter,
-        mainFilter: mode, // Set to all if only folder is shared
-        sort: sort,
-      });
-    }
-  };
 
   useEffect(() => {
     const { asPath } = router;
@@ -179,9 +82,22 @@ const ShareFolderMain = () => {
       setSharePath(splitPathWithoutQuery[0]);
       setContextPath(splitPathWithoutQuery[0]);
     }
+    onChangeWidth();
+    window.addEventListener("resize", onChangeWidth);
+    return () => {
+      window.removeEventListener("resize", onChangeWidth);
+    };
   }, [router.asPath]);
 
   useEffect(() => {
+    if (sharePath && sharePath !== "[team]/[id]/[name]" && !firstLoaded) {
+      console.log("in here page shrepath")
+      getFolderInfo();
+    }
+  }, [sharePath]);
+
+  useEffect(() => {
+
     if (selectedAllAssets) {
       selectAllAssets(false);
     }
@@ -195,12 +111,6 @@ const ShareFolderMain = () => {
   }, [activeMode]);
 
   useEffect(() => {
-    if (sharePath && sharePath !== "[team]/[id]/[name]") {
-      getFolderInfo();
-    }
-  }, [sharePath]);
-
-  useEffect(() => {
     if (needsFetch === "assets") {
       getAssets();
     } else if (needsFetch === "folders") {
@@ -210,17 +120,19 @@ const ShareFolderMain = () => {
   }, [needsFetch]);
 
   useEffect(() => {
-    setInitialLoad(folderInfo);
+    setInitialLoad(folderInfo, activeSortFilter.mainFilter);
     if (firstLoaded && sharePath) {
       setActivePageMode("library");
       if (activeSortFilter.mainFilter === "folders") {
         setActiveMode("folders");
         getFolders();
-      } else if (activeSortFilter.mainFilter === "SubCollectionView" && activeSubFolders !== "") {
+      }
+      else if (activeSortFilter.mainFilter === "SubCollectionView" && activeSubFolders !== "") {
         setActiveMode("SubCollectionView");
-        getSubCollectionsFolderData(true, 50);
+        getSubCollectionsFolderData(true, 10);
         getSubCollectionsAssetData();
-      } else {
+      }
+      else {
         setActiveMode("assets");
         setAssets([]);
         getAssets();
@@ -260,21 +172,145 @@ const ShareFolderMain = () => {
     }
   }, [activeFolder]);
 
-  useEffect(() => {
-    onChangeWidth();
-    window.addEventListener("resize", onChangeWidth);
-    return () => window.removeEventListener("resize", onChangeWidth);
-  }, []);
+  const submitPassword = async (password, email) => {
+    try {
+      const { data } = await folderApi.authenticateCollection({
+        password,
+        email,
+        sharePath,
+      });
+      // Set axios headers
+      requestUtils.setAuthToken(data.token, "share-authorization");
+      getFolderInfo(true);
+    } catch (err) {
+      toastUtils.error("Wrong password or invalid link, please try again");
+    }
+  };
 
-  const getSubCollectionsFolderData = async (replace = true, pageSize?: number = 50) => {
+  const getFolders = async (replace = true) => {
+    try {
+      if (replace) {
+        setAddedIds([]);
+      }
+      setPlaceHolders("folder", replace);
+      const { field, order } = activeSortFilter.sort;
+      const queryParams = {
+        page: replace ? 1 : nextPage,
+        sortField: field,
+        sortOrder: order,
+        sharePath,
+      };
+
+      if (!replace && addedIds.length > 0) {
+        // @ts-ignore
+        queryParams.excludeIds = addedIds.join(",");
+      }
+      if (activeSortFilter.filterFolders?.length > 0) {
+        // @ts-ignore
+        queryParams.folders = activeSortFilter.filterFolders.map((item) => item.value).join(",");
+      }
+      const { data } = await shareCollectionApi.getFolders({
+        ...queryParams,
+        ...(term && { term }),
+      });
+      let assetList = { ...data, results: data.results };
+      setFolders(assetList, replace);
+      setLoading(false)
+    } catch (err) {
+      setLoading(false)
+      //TODO: Handle error
+      console.log(err);
+    }
+  };
+
+  const setInitialLoad = async (folderInfo) => {
+    console.log(firstLoaded, folderInfo, folderInfo.customAdvanceOptions, "firstLoaded && folderInfo && folderInfo.customAdvanceOptions")
+    if (!firstLoaded && folderInfo && folderInfo.customAdvanceOptions) {
+      setFirstLoaded(true);
+      let mode, sort;
+      if (folderInfo?.singleSharedCollectionId && folderInfo?.sharedFolder?.parentId) {
+        sort =
+          folderInfo?.customAdvanceOptions.assetSortView === "alphabetical"
+            ? selectOptions.sort[3]
+            : selectOptions.sort[1];
+        mode = "all";
+      } else if (folderInfo?.singleSharedCollectionId && !folderInfo?.sharedFolder?.parentId) {
+        setActiveSubFolders(folderInfo?.singleSharedCollectionId);
+        return;
+      } else if (!folderInfo?.singleSharedCollectionId) {
+        sort =
+          folderInfo?.customAdvanceOptions.collectionSortView === "alphabetical"
+            ? selectOptions.sort[3]
+            : selectOptions.sort[1];
+        mode = "folders";
+      }
+      setActiveSortFilter({
+        ...activeSortFilter,
+        mainFilter: mode, // Set to all if only folder is shared
+        sort: sort,
+      });
+      setHeaderName(folderInfo.folderName)
+    }
+  };
+
+  const getFolderInfo = async (displayError = false, ignoreFolder = false) => {
+    try {
+      console.log("hello in here")
+      const { data } = await shareCollectionApi.getFolderInfo({ sharePath });
+      let sort, mode;
+      if (firstLoaded) {
+        if (data?.singleSharedCollectionId && data?.sharedFolder?.parentId) {
+          sort =
+            data?.customAdvanceOptions.assetSortView === "alphabetical"
+              ? selectOptions.sort[3]
+              : selectOptions.sort[1];
+          mode = "all";
+          setActiveSortFilter({
+            ...activeSortFilter,
+            mainFilter: mode, // Set to all if only folder is shared
+            sort: sort,
+          });
+        } else if (data?.singleSharedCollectionId && !data?.sharedFolder?.parentId) {
+          setActiveSubFolders(data?.singleSharedCollectionId);
+        } else if (!data?.singleSharedCollectionId) {
+          sort =
+            data?.customAdvanceOptions.collectionSortView === "alphabetical"
+              ? selectOptions.sort[3]
+              : selectOptions.sort[1];
+          mode = "folders";
+          setActiveSortFilter({
+            ...activeSortFilter,
+            mainFilter: mode, // Set to all if only folder is shared
+            sort: sort,
+          });
+        }
+      }
+      console.log("heeheheheh")
+      setHeaderName(data.folderName)
+      setFolderInfo(data);
+      setAdvancedConfig(data.customAdvanceOptions);
+      setActivePasswordOverlay(false);
+      setLoading(false);
+    } catch (err) {
+      // If not 500, must be auth error, request user password
+      if (err.response?.status !== 500) {
+        setFolderInfo(err.response.data);
+        setActivePasswordOverlay(true);
+      }
+      if (displayError) {
+        toastUtils.error("Wrong password or invalid link, please try again");
+      }
+      setLoading(false);
+    }
+  };
+
+  const getSubCollectionsFolderData = async (replace = true, pageSize: number = 10, nestedSubFolderId: string = "") => {
     try {
       if (activeSortFilter.mainFilter !== "SubCollectionView") {
         return;
       }
-      setParentFolders(folderInfo.singleSharedCollectionId ? [folderInfo?.sharedFolder] : []);
       const { field, order } = activeSortFilter.sort;
       const { next } = subFoldersViewList;
-
       const queryParams = {
         page: replace ? 1 : next,
         pageSize: pageSize,
@@ -291,12 +327,12 @@ const ShareFolderMain = () => {
           ...queryParams,
           ...(term && { term }),
         },
-        activeSubFolders,
+        nestedSubFolderId ? nestedSubFolderId : activeSubFolders,
       );
       setSubFoldersViewList(subFolders, replace);
-      setSidenavFolderList(subFolders?.results || []);
+      setLoading(false)
     } catch (err) {
-      // TODO: Handle Error
+      setLoading(false)
       console.log(err);
     }
   };
@@ -330,50 +366,6 @@ const ShareFolderMain = () => {
     } catch (err) {
       // TODO: Handle Error
       console.log(err);
-    }
-  };
-
-  const getFolderInfo = async (displayError = false, ignoreFolder = false) => {
-    try {
-      const { data } = await shareCollectionApi.getFolderInfo({ sharePath });
-
-      const sharedFolder = data.sharedFolder;
-      // Needed for navigation(arrows) information in detail-overlay
-      let condition = true
-      ignoreFolder ? null : condition = (activeFolder === "" && activeSubFolders === "")
-      if (sharedFolder && condition) {
-        const folders = [{ ...sharedFolder, assets: [...assets] }];
-        if (!sharedFolder?.parentId) {
-          setActiveSubFolders(sharedFolder.id);
-        } else {
-          setActiveFolder(sharedFolder.id);
-          setFolders(folders);
-        }
-      }
-      setActivePasswordOverlay(false);
-      setFolderInfo(data);
-      setAdvancedConfig(data.customAdvanceOptions);
-
-      setHeaderName(data.folderName);
-      // There is team theme set
-      if (data.theme) {
-        // Load theme from team settings
-        const currentTheme = loadTheme(data.theme);
-        // @ts-ignore
-        setLogo(currentTheme.logoImage?.realUrl || defaultLogo);
-      }
-      setLoading(false);
-    } catch (err) {
-      console.log(err);
-      // If not 500, must be auth error, request user password
-      if (err.response?.status !== 500) {
-        setFolderInfo(err.response.data);
-        setActivePasswordOverlay(true);
-      }
-      if (displayError) {
-        toastUtils.error("Wrong password or invalid link, please try again");
-      }
-      setLoading(false);
     }
   };
 
@@ -421,11 +413,6 @@ const ShareFolderMain = () => {
           })),
         });
       }
-
-      // For selecting the assets only subcollection view
-      // setSubFoldersAssetsViewList({
-      //   ...subFoldersAssetsViewList, results: subFoldersAssetsViewList.results.map((asset) => ({ ...asset, isSelected: true }))
-      // })
     }
   };
 
@@ -515,9 +502,10 @@ const ShareFolderMain = () => {
         sharePath,
       });
       setAssets({ ...data, results: data.results.map(mapWithToggleSelection) }, replace);
-      setParentFolders(folderInfo.singleSharedCollectionId ? [folderInfo?.sharedFolder] : []);
-      // setFirstLoaded(true);
+      setLoading(false)
     } catch (err) {
+      setLoading(false)
+
       //TODO: Handle error
       console.log(err);
     }
@@ -532,34 +520,19 @@ const ShareFolderMain = () => {
   };
 
   const viewFolder = async (id: string, subCollection: boolean, nestedSubFolderId = "", folderName = "") => {
-    if (
-      (activeSortFilter.mainFilter === "SubCollectionView" && activeSubFolders !== "") ||
-      (subCollection && Boolean(folderInfo?.singleSharedCollectionId))
-    ) {
-      if (id) {
-        setActiveFolder(id);
-      } else {
-        getFolderInfo();
+    if (!subCollection) {
+      if (nestedSubFolderId) {
+        await getSubCollectionsFolderData(true, 50, nestedSubFolderId);
       }
-    } else if (!Boolean(folderInfo?.singleSharedCollectionId)) {
-      if (id) {
-        setActiveFolder(id);
-      } else {
-        setActiveFolder("");
-        let sort =
-          folderInfo?.customAdvanceOptions?.collectionSortView === "alphabetical"
-            ? selectOptions.sort[3]
-            : selectOptions.sort[1];
-        setActiveSortFilter({
-          ...activeSortFilter,
-          mainFilter: "folders", // Set to all if only folder is shared
-          sort: sort,
-        });
-        getFolderInfo();
-      }
-    } else if (Boolean(folderInfo?.singleSharedCollectionId)) {
+      setActiveFolder(id);
+      setActiveSubFolders("");
+      setHeaderName(
+        folderName ? folderName : subFoldersViewList.results.find((folder: any) => folder.id === id)?.name || "",
+      );
+    } else {
       setActiveFolder("");
-      getFolderInfo(false, true);
+      setActiveSubFolders(id);
+      setHeaderName(folderName ? folderName : folders.find((folder: any) => folder.id === id)?.name || "");
     }
   };
 
@@ -584,28 +557,31 @@ const ShareFolderMain = () => {
       ? styles["col-wrapperview"]
       : styles["col-wrapper"];
 
-  const headingClick = (value: string, description: string) => {
-    if (!value) {
-      return false;
-    }
-    viewFolder();
+  const headingClick = () => {
+    setActiveFolder("");
+    setActiveSubFolders("");
+    getFolderInfo();
   };
+
   const closeSearchOverlay = () => {
     getAssets();
     setActiveSearchOverlay(false);
   };
+
   return (
     <>
       {!loading && (
         <main className={`${sidebarOpen ? styles["container"] : styles["rightToggle"]} sharefolderOuter`}>
-          {sidebarOpen ? (
-            <SharedPageSidenav
-              viewFolder={viewFolder}
-              headingClick={headingClick}
-              sidenavFolderList={sidenavFolderList}
-              parentFolders={parentFolders}
-            />
-          ) : null}
+          {!((folderInfo?.singleSharedCollectionId) && (folderInfo?.sharedFolder?.parentId || subFoldersViewList.results.length === 0)) && sidebarOpen && (
+            <>
+              <NestedFirstlist sharePath={sharePath} />
+              <SharedPageSidenav
+                viewFolder={viewFolder}
+                headingClick={headingClick}
+                sharePath={sharePath}
+              />
+            </>
+          )}
           <TopBar
             activeSearchOverlay={activeSearchOverlay}
             activeSortFilter={activeSortFilter}
@@ -614,8 +590,6 @@ const ShareFolderMain = () => {
             setActiveView={setActiveView}
             setActiveSearchOverlay={() => setActiveSearchOverlay(true)}
             selectAll={selectAll}
-            isShare={true}
-            singleCollection={!!folderInfo.singleSharedCollectionId}
             sharedAdvanceConfig={user ? undefined : advancedConfig}
             isFolder={activeSortFilter.mainFilter === "folders"}
             sharePath={sharePath}
