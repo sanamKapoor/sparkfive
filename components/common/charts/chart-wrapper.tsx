@@ -60,8 +60,8 @@ const ChartWrapper = ({ chartObj, data, width = 400,  height = 400, fileName = '
   };  
 
   return (
-    <div className={styles.wrapper} ref={wrapperRef} >
-      <canvas id="chart" style={{width:"100%", height:"100%"}} ></canvas>
+    <div className={styles.wrapper} ref={wrapperRef}>
+      <canvas id="chart" style={{width:"100%", height:"100%"}}></canvas>
     </div>
   );
 };
