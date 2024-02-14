@@ -31,12 +31,9 @@ const ChartWrapper = ({ chartObj, data, width = 400,  height = 400, fileName = '
               }
           }]
         },
-        
-        options: {
-          responsive: true,
-          
-      },
-    
+        // responsive: true,
+        // maintainAspectRatio: true,
+        aspectRatio: 1,
         plugins: {
           customCanvasBackgroundColor: {
             color: '#ffffff',

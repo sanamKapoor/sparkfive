@@ -13,9 +13,12 @@
     border-collapse: collapse;
    
   }
+  .backdrops{
+    position: relative;
+  }
 
   @media (min-width:1200px){
-    .table{
+    .activityTable{
       table-layout: fixed;
     }
   }
@@ -176,12 +179,21 @@
     }
     
   }
+
+  /* @media (max-width: 475px) {
+    .tableContent{
+      height: 100px;
+      overflow: scroll;
+    }
+  } */
+
   @media(max-width:430px){
     .headingIcon{
       display: flex;
       align-items: center;
       width: 180px;
     }
+ 
 
   }
 

@@ -5,6 +5,7 @@ import TableBody from "./table-body";
 import styles from "./table-data.module.css";
 import TableHeader from "./table-header";
 import Loader from "../../../common/UI/Loader/loader";
+import { TableBodySection } from "../../../../constants/analytics";
 
 export default function TableData({
   columns,
@@ -33,7 +34,7 @@ export default function TableData({
   return (
     <>
       <div className={styles.tableResponsive}>
-        <table className={styles.table}>
+        <table className={tableFor === TableBodySection.USER_ACTIVITY ? `${styles.activityTable} ${styles.table}` : `${styles.table}`}>
           <TableHeader
             columns={columns}
             arrowColumns={arrowColumns}
@@ -52,7 +53,7 @@ export default function TableData({
             />
           }
         </table>
-        {tableLoading ? <div className={styles.backdrop}><Loader /></div> : null}
+        {tableLoading ? <div className={styles.backdrop}></div> : null}
       </div>
       {
         showModal && <Modal section={activeModalFor} setShowModal={setShowModal} id={activeId} />

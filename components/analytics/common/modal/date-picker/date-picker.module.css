@@ -1,0 +1,20 @@
+.modal-outer {
+    /* width: calc(100% - 218px);
+    margin-left: 218px; */
+    position: absolute;
+    background: white;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 218px);
+  }
+
+  .backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width:100%;
+    height: 100%;
+    z-index: 999; 
+    background: #C5C5C5E5;
+  }

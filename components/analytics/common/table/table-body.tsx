@@ -10,8 +10,10 @@ const TableBody = ({ handleModals, data, tableFor, dashboardView }) => {
     switch (tableFor) {
       case TableBodySection.DASHBOARD_ASSETS:
         return <AssetTableDashboardRows data={data} />
+      case TableBodySection.DASHBOARD_USERS:
+        return <DashboardUserTableRows data={data} handleModals={handleModals} />;
       case TableBodySection.USER:
-        return <UserTableRows data={data} handleModals={handleModals} dashboardView={dashboardView} />;
+        return <UserTableRows data={data} handleModals={handleModals} />;
       case TableBodySection.ASSET:
         return <AssetTableRows data={data} handleModals={handleModals} />;
       case TableBodySection.USER_ACTIVITY:
@@ -60,7 +62,7 @@ export const DefaultTableRows = ({ data, columns, buttonColumns, buttonTexts, ha
   );
 };
 
-export const UserTableRows = ({ data, handleModals, dashboardView }) => {
+export const DashboardUserTableRows = ({ data, handleModals }) => {
   return (
     <tbody>
       {data.map((row) => {
@@ -80,7 +82,51 @@ export const UserTableRows = ({ data, handleModals, dashboardView }) => {
                 </div>
               )}
             </td>
-            {!dashboardView && <td className={`${styles["user-role"]}`}>{row.roleId}</td>}
+            <td>{row.sessionCount}</td>
+            <td>
+              <div style={{ display: "flex" }}>
+                <span>
+                  {row.lastSession ? DateFormatter.analyticsDateFormatter(row.lastSession) : ""}
+                </span>
+              </div>
+            </td>
+            <td>
+              {row.name ? (
+                <button className={styles.actionButton} onClick={() => handleModals(row.userId, AnalyticsActiveModal.USER_ACTIVITY)}>
+                  User Info
+                </button>
+              ) : (
+                ""
+              )}
+            </td>
+          </tr>
+        );
+      })}
+    </tbody>
+  );
+};
+
+export const UserTableRows = ({ data, handleModals }) => {
+  return (
+    <tbody>
+      {data.map((row) => {
+        return (
+          <tr key={row.id}>
+            <td>
+              {row.name && (
+                <div className={styles["usernameWithImage"]}>
+                  <div className={`${styles["image-wrapper"]}`}>
+                    {row.profilePhoto !== null ? (
+                      <img src={row.profilePhoto} alt="user" className={styles.userImage} />
+                    ) : (
+                      <div className={styles.userAvatar}>{row.name.charAt(0).toUpperCase()}</div>
+                    )}
+                  </div>
+                  <span className={`${styles["user-name"]}`}>{row.name}</span>
+                </div>
+              )}
+            </td>
+            <td className={`${styles["user-role"]}`}>{row.roleId}</td>
             <td>
               <div style={{ display: "flex" }}>
                 <span>
@@ -89,8 +135,8 @@ export const UserTableRows = ({ data, handleModals, dashboardView }) => {
               </div>
             </td>
             <td>{row.sessionCount}</td>
-            {!dashboardView && <td>{row.downloads}</td>}
-            {!dashboardView && <td>{row.shares}</td>}
+            <td>{row.downloads}</td>
+            <td>{row.shares}</td>
             <td>
               {row.name ? (
                 <button className={styles.actionButton} onClick={() => handleModals(row.userId, AnalyticsActiveModal.USER_ACTIVITY)}>
@@ -148,7 +194,7 @@ export const UserActivityRows = ({ data, dashboardView }) => {
   let activityTitle = "";
   let activityDate = "";
   return (
-    <tbody>
+    <tbody className={`${styles['tableContent']}`}>
       {data.map((row) => {
         activityTitle = row.last_download ? "Download" : row.last_viewed ? "Viewed" : row.last_shared ? "Shared" : "";
         activityDate = row.last_download

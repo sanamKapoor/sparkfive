@@ -490,7 +490,7 @@ console
 }
 .apply-btn{
   min-width: 140px;
-  background: var(--primary-color);
+  background:#10BDA5;
   color:#fff;
   height: 40px;
   display: flex;

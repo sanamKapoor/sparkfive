@@ -10,7 +10,7 @@ export default function InsightsSideNav() {
   const [showNav, setShowNav] = useState(true);
 
   const handleItemClick = (route: string) => {
-    if(window.innerWidth < 901) setShowNav(false);
+    if (window.innerWidth < 901) setShowNav(false);
     router.push(route);
   };
   const handleCloseNav = () => {
@@ -33,41 +33,44 @@ export default function InsightsSideNav() {
             <span>Menu</span>
           </div>
         </div>
-      
+
       </div>
-      {showNav && <section className={styles.container}>
-        {NavItems.map((item) => {
-          return (
-            <>
-            <div  className={`${styles["responsive-device"]}`}>
-            <div className={`${styles["close-icon"]}`}>
-            <IconClickable   additionalClass={styles.toggleClose} src={insights.toggleClose} onClick={handleCloseNav} />
-            </div>
-            </div>
-         
-              <h6 className={styles.upper}>{item.parent}</h6>
-              {item.components.length > 0 && (
-                <ul>
-                  {item.components.map((comp, index) => {
-                    return (
-                      <li
-                        key={index}
-                        className={`${styles.setting} ${router.pathname === comp.route && styles.selected}`}
-                        onClick={() => handleItemClick(comp.route)}
-                      >
-                        <a className={styles.info}>
-                          <img src={comp.image} alt={`${comp.label}-img`} />
-                          <span>{comp.label}</span>
-                        </a>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-            </>
-          );
-        })}
-      </section>}
+      {showNav &&
+        <div className={styles.backdrop}>
+          <section className={styles.container}>
+            {NavItems.map((item) => {
+              return (
+                <>
+                  <div className={`${styles["responsive-device"]}`}>
+                    <div className={`${styles["close-icon"]}`}>
+                      <IconClickable additionalClass={styles.toggleClose} src={insights.toggleClose} onClick={handleCloseNav} />
+                    </div>
+                  </div>
+                  <h6 className={styles.upper}>{item.parent}</h6>
+                  {item.components.length > 0 && (
+                    <ul>
+                      {item.components.map((comp, index) => {
+                        return (
+                          <li
+                            key={index}
+                            className={`${styles.setting} ${router.pathname === comp.route && styles.selected}`}
+                            onClick={() => handleItemClick(comp.route)}
+                          >
+                            <a className={styles.info}>
+                              <img src={comp.image} alt={`${comp.label}-img`} />
+                              <span>{comp.label}</span>
+                            </a>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                </>
+              );
+            })}
+          </section>
+        </div>
+      }
     </>
   );
 }

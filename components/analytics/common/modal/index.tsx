@@ -5,8 +5,8 @@ import { calculateBeginDate } from "../../../../config/data/filter";
 import { AnalyticsActiveModal, InsightsApiEndpoint, TableBodySection } from "../../../../constants/analytics";
 import { SOMETHING_WENT_WRONG } from "../../../../constants/messages";
 import {
-    userActivityModalArrowColumns,
-    userActivityModalcolumns,
+  userActivityModalArrowColumns,
+  userActivityModalcolumns,
 } from "../../../../data/analytics";
 import AnalyticsApi from "../../../../server-api/analytics";
 import { getCSVFileName } from "../../../../utils/analytics";
@@ -15,6 +15,7 @@ import Loader from "../../../common/UI/Loader/loader";
 import Button from "../../../common/buttons/button";
 import IconClickable from "../../../common/buttons/icon-clickable";
 import ChartComp from "../chart";
+import DownloadChart from "../chart/download-button";
 import Datefilter from "../date-filter";
 import Download from "../download-button";
 import Heading from "../header/heading";
@@ -23,7 +24,6 @@ import Pagination from "../pagination";
 import TableData from "../table";
 import toastUtils from "./../../../../utils/toast";
 import styles from "./modal.module.css";
-import DownloadChart from "../chart/download-button";
 
 const Modal = ({ section, setShowModal, id }: {
   section: string,
@@ -234,7 +234,7 @@ const Modal = ({ section, setShowModal, id }: {
     <div className={`${styles.backdrop}`}>
       <section className={`${styles["user-modal-outer"]}`}>
         {
-          loading ? <Loader /> :
+          loading ? <div className={styles.test}><Loader /></div> :
             (error) ?
               <>
                 <div className={`${styles["data-close-icon"]}`}>
@@ -250,37 +250,35 @@ const Modal = ({ section, setShowModal, id }: {
               :
               activeModalSection === AnalyticsActiveModal.ASSET_CHART
                 ?
-                <div className={`${styles["user-modal"]}`}>
-                  <div className= {`${styles["user-chart-modal"]}`}>
-                  <Heading mainText={apiData?.asset?.name || 'Asset Chart'} />
-                  <div className= {`${styles["user-filters"]}`} >
-                    <Datefilter
-                      filter={modalData.filter}
-                      customDates={modalData.customDates}
-                      setFilter={handleFilter}
-                      setCustomDates={handleCustomDate}
-                    />
-                    <div style={{marginLeft:"20px"}}>
-                    <DownloadChart fileName={apiData?.asset?.name || 'Asset Chart'} />
-                    </div>
-                
-                    <div className={`${styles["data-close-icon"]}`}>
-                      <IconClickable
-                        src={insights.insightClose}
-                        additionalClass={styles.closeIcon}
-                        text={""}
-                        onClick={handleCloseModal}
+                <div className={`${styles["user-modal"]} ${styles["adaptive-modal"]}`}>
+                  <div className={`${styles["user-chart-modal"]}`}>
+                    <Heading mainText={apiData?.asset?.name || 'Asset Chart'} />
+                    <div className={`${styles["user-filters"]}`} >
+                      <Datefilter
+                        filter={modalData.filter}
+                        customDates={modalData.customDates}
+                        setFilter={handleFilter}
+                        setCustomDates={handleCustomDate}
                       />
+                      <div className={styles.chartDownload}>
+                        <DownloadChart fileName={apiData?.asset?.name || 'Asset Chart'} />
+                      </div>
                     </div>
                   </div>
+                  <div className={`${styles["close-mob"]}`}>
+                    <IconClickable
+                      src={insights.insightClose}
+                      additionalClass={styles.closeIcon}
+                      text={""}
+                      onClick={handleCloseModal}
+                    />
                   </div>
                   <div className={`${styles["modal-chart-container"]}`}>
-                  <ChartComp data={apiData} fileName={apiData?.asset?.name && (apiData?.asset?.name).split('.')[0]} />
+                    <ChartComp data={apiData} fileName={apiData?.asset?.name && (apiData?.asset?.name).split('.')[0]} />
                   </div>
-                
                 </div>
                 :
-                <div className={`${styles["user-modal"]}`}>
+                <div className={`${styles["user-modal"]} ${styles["adaptive-modal"]}`}>
                   {
                     (modalHeaderData && modalHeaderData?.name) &&
                     <div className={styles["profile-img-wrapper"]}>
@@ -312,12 +310,14 @@ const Modal = ({ section, setShowModal, id }: {
                         setCustomDates={handleCustomDate}
                       />
                       <Download setDownloadCSV={setDownloadCSV} />
-                      <IconClickable
-                        src={insights.insightClose}
-                        additionalClass={styles.closeIcon}
-                        text={""}
-                        onClick={handleCloseModal}
-                      />
+                      <div className={`${styles["close-mob"]}`}>
+                        <IconClickable
+                          src={insights.insightClose}
+                          additionalClass={styles.closeIcon}
+                          text={""}
+                          onClick={handleCloseModal}
+                        />
+                      </div>
                     </div>
                   </div>
                   {/* for laptop */}
@@ -344,12 +344,14 @@ const Modal = ({ section, setShowModal, id }: {
                           setCustomDates={handleCustomDate}
                         />
                         <Download setDownloadCSV={setDownloadCSV} />
-                        <IconClickable
-                          src={insights.insightClose}
-                          additionalClass={styles.closeIcon}
-                          text={""}
-                          onClick={() => setShowModal(false)}
-                        />
+                        <div className={`${styles["close-mob"]}`}>
+                          <IconClickable
+                            src={insights.insightClose}
+                            additionalClass={styles.closeIcon}
+                            text={""}
+                            onClick={() => setShowModal(false)}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -390,6 +392,7 @@ const Modal = ({ section, setShowModal, id }: {
                     </div>
                   </div>
                   {(apiData && apiData?.length > 0 && sortBy) && <div className={`${styles["clear-sort"]}`}><Button text="Clear sorting" className={'clear-sort-btn'} onClick={handleClearSorting} /></div>}
+
                   <TableData
                     data={apiData}
                     apiData={apiData}

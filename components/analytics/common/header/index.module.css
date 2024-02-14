@@ -43,11 +43,14 @@
 }
 
 @media (max-width:475px){
-    .heading {
+    .heading, .smallHeading {
        font-size: 14px;
     }
     .description{
         margin-left: 0;
+    }
+    .heading{
+        max-width: 243px;
     }
 }
 

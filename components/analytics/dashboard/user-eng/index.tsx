@@ -62,7 +62,7 @@ const UserEngagment = ({ initialData }) => {
         sortOrder={sortOrder}
         setSortBy={setSortBy}
         setSortOrder={setSortOrder}
-        tableFor={TableBodySection.USER}
+        tableFor={TableBodySection.DASHBOARD_USERS}
         dashboardView={true}
       />
     </div>

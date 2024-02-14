@@ -56,8 +56,6 @@
     top:138px;
 
   }
-
-
 }
 
 @media (max-width:600px){
@@ -68,5 +66,11 @@
   .header{
     top:112px
 
+  }
+  .titles, .companyName{
+    font-size: 14px;
+  }
+  .tabletop {
+    padding: 10px 16px;
   }
 }

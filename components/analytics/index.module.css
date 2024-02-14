@@ -53,7 +53,7 @@
 }
 
 .dashboard-chart-container{
-  height:380px;
+  height: 380px;
   margin-top:20px;
 }
 .team-chart-container{
@@ -262,7 +262,7 @@
     gap:20px;
   }
   .dashboard-chart{
-    margin-top: 35px;
+    margin-top: 25px;
   }
   .inner-container{
     padding: 30px 16px 0 16px;
@@ -281,7 +281,7 @@
 
 }
 .outer-wrapper {
-  margin-top: 35px;
+  margin-top: 25px;
 }
 .headerContainer{
   margin-top: 14px;

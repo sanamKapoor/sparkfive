@@ -39,6 +39,7 @@
   .text {
    display: none;
   }
-  
-
+  .icon {
+  margin: 0 10px;
+  }
 }

@@ -1,3 +1,4 @@
+
 .container {
   grid-area: side-nav;
   min-height: 100vh;
@@ -51,11 +52,9 @@
   font-size: 18px;
   line-height: 24px;
   color: var(--color-prim-navy);
-}
-.menuIcon {
-  display: flex;
   align-items: center;
   margin-right: 10px;
+  margin-left: 6px;
   cursor: pointer;
 }
 .toggleClose {
@@ -68,21 +67,16 @@
 }
 
 @media screen and (max-width: 900px) {
-  /* .container {
-    position: absolute;
-    grid-area: unset;
-    background-color: white;
-    border: 1px solid var(--color-secondary-border);
-    width: 211px;
-    z-index: 999;
-    top: 130px;
-    left: 10px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    height: fit-content;
-    min-height: fit-content;
-    padding-top: 0;
-  } */
+  .backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width:100%;
+    height: 100%;
+    z-index: 999; 
+    background: #C5C5C5E5;
+  }
+  
   .container {
     grid-area: side-nav;
     min-height: 100vh;
@@ -96,12 +90,6 @@
     top: 81px;
     z-index: 999;
   }
-
-  /* .setting {
-    color: var(--color-prim-navy);
-    font-size: 12px;
-    font-weight: 400;
-  } */
 
   .container h6 {
     font-weight: 400;
@@ -127,9 +115,9 @@
 }
 .close-icon {
   position: absolute;
-  right: -7px;
+  right: 3px;
   z-index: 9999;
-  top: 19px;
+  top: 16px;
 }
 
 @media (max-width: 900px) {
@@ -150,5 +138,9 @@
     position: fixed;
     background: #fff;
     z-index: 9;
+  }
+  .container{
+    top: 55px;
+
   }
 }

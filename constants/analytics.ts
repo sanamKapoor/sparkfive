@@ -102,7 +102,8 @@ export const TableBodySection = {
   USER_ACTIVITY: "activity",
   USER: "users",
   ASSET: "assets",
-  DASHBOARD_ASSETS: 'dashboard-asset'
+  DASHBOARD_ASSETS: 'dashboard-asset',
+  DASHBOARD_USERS: 'dashboard-user'
 };
 
 export const InsightsApiEndpoint = {

@@ -30,7 +30,7 @@ const TeamSession = ({ initialData }) => {
         </div>
       </div>
       <div className={`${styles["dashboard-chart-container"]}`}>
-      <ChartComp data={chartData} fileName="Team Session" />
+        <ChartComp data={chartData} fileName="Team Session" />
       </div>
     </div>
   );

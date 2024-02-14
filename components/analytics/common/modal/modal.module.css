@@ -181,6 +181,17 @@
       height:unset;
       margin-top: 12px;
     }
+    .user-detail{
+      display: block;
+    }
+    .close-mob{
+      position: absolute;
+      top:22px;
+      right:18px;
+      z-index: 999;
+    }
+    
+
   }
   @media (max-width: 600px) {
     .heading-wrap {
@@ -227,5 +238,25 @@
   @media (max-width:500px){
     .user-modal-outer{
       width:90%;
+    }
+    .user-detail{
+      padding: 5px 0;
+    }
+    .adaptive-modal{
+      height: 80vh;
+      overflow: auto;
+    }
+    .close-mob{
+      position: absolute;
+      top:22px;
+      right:18px;
+      z-index: 999;
+    }
+    .test{
+  position: relative;
+    }
+    .user-filters{
+      margin-top:10px;
+      gap:10px;
     }
   }
