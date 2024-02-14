@@ -250,7 +250,7 @@ const Modal = ({ section, setShowModal, id }: {
               :
               activeModalSection === AnalyticsActiveModal.ASSET_CHART
                 ?
-                <div className={`${styles["user-modal"]} ${styles["adaptive-modal"]}`}>
+                <div className={`${styles["user-modal"]}`}>
                   <div className={`${styles["user-chart-modal"]}`}>
                     <Heading mainText={apiData?.asset?.name || 'Asset Chart'} />
                     <div className={`${styles["user-filters"]}`} >
