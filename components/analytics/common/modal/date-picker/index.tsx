@@ -99,57 +99,56 @@ const DatePickerModal = ({
           </div>
 
           {showCustomRange &&
-            <>
-              <div className={`${styles["date-filters"]}`}>
-                <div className={styles.dummy}>
-                  <label className={styles.label} htmlFor="">
-                    From Date
-                  </label>
-                  <DayPickerInput
-                    onDayChange={(day) => handleStartDay(day)}
-                    value={
-                      customDateVal.beginDate !== null
-                        ? DateUtils.parseDateToStringForAnalytics(customDateVal.beginDate)
-                        : ""
-                    }
-                    dayPickerProps={{
-                      disabledDays: {
-                        before: calculateBeginDate(365, 1),
-                        after: customDateVal.endDate ? new Date(customDateVal.endDate) : new Date(),
-                      },
-                    }}
-                  />
-                </div>
-                <div className={styles.dummy}>
-                  <label className={styles.label} htmlFor="">
-                    To Date
-                  </label>
-                  <DayPickerInput
-                    onDayChange={(day) => handleEndDay(day)}
-                    value={
-                      customDateVal.endDate !== null ? DateUtils.parseDateToStringForAnalytics(customDateVal.endDate) : ""
-                    }
-                    dayPickerProps={{
-                      className: styles.calendar,
-                      disabledDays: {
-                        before: customDateVal.beginDate ? new Date(customDateVal.beginDate) : calculateBeginDate(365, 1),
-                        after: new Date(),
-                      },
-                    }}
-                  />
-                </div>
+            <div className={`${styles["date-filters"]}`}>
+              <div className={styles.dummy}>
+                <label className={styles.label} htmlFor="">
+                  From Date
+                </label>
+                <DayPickerInput
+                  onDayChange={(day) => handleStartDay(day)}
+                  value={
+                    customDateVal.beginDate !== null
+                      ? DateUtils.parseDateToStringForAnalytics(customDateVal.beginDate)
+                      : ""
+                  }
+                  dayPickerProps={{
+                    disabledDays: {
+                      before: calculateBeginDate(365, 1),
+                      after: customDateVal.endDate ? new Date(customDateVal.endDate) : new Date(),
+                    },
+                  }}
+                />
               </div>
-              {dateError && <small>{dateError}</small>}
-              <div className={`${styles["datepicker-buttons-outer"]}`}>
-                <Button
-                  text={"Apply"}
-                  className={!customDateVal.beginDate || !customDateVal.endDate ? "apply-btn-disable" : "apply-btn"}
-                  onClick={handleApplyCustomDate}
-                  disabled={!customDateVal.beginDate || !customDateVal.endDate}
-                ></Button>
-                <Button text={"Cancel"} className={"cancel-btn"} onClick={handleCustomDateSelector}></Button>
+              <div className={styles.dummy}>
+                <label className={styles.label} htmlFor="">
+                  To Date
+                </label>
+                <DayPickerInput
+                  onDayChange={(day) => handleEndDay(day)}
+                  value={
+                    customDateVal.endDate !== null ? DateUtils.parseDateToStringForAnalytics(customDateVal.endDate) : ""
+                  }
+                  dayPickerProps={{
+                    className: styles.calendar,
+                    disabledDays: {
+                      before: customDateVal.beginDate ? new Date(customDateVal.beginDate) : calculateBeginDate(365, 1),
+                      after: new Date(),
+                    },
+                  }}
+                />
               </div>
-            </>}
+            </div>
+          }
+          {dateError && <small>{dateError}</small>}
+          <div className={`${styles["datepicker-buttons-outer"]}`}>
+            <Button
+              text={"Apply"}
+              className={!customDateVal.beginDate || !customDateVal.endDate ? "apply-btn-disable" : "apply-btn"}
+              onClick={handleApplyCustomDate}
+              disabled={!customDateVal.beginDate || !customDateVal.endDate}
+            ></Button>
+            <Button text={"Cancel"} className={"cancel-btn"} onClick={handleCustomDateSelector}></Button>
+          </div>
         </div>
       </section>
     </div>
