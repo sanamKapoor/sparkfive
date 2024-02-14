@@ -490,7 +490,7 @@ console
 }
 .apply-btn{
   min-width: 140px;
-  background: var(--primary-color);
+  background:#10BDA5;
   color:#fff;
   height: 40px;
   display: flex;
@@ -554,6 +554,15 @@ console
     display: none;
     margin-left: 0;
   }
+}
+@media (max-width:475px){
+  .apply-btn-disable{
+    min-width: 147px;
+  }
+  .cancel-btn{
+    min-width: 147px;
+  }
+
 }
 @media screen and (max-width: 400px) {
  .mobile-select {

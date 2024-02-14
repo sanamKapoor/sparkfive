@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import { useContext, useRef, useState } from "react";
-import { GeneralImg, Navigation } from "../../../assets";
+import { GeneralImg, Navigation, insights } from "../../../assets";
 import { ASSET_UPLOAD_APPROVAL, SETTINGS_TEAM, SUPERADMIN_ACCESS } from "../../../constants/permissions";
 import { LoadingContext, TeamContext, UserContext } from "../../../context";
 import cookiesUtils from "../../../utils/cookies";
@@ -23,6 +23,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
   const { user, logOut, hasPermission, logo } = useContext(UserContext);
   const { isLoading } = useContext(LoadingContext);
   const pageListRef = useRef(null);
+  const router = useRouter();
 
   const { plan } = useContext(TeamContext);
 
@@ -32,20 +33,24 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
     {
       id: "assets",
       label: "Assets",
-      onClick: () => { },
+      onClick: () => { 
+        router.push("/main/assets")
+      },
     },
-    {
-      id: "templates",
-      label: "Templates",
-      onClick: () => { },
-    },
+    // {
+    //   id: "templates",
+    //   label: "Templates",
+    //   onClick: () => { },
+    // },
   ]
 
   if(user?.team?.analytics && user?.roleId === 'admin') {
     menuOptions.push({
       id: "insights",
       label: "Insights",
-      onClick: () => { },
+      onClick: () => { 
+        router.push("/main/insights")
+      },
     })
   }
 
@@ -130,7 +135,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
                 <img className={styles["logo-img"]} src={logo} alt={"logo"} />
               </a>
             </Link>
-            <div className={styles["mobile-navigation-links"]}>
+            {/* <div className={styles["mobile-navigation-links"]}>
               <div onClick={() => setMenuOpen(true)}>
                 <HeaderLink
                   href={""}
@@ -147,7 +152,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
                   options={menuOptions}
                 />
               )}
-            </div>
+            </div> */}
             <ul className={styles["navigation-links"]} ref={pageListRef}>
               {plan?.type === "marketing_hub" && (
                 <HeaderLink
@@ -161,12 +166,12 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
               <HeaderLink
                 active={Router.pathname.indexOf("assets") !== -1}
                 href="/main/assets"
-                img={Router.pathname.indexOf("assets") !== -1 ? Navigation.assetsSelected : Navigation.assets}
-                imgHover={Navigation.assetsSelected}
+                img={Router.pathname.indexOf("assets") !== -1 ? insights.insightAsset : insights.insightAsset}
+                imgHover={insights.insightAsset}
                 text="Assets"
               />
               
-              { (user?.team?.analytics && user?.roleId === 'admin') && <HeaderLink
+              {(user?.team?.analytics && user?.roleId === 'admin') && <HeaderLink
                 active={Router.pathname.indexOf("insights") !== -1}
                 href="/main/insights"
                 img={Router.pathname.indexOf("insights") !== -1 ? Navigation.insightSelected : Navigation.insights}

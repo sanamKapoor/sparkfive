@@ -102,9 +102,9 @@
     margin-right: 10px;
   }
 
-  .navigation-links {
+  /* .navigation-links {
     display: none;
-  }
+  } */
 
   .mobile-navigation-links {
     flex: 1 1;
@@ -126,9 +126,9 @@
     justify-content: center;
   }
 }
-
+/* 
 @media (max-width:420px){
   .menu-dropdown{
     display: none;
   }
-}
+} */

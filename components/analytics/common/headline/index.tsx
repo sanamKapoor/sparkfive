@@ -6,9 +6,6 @@ export default function InsightsHeader({ title, companyName = "Hooli Inc." }) {
   return (
     <>
       <section className={styles.header}>
-   
-
-        {/* header-on-toggle this will be added conditionally  */}
         <div className={styles.tabletop}>
           <span className={styles.titles}>{title}</span>
           <span className={styles.hyphen}>{" - "}</span>

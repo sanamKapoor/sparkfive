@@ -9,7 +9,7 @@ export default function Download({ setDownloadCSV, text }: {
 }) {
 
   return (
-   <section>
+   <section className={styles.mobile}>
     <button className={`${styles['download-btn']}`} onClick={() => setDownloadCSV(true)}>
         Download {text ? text : 'CSV'}
     </button>

@@ -1,5 +1,7 @@
 import React from 'react';
 import styles from "./index.module.css";
+import { Utilities } from "../../../../../assets";
+import IconClickable from '../../../../common/buttons/icon-clickable';
 
 const DownloadChart = ({ fileName = '' }) => {
     const handleDownload = () => {
@@ -12,7 +14,14 @@ const DownloadChart = ({ fileName = '' }) => {
       };
 
   return (
-    <button className={styles.downloadChart} onClick={handleDownload} >Download Chart</button>
+    <>
+     <button className={styles.downloadChart} onClick={handleDownload} >Download Chart</button>
+    <div className={styles.downloadIcon}>
+    <IconClickable src={Utilities.download}  onClick={handleDownload}  additionalClass={styles.download} />
+    </div>
+      
+    </>
+   
   )
 }
 

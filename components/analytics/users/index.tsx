@@ -42,6 +42,9 @@ const Users = ({
   const [emptyRows, setEmptyRows] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalUsersData, setTotalUsersData] = useState([]);
+  const [toggleMainContainer, setToggleMainContainer] = useState(false);
+
+  
 
   useEffect(() => {
     if (totalRecords > 0 && data.length > 0) {
@@ -87,6 +90,7 @@ const Users = ({
                 </div>
                 <div className={`${styles["table-header-tabs"]}`}>
                   <SearchButton label="Search User" setSearch={setSearch} />
+                  <div className={`${styles["button-wrapper"]}`}>
                   <DateFilter
                     filter={filter}
                     setFilter={setFilter}
@@ -94,6 +98,8 @@ const Users = ({
                     setCustomDates={setCustomDates}
                   />
                   <Download setDownloadCSV={setDownloadCSV} />
+                  </div>
+               
                 </div>
               </div>
               {

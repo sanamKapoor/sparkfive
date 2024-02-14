@@ -87,7 +87,8 @@ function Asset({ initialData }) {
                   <DateRangeTitle filter={filter} />
                 </div>
                 <div className={`${styles["table-header-tabs"]}`}>
-                  <SearchButton label="Search User" setSearch={setSearch} />
+                  <SearchButton label="Search Asset" setSearch={setSearch} />
+                  <div className={`${styles["button-wrapper"]}`}>
                   <DateFilter
                     filter={filter}
                     setFilter={setFilter}
@@ -95,6 +96,7 @@ function Asset({ initialData }) {
                     setCustomDates={setCustomDates}
                   />
                   <Download setDownloadCSV={setDownloadCSV} />
+                  </div>
                 </div>
               </div>
               {

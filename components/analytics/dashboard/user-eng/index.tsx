@@ -45,7 +45,9 @@ const UserEngagment = ({ initialData }) => {
           <SectionLink title='View All' link="/main/insights/account/users" />
         </div>
         <div className={`${styles["table-header-tabs"]}`}>
+        <div className={`${styles["button-wrapper"]}`}>
           <DateFilter filter={filter} setFilter={setFilter} customDates={customDates} setCustomDates={setCustomDates} />
+          </div>
         </div>
       </div>
       {totalUsersData?.length > 0 && sortBy && <ClearSort onClick={handleClearSorting} />}
@@ -60,7 +62,7 @@ const UserEngagment = ({ initialData }) => {
         sortOrder={sortOrder}
         setSortBy={setSortBy}
         setSortOrder={setSortOrder}
-        tableFor={TableBodySection.USER}
+        tableFor={TableBodySection.DASHBOARD_USERS}
         dashboardView={true}
       />
     </div>
