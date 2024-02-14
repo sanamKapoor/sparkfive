@@ -26,7 +26,6 @@ const DatePickerModal = ({
   return (
     <div className={`${modalStyles.backdrop}`}>
       <section className={`${modalStyles["modal-outer"]}`}>
-        <div className={`${styles["date-picker-wrapper"]}`}>
           <div className={`${styles["date-picker-top"]}`}>
             <div className={`${styles["left-side"]}`}>Date Range</div>
             <div className={`${styles["right-side"]}`}>
@@ -149,7 +148,6 @@ const DatePickerModal = ({
             ></Button>
             <Button text={"Cancel"} className={"cancel-btn"} onClick={handleCustomDateSelector}></Button>
           </div>
-        </div>
       </section>
     </div>
   )
