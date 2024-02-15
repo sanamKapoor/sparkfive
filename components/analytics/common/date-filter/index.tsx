@@ -36,19 +36,23 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
     setActiveDays(days);
   };
 
+  const calcelCustomDates = () => {
+    if (showCustomRange) {
+      handleFilterClick("7d", 7);
+    } else {
+      setActiveFilter("custom");
+      setCustomDateVal({
+        endDate: "",
+        beginDate: "",
+      });
+    }
+  }
+
   const handleCustomDateSelector = () => {
     if (tabView || mobileView) {
       setShowDatePopup(false)
     } else {
-      if (showCustomRange) {
-        handleFilterClick("7d", 7);
-      } else {
-        setActiveFilter("custom");
-        setCustomDateVal({
-          endDate: "",
-          beginDate: "",
-        });
-      }
+      calcelCustomDates()
       setShowDatePopup(!showDatePopup)
     }
   };
@@ -157,7 +161,6 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
           <div className={`${styles["date-filter-teb"]}`}>
             <Button text="Date Range" className={"outline-text-btn"} onClick={() => {
               setTabView(!tabView)
-              setShowDatePopup(true)
             }} />
           </div>
         </section>
@@ -189,7 +192,7 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
               </div>
 
               {/* tab-view dates */}
-              {
+              {/* {
                 tabView &&
                 <div className={`${styles["date-range-mobile"]}`}>
                   <div className={styles.radioButtons}>
@@ -248,7 +251,7 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
                     </label>
                   </div>
                 </div>
-              }
+              } */}
 
               {showCustomRange && <div className={`${styles["date-filters"]}`}>
                 <div className={styles.dummy}>
@@ -304,19 +307,27 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
         }
       </div>
       {/* mobile-view dates */}
-      {mobileView &&
+      {(mobileView || tabView) &&
         <DatePickerModal
-          handleClosePopup={handleClosePopup}
           activeFilter={activeFilter}
-          handleFilterClick={handleFilterClick}
-          handleCustomDateSelector={handleCustomDateSelector}
+          activeDays={activeDays}
           handleStartDay={handleStartDay}
           handleEndDay={handleEndDay}
           customDateVal={customDateVal}
           dateError={dateError}
           handleApplyCustomDate={handleApplyCustomDate}
           showCustomRange={showCustomRange}
+          setShowCustomRange={setShowCustomRange}
           setMobileView={setMobileView}
+          setTabView={setTabView}
+          setActiveFilter={setActiveFilter}
+          setActiveDays={setActiveDays}
+          setFilter={setFilter}
+          setCustomDateVal={setCustomDateVal}
+          setCustomDates={setCustomDates}
+          customDates={customDates}
+          tabView={tabView}
+          mobileView={mobileView}
         />}
     </>
   );
