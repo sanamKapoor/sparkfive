@@ -710,7 +710,7 @@ const AssetGrid = ({
         {mode === "assets" && <FilterView render={render} setRender={setRender} />}
       </div>
       <section
-        className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ""} ${!sidebarOpen ? styles["container-on-toggle"] : ""
+        className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ""} ${!sidebarOpen  ? styles["container-on-toggle"] : ""
           }`}
         style={getStyling}
       >

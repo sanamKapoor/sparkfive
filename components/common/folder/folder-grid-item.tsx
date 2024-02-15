@@ -280,7 +280,7 @@ const FolderGridItem = ({
                 ))}
               {activeView !== "list" && (
                 <div className={styles["image-button-wrapper"]}>
-                  <Button className="container primary" text={"View Collection"} type={"button"} onClick={viewFolder} />
+                  <Button data-drag="false" className="container primary" text={"View Collection"} type={"button"} onClick={viewFolder} data-drag="false" />
                 </div>
               )}
               {activeView !== "list" && (

@@ -251,6 +251,7 @@ const AssetThumbail = ({
                 />
               ) : (
                 <HoverVideoPlayer
+                 data-drag="false"
                   controls
                   className={styles["hover-video-player-wrapper"]}
                   videoClassName={styles["video-style"]}
@@ -263,10 +264,11 @@ const AssetThumbail = ({
                       name={asset.name}
                       opaque={isUploading}
                       imgClass={styles["video-thumbnail userEvents"]}
+                      data-drag="false"
                     />
                   }
                   loadingOverlay={
-                    <div className={styles["loading-overlay"]}>
+                    <div data-drag="false" className={styles["loading-overlay"]}>
                       <Spinner />
                     </div>
                   }
@@ -281,12 +283,14 @@ const AssetThumbail = ({
                           src={Utilities.radioButtonEnabled}
                           additionalClass={styles["select-icon"]}
                           onClick={toggleSelected}
+                          data-drag="false"
                         />
                       ) : (
                         <IconClickable
                           src={Utilities.radioButtonNormal}
                           additionalClass={styles["select-icon"]}
                           onClick={toggleSelected}
+                          data-drag="false"
                         />
                       )}
                     </div>
@@ -297,13 +301,15 @@ const AssetThumbail = ({
                       text={"View Details"}
                       type={"button"}
                       onClick={() => handleViewDetails("button")}
+                      data-drag="false"
                     />
                   </div>
                 </>
               )}
             </div>
-            <div className={`normal-text ${styles["wrap-text"]} ${activeView === "list" && styles["list-text"]}`}>
+            <div data-drag="false" className={`normal-text ${styles["wrap-text"]} ${activeView === "list" && styles["list-text"]}`}>
               <span
+              data-drag="false"
                 id="editable-preview"
                 onClick={() => {
                   if (onView) {
@@ -327,10 +333,11 @@ const AssetThumbail = ({
             </div>
           </div>
           {activeView === "list" && (
-            <div className={styles["size"]}>{parseInt(asset.size) !== 0 && asset.size && filesize(asset.size)}</div>
+            <div data-drag="false" className={styles["size"]}>{parseInt(asset.size) !== 0 && asset.size && filesize(asset.size)}</div>
           )}
-          <div className={activeView === "grid" && styles.sizeMargin}>
+          <div data-drag="false" className={activeView === "grid" && styles.sizeMargin}>
             <div
+            data-drag="false"
               className={`${activeView !== "list"
                 ? `secondary-text ${styles["modified-date"]} ${styles["uploadModified"]}`
                 : ""
@@ -341,13 +348,13 @@ const AssetThumbail = ({
             </div>
           </div>
           {activeView === "list" && (
-            <div className={`${styles["modified-date"]} ${activeView === "list" && styles["modified-date-list"]}`}>
+            <div data-drag="false" className={`${styles["modified-date"]} ${activeView === "list" && styles["modified-date-list"]}`}>
               {" "}
               {format(new Date(asset.createdAt), dateFormat)}
             </div>
           )}
           {activeView === "list" && (
-            <div className={styles.extension}>
+            <div data-drag="false" className={styles.extension}>
               <span className={styles.format}>{asset.extension}</span>
             </div>
           )}

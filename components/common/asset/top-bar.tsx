@@ -30,8 +30,10 @@ const TopBar = ({
   activeSearchOverlay,
   closeSearchOverlay,
   sharePath,
+  renderSidebar=true,
   isFolder,
 }: any) => {
+  
   const {
     selectAllAssets,
     selectAllFolders,
@@ -76,7 +78,7 @@ const TopBar = ({
 
   return (
     <section
-      className={`${sidebarOpen ? styles["container"] : styles["container-on-toggle"]
+      className={`${renderSidebar && sidebarOpen ? styles["container"] : styles["container-on-toggle"]
         }`}
       id={"top-bar"}
     >

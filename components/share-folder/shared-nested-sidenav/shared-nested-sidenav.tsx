@@ -161,7 +161,7 @@ export default function SharedPageSidenav({ viewFolder, headingClick, sharePath 
     <>
       <div className={`${styles["shared-sidenav-outer"]}`}>
         <ReusableHeading
-          customStyle={{ padding: "10px 23px 0px 23px", cursor: "pointer" }}
+          customStyle={{ cursor: "pointer" }}
           text={`Collections`}
           headingClick={headingClick}
           icon={

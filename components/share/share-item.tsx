@@ -79,6 +79,7 @@ const ShareItem = ({
               text={"View Details"}
               type={"button"}
               onClick={() => viewDetails(true)}
+              data-drag="false"
             />
           </div>
         </div>

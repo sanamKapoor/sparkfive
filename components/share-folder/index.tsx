@@ -1,22 +1,22 @@
-import update from 'immutability-helper';
-import { useRouter } from 'next/router';
-import { useContext, useEffect, useState } from 'react';
+import update from "immutability-helper";
+import { useRouter } from "next/router";
+import { useContext, useEffect, useState } from "react";
 
-import { AssetContext, FilterContext, ShareContext, UserContext } from '../../context';
-import folderApi from '../../server-api/folder';
-import shareCollectionApi from '../../server-api/share-collection';
-import { getAssetsFilters, getAssetsSort } from '../../utils/asset';
-import requestUtils from '../../utils/requests';
-import selectOptions from '../../utils/select-options';
-import toastUtils from '../../utils/toast';
-import AssetGrid from '../common/asset/asset-grid';
-import AssetOps from '../common/asset/asset-ops';
-import TopBar from '../common/asset/top-bar';
-import Spinner from '../common/spinners/spinner';
-import styles from './index.module.css';
-import PasswordOverlay from './password-overlay';
-import NestedFirstlist from './shared-nested-sidenav/shared-nested-firstlist';
-import SharedPageSidenav from './shared-nested-sidenav/shared-nested-sidenav';
+import { AssetContext, FilterContext, ShareContext, UserContext } from "../../context";
+import folderApi from "../../server-api/folder";
+import shareCollectionApi from "../../server-api/share-collection";
+import { getAssetsFilters, getAssetsSort } from "../../utils/asset";
+import requestUtils from "../../utils/requests";
+import selectOptions from "../../utils/select-options";
+import toastUtils from "../../utils/toast";
+import AssetGrid from "../common/asset/asset-grid";
+import AssetOps from "../common/asset/asset-ops";
+import TopBar from "../common/asset/top-bar";
+import Spinner from "../common/spinners/spinner";
+import styles from "./index.module.css";
+import PasswordOverlay from "./password-overlay";
+import NestedFirstlist from "./shared-nested-sidenav/shared-nested-firstlist";
+import SharedPageSidenav from "./shared-nested-sidenav/shared-nested-sidenav";
 
 // Components
 const ShareFolderMain = () => {
@@ -91,13 +91,12 @@ const ShareFolderMain = () => {
 
   useEffect(() => {
     if (sharePath && sharePath !== "[team]/[id]/[name]" && !firstLoaded) {
-      console.log("in here page shrepath")
+      console.log("in here page shrepath");
       getFolderInfo();
     }
   }, [sharePath]);
 
   useEffect(() => {
-
     if (selectedAllAssets) {
       selectAllAssets(false);
     }
@@ -126,13 +125,11 @@ const ShareFolderMain = () => {
       if (activeSortFilter.mainFilter === "folders") {
         setActiveMode("folders");
         getFolders();
-      }
-      else if (activeSortFilter.mainFilter === "SubCollectionView" && activeSubFolders !== "") {
+      } else if (activeSortFilter.mainFilter === "SubCollectionView" && activeSubFolders !== "") {
         setActiveMode("SubCollectionView");
         getSubCollectionsFolderData(true, 10);
         getSubCollectionsAssetData();
-      }
-      else {
+      } else {
         setActiveMode("assets");
         setAssets([]);
         getAssets();
@@ -215,16 +212,21 @@ const ShareFolderMain = () => {
       });
       let assetList = { ...data, results: data.results };
       setFolders(assetList, replace);
-      setLoading(false)
+      setLoading(false);
     } catch (err) {
-      setLoading(false)
+      setLoading(false);
       //TODO: Handle error
       console.log(err);
     }
   };
 
   const setInitialLoad = async (folderInfo) => {
-    console.log(firstLoaded, folderInfo, folderInfo.customAdvanceOptions, "firstLoaded && folderInfo && folderInfo.customAdvanceOptions")
+    console.log(
+      firstLoaded,
+      folderInfo,
+      folderInfo.customAdvanceOptions,
+      "firstLoaded && folderInfo && folderInfo.customAdvanceOptions",
+    );
     if (!firstLoaded && folderInfo && folderInfo.customAdvanceOptions) {
       setFirstLoaded(true);
       let mode, sort;
@@ -249,21 +251,19 @@ const ShareFolderMain = () => {
         mainFilter: mode, // Set to all if only folder is shared
         sort: sort,
       });
-      setHeaderName(folderInfo.folderName)
+      setHeaderName(folderInfo.folderName);
     }
   };
 
   const getFolderInfo = async (displayError = false, ignoreFolder = false) => {
     try {
-      console.log("hello in here")
+      console.log("hello in here");
       const { data } = await shareCollectionApi.getFolderInfo({ sharePath });
       let sort, mode;
       if (firstLoaded) {
         if (data?.singleSharedCollectionId && data?.sharedFolder?.parentId) {
           sort =
-            data?.customAdvanceOptions.assetSortView === "alphabetical"
-              ? selectOptions.sort[3]
-              : selectOptions.sort[1];
+            data?.customAdvanceOptions.assetSortView === "alphabetical" ? selectOptions.sort[3] : selectOptions.sort[1];
           mode = "all";
           setActiveSortFilter({
             ...activeSortFilter,
@@ -285,8 +285,8 @@ const ShareFolderMain = () => {
           });
         }
       }
-      console.log("heeheheheh")
-      setHeaderName(data.folderName)
+      console.log("heeheheheh");
+      setHeaderName(data.folderName);
       setFolderInfo(data);
       setAdvancedConfig(data.customAdvanceOptions);
       setActivePasswordOverlay(false);
@@ -330,9 +330,9 @@ const ShareFolderMain = () => {
         nestedSubFolderId ? nestedSubFolderId : activeSubFolders,
       );
       setSubFoldersViewList(subFolders, replace);
-      setLoading(false)
+      setLoading(false);
     } catch (err) {
-      setLoading(false)
+      setLoading(false);
       console.log(err);
     }
   };
@@ -502,9 +502,9 @@ const ShareFolderMain = () => {
         sharePath,
       });
       setAssets({ ...data, results: data.results.map(mapWithToggleSelection) }, replace);
-      setLoading(false)
+      setLoading(false);
     } catch (err) {
-      setLoading(false)
+      setLoading(false);
 
       //TODO: Handle error
       console.log(err);
@@ -568,19 +568,31 @@ const ShareFolderMain = () => {
     setActiveSearchOverlay(false);
   };
 
+  const getSidebarRender = () => {
+    if (
+      !(
+        folderInfo?.singleSharedCollectionId &&
+        (folderInfo?.sharedFolder?.parentId || subFoldersViewList.results.length === 0)
+      )
+    ) {
+      return true;
+    }
+    return false;
+  };
+
   return (
     <>
       {!loading && (
-        <main className={`${sidebarOpen ? styles["container"] : styles["rightToggle"]} sharefolderOuter`}>
-          {!((folderInfo?.singleSharedCollectionId) && (folderInfo?.sharedFolder?.parentId || subFoldersViewList.results.length === 0)) && sidebarOpen && (
-            <>
+        <main
+          className={`${
+            sidebarOpen ? (getSidebarRender() ? styles["container"] : styles["containerPortal"]) : styles["rightToggle"]
+          } sharefolderOuter`}
+        >
+          {getSidebarRender() && sidebarOpen && (
+            <div className={`${styles["sidenav-main-wrapper"]}`}>
               <NestedFirstlist sharePath={sharePath} />
-              <SharedPageSidenav
-                viewFolder={viewFolder}
-                headingClick={headingClick}
-                sharePath={sharePath}
-              />
-            </>
+              <SharedPageSidenav viewFolder={viewFolder} headingClick={headingClick} sharePath={sharePath} />
+            </div>
           )}
           <TopBar
             activeSearchOverlay={activeSearchOverlay}
@@ -596,9 +608,12 @@ const ShareFolderMain = () => {
             activeFolder={activeFolder}
             closeSearchOverlay={closeSearchOverlay}
             mode={activeMode}
+            renderSidebar={getSidebarRender()}
           />
           <div
-            className={`${assetGridWrapperStyle} ${sidebarOpen ? styles["mainContainer"] : styles["toggleContainer"]} `}
+            className={`${assetGridWrapperStyle} ${
+              sidebarOpen && getSidebarRender() ? styles["mainContainer"] : styles["toggleContainer"]
+            } `}
             style={{ marginTop: top }}
           >
             <AssetGrid
