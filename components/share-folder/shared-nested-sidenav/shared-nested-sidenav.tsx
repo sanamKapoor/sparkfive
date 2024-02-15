@@ -174,14 +174,15 @@ export default function SharedPageSidenav({ viewFolder, headingClick, sharePath 
           }
         />
         <div className={styles["sidenavScroll"]}>
-          <div className={styles["sidenav-list1"]}>
-            <ul>
+          <div data-drag="false" className={styles["sidenav-list1"]}>
+            <ul data-drag="false">
               {sidenavFolderList.map((item: Item, index: number) => (
                 <>
                   <div style={{ display: "flex", marginBottom: "4px" }}>
                     {item?.childFolders?.length > 0 ? (
                       <div className={styles.clickable} onClick={() => toggleDropdown(index, item, true)}>
                         <img
+                        data-drag="false"
                           className={showDropdown[index] ? styles.iconClick : styles.rightIcon}
                           src={Utilities.caretRightSolid}
                         />
@@ -190,6 +191,7 @@ export default function SharedPageSidenav({ viewFolder, headingClick, sharePath 
                       <div className={styles.emptyBox}></div>
                     )}
                     <li
+                    data-drag="false"
                       key={index}
                       className={`${styles["list1-description"]} ${styles["border-bottom"]} 
                       ${((item.id === activeSubFolders)) ? styles.active : ""}`}
@@ -201,10 +203,10 @@ export default function SharedPageSidenav({ viewFolder, headingClick, sharePath 
                         }}
                       >
                         <div className={styles.icon}>
-                          <img src={Utilities.folder} alt="" />
+                          <img data-drag="false" src={Utilities.folder} alt="" />
                         </div>
                         <div className={styles["icon-description"]}>
-                          <span title={item?.name}>{item?.name}</span>
+                          <span data-drag="false" title={item?.name}>{item?.name}</span>
                         </div>
                       </div>
                       <div className={styles["list1-right-contents"]}>
