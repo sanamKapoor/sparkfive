@@ -11,6 +11,12 @@
   width: calc(100% - 320px);
   margin-left: 327px;
 }
+/* for testing purpose need to remove  */
+.shared-container{
+  width:100%;
+  margin-left: 0;
+}
+
 .container-on-toggle{
   position: fixed;
   width: 100%;

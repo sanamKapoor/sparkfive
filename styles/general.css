@@ -188,7 +188,10 @@ ul {
   /* prevents background page from scrolling when the modal is open */
 }
 
-
+.confirm{
+ min-width: 550px !important;
+ max-width: 550px!important;
+}
 
 .app-overlay {
   position: fixed;
