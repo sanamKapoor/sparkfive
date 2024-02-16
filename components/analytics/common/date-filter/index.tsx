@@ -159,6 +159,7 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
         {/* tab-view button */}
         <section>
           <div className={`${styles["date-filter-teb"]}`}>
+        
             <Button text="Date Range" className={"outline-text-btn"} onClick={() => {
               setTabView(!tabView)
             }} />
@@ -179,7 +180,7 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
         {/* web-view custom dates */}
         {
           (showDatePopup) && (
-            <div className={`${styles["date-picker-wrapper"]}`}>
+            <div className={`${styles["date-picker-wrapper"]} ${styles["date-picker-wrapper-web"]}`}>
               <div className={`${styles["date-picker-top"]}`}>
                 <div className={`${styles["left-side"]}`}>Date Range</div>
                 <div className={`${styles["right-side"]}`}>
