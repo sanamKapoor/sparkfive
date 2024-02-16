@@ -5,24 +5,11 @@ import { AssetContext } from '../../../context';
 import DetailOverlay from "../../../components/main/assets-library/assetDetail";
 import { useRouter } from 'next/router';
 import shareApi from '../../../server-api/share-collection';
-
-interface AssetData {
-    realUrl: string;
-    thumbailUrl: string;
-    asset: any; // Adjust the type according to your asset data structure
-    sharePath: string;
-    sharedCode: string;
-    isShare: boolean;
-    activeFolder: string;
-    availableNext: boolean;
-    completeAsset: any; // Adjust the type according to your complete asset data structure
-    activeSubFolders: string;
-    headerName: string;
-}
+import { IAssetData } from "../../../interfaces/common/asset"
 
 const ShareDetailPage = () => {
     const { downloadingStatus } = useContext(AssetContext);
-    const [assetData, setAssetData] = useState<AssetData>({
+    const [assetData, setAssetData] = useState<IAssetData>({
         realUrl: "",
         thumbailUrl: "",
         asset: null,

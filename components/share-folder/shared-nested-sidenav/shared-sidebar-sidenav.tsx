@@ -4,7 +4,7 @@ import { Utilities } from '../../../assets';
 import { AssetContext, FilterContext } from '../../../context';
 import shareCollectionApi from '../../../server-api/share-collection';
 import ReusableHeading from '../../nested-subcollection-sidenav/nested-heading';
-import styles from './shared-nested-sidenav.module.css';
+import styles from './shared-sidebar-sidenav.module.css';
 
 interface Asset {
   id: string;
@@ -39,7 +39,6 @@ interface Item {
 export default function SharedPageSidenav({ viewFolder, headingClick, sharePath }) {
 
   const {
-    sidebarOpen,
     activeFolder,
     setSidebarOpen,
     activeSubFolders,

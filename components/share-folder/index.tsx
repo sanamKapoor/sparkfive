@@ -15,8 +15,8 @@ import TopBar from "../common/asset/top-bar";
 import Spinner from "../common/spinners/spinner";
 import styles from "./index.module.css";
 import PasswordOverlay from "./password-overlay";
-import NestedFirstlist from "./shared-nested-sidenav/shared-nested-firstlist";
-import SharedPageSidenav from "./shared-nested-sidenav/shared-nested-sidenav";
+import NestedFirstlist from "./shared-nested-sidenav/shared-sidebar-firstlist";
+import SharedPageSidenav from "./shared-nested-sidenav/shared-sidebar-sidenav";
 
 import { loadTheme } from "../../utils/theme";
 

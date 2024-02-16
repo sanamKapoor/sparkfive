@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import { sideNavFirstList } from "../../../constants/firstList-sidenav";
 import { AssetContext, FilterContext, UserContext } from "../../../context";
 import shareCollectionApi from "../../../server-api/share-collection";
-import styles from "./shared-nested-firstlist.module.css";
+import styles from "./shared-sidebar-firstlist.module.css";
 import ReusableHeading from "../../nested-subcollection-sidenav/nested-heading";
 import { Utilities } from "../../../assets";
 
