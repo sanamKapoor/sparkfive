@@ -55,6 +55,7 @@ const SubCollection = () => {
                 className="container primary"
                 text={"View Collection"}
                 type={"button"}
+                data-drag="false"
               />
             </div>
           </div>

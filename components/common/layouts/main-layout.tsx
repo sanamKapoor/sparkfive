@@ -19,7 +19,11 @@ import Notification from "../notifications/notification";
 import SpinnerOverlay from "../spinners/spinner-overlay";
 import UserPhoto from "../user/user-photo";
 
-const MainLayout = ({ children, requiredPermissions = [] }) => {
+const MainLayout = ({ children, requiredPermissions = [], headerZIndex}) => {
+  const headerStyle = {
+    zIndex: typeof headerZIndex !== 'undefined' ? headerZIndex : '1500',
+  };
+
   const { user, logOut, hasPermission, logo } = useContext(UserContext);
   const { isLoading } = useContext(LoadingContext);
   const pageListRef = useRef(null);
@@ -129,7 +133,7 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
     <>
       {user && (
         <>
-          <header id={"main-header"} className={styles.header}>
+          <header id={"main-header"} className={styles.header}  style={headerStyle}>
             <Link href={plan?.type === "marketing_hub" ? "/main/overview" : "/main/assets"}>
               <a>
                 <img className={styles["logo-img"]} src={logo} alt={"logo"} />

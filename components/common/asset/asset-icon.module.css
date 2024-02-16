@@ -44,6 +44,12 @@
   height: 270px;
   max-height: 270px;
 }
+.userEvents{
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+}
+
 .analytics-icon{
   max-width: 28px;
   height:100%;

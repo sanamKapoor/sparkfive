@@ -43,5 +43,9 @@ module.exports = {...withSentryConfig(
   typescript: {
     ignoreBuildErrors: true,
   },
-
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
 };

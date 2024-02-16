@@ -1,56 +1,57 @@
 // External import
-import update from "immutability-helper";
-import { useContext, useEffect, useRef, useState } from "react";
+import { boxesIntersect, useSelectionContainer } from '@air/react-drag-to-select';
+import update from 'immutability-helper';
+import fileDownload from 'js-file-download';
+import { useContext, useEffect, useRef, useState } from 'react';
 
-// Styles
-import styles from "./index.module.css";
-
-import assetApi from "../../server-api/asset";
-import toastUtils from "../../utils/toast";
-import urlUtils from "../../utils/url";
-
-// Components
-import fileDownload from "js-file-download";
-import { GeneralImg } from "../../assets";
-import AuthContainer from "../common/containers/auth-container";
-import AssetDownloadProcess from "./asset-download-process";
-import ShareItem from "./share-item";
-import ShareOperationButtons from "./share-operation-buttons";
-
-// Contexts
-import Button from "../common/buttons/button";
-import Input from "../common/inputs/input";
-import Spinner from "../common/spinners/spinner";
-
-import { loadTheme } from "../../utils/theme";
-
-import { ShareContext, UserContext } from "../../context";
-import { defaultLogo } from "../../constants/theme";
-
-import { sizeToZipDownload } from "../../constants/download";
-import downloadUtils from "../../utils/download";
-
+import { sizeToZipDownload } from '../../constants/download';
+import { defaultLogo } from '../../constants/theme';
+import { ShareContext, UserContext } from '../../context';
+import assetApi from '../../server-api/asset';
+import downloadUtils from '../../utils/download';
+import { loadTheme } from '../../utils/theme';
+import toastUtils from '../../utils/toast';
+import urlUtils from '../../utils/url';
+import Button from '../common/buttons/button';
+import AuthContainer from '../common/containers/auth-container';
+import Input from '../common/inputs/input';
+import Spinner from '../common/spinners/spinner';
+import AssetDownloadProcess from './asset-download-process';
+import styles from './index.module.css';
+import ShareItem from './share-item';
+import ShareOperationButtons from './share-operation-buttons';
 import { events, shareLinkEvents } from '../../constants/analytics';
 import useAnalytics from "../../hooks/useAnalytics"
 import cookiesApi from "../../utils/cookies";
-
+interface Box {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  id: string;
+}
 const AssetShare = () => {
+  const { email, setEmail } = useContext(ShareContext);
   const { logo: themeLogo, setLogo: setThemeLogo } = useContext(UserContext);
 
   const [assets, setAssets] = useState([]);
   const [selectedAsset, setSelectedAsset] = useState(0);
   const [showDownloadPopup, setShowDownloadPopup] = useState(false);
   const [downloadStatus, setDownloadStatus] = useState("");
-  const [downloadingPercent, setDownloadingPercent] = useState(30);
-  const interval = useRef();
-  const [email, setEmail] = useState("");
   const [logo, setLogo] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [shareUserName, setShareUserName] = useState("");
   const [sharedCode, setSharedCode] = useState("");
-
   const { trackLinkEvent } = useAnalytics();
+
+  // new library air drag
+  const selectableItems = useRef<Box[]>([]);
+  const elementsContainerRef = useRef<HTMLDivElement | null>(null);
+  const selectionArea = useRef(null);
+
+
+
 
   // Toggle select asset
   const toggleSelected = (id) => {
@@ -87,36 +88,16 @@ const AssetShare = () => {
   const zipping = () => {
     setDownloadStatus("zipping");
     setShowDownloadPopup(true);
-    // simulateProcess();
   };
 
   const done = () => {
     setDownloadStatus("done");
-    // cancelSimulatedProcess
   };
 
-  const simulateProcess = () => {
-    // @ts-ignore
-    interval.current = setInterval(() => {
-      if (downloadingPercent < 100) {
-        setDownloadingPercent(downloadingPercent + 10);
-      }
-    }, 1000);
-  };
-
-  const cancelSimulatedProcess = () => {
-    if (interval.current) {
-      clearInterval(interval.current);
-      setDownloadingPercent(0);
-    }
-  };
-
-  // Download select assets
   // Download select assets
   const downloadSelectedAssets = async () => {
     try {
       const { shareJWT, code } = urlUtils.getQueryParameters();
-
       const selectedAssets = assets.filter((asset) => asset.isSelected);
 
       selectedAssets.map(assetItem => {
@@ -133,10 +114,8 @@ const AssetShare = () => {
         let payload = {
           assetIds: selectedAssets.map((item) => item.asset.id),
         };
-
         // Show processing bar
         zipping();
-
         const { data } = await assetApi.shareDownload(payload, {
           shareJWT,
           code,
@@ -157,8 +136,6 @@ const AssetShare = () => {
       } else {
         downloadAsZip();
       }
-
-      // downloadUtils.zipAndDownload(selectedAssets.map(assetItem => ({ url: assetItem.realUrl, name: assetItem.asset.name })), 'assets.zip')
     } catch (e) { }
   };
 
@@ -172,13 +149,12 @@ const AssetShare = () => {
 
       // Allow get by both shareJWT or code (shareJWT has problem with very long at url issue)
       if (shareJWT || code) {
-        const { data } = await assetApi.getSharedAssets({ shareJWT, code });
+        const { data } = await assetApi.getSharedAssets({ shareJWT, email, code });
         if (data.error) {
           setError(true);
           setLoading(false);
           setLogo(data.data.team.workspaceIcon);
           setShareUserName(data.data.user.name);
-
           if (data.errorMessage !== "Email is required") {
             toastUtils.error(data.errorMessage);
           }
@@ -203,7 +179,6 @@ const AssetShare = () => {
         if (data.theme) {
           // Load theme from team settings
           const currentTheme = loadTheme(data.theme);
-
           // @ts-ignore
           setThemeLogo(currentTheme.logoImage?.realUrl || defaultLogo);
         }
@@ -228,6 +203,9 @@ const AssetShare = () => {
       setError(false);
       setLoading(false);
       setAssets(data.data);
+      setShareUserName(data.sharedBy);
+      setSharedCode(code as string);
+      setLogo(data.data.team?.workspaceIcon);
       cookiesApi.set('shared_email', email);
       if (data?.theme?.teamId) cookiesApi.set('teamId', data?.theme?.teamId)
       trackLinkEvent(shareLinkEvents.ACCESS_SHARED_LINK, {
@@ -242,20 +220,93 @@ const AssetShare = () => {
     if (data.theme) {
       // Load theme from team settings
       const currentTheme = loadTheme(data.theme);
-
-      console.log(`Current sync theme`, currentTheme);
-      // @ts-ignore
-      console.log(`Logo: `, currentTheme.logoImage?.realUrl || defaultLogo);
       // @ts-ignore
       setThemeLogo(currentTheme.logoImage?.realUrl || defaultLogo);
     } else {
       // Load theme from local storage
       const currentTheme = loadTheme();
-      console.log(`Current logo theme`, currentTheme);
       // @ts-ignore
       setThemeLogo(currentTheme.logoImage?.realUrl || defaultLogo);
     }
   };
+
+  const onSelectionChange = (box) => {
+    if (elementsContainerRef.current) {
+      const containerRect = elementsContainerRef.current.getBoundingClientRect();
+      const scrollAwareBox = {
+        ...box,
+        top: box.top - containerRect.top,
+        left: box.left - containerRect.left
+      };
+      selectionArea.current = scrollAwareBox
+    }
+  };
+
+  const bulkToggle = async (idsToFind) => {
+    const updatedAssets = assets.map((asset, index) => {
+      // Check if the object's ID is in the idsToFind array
+      if (idsToFind.includes(asset.asset.id)) {
+        // You can perform your update logic here
+        // For example, toggle the isSelected property
+        return {
+          ...asset,
+          isSelected: !asset.isSelected
+        };
+      }
+      return asset; // Return the original object for non-matching IDs
+    });
+    setSelectedAsset(idsToFind.length);
+    setAssets(updatedAssets);
+  };
+
+  const { DragSelection } = useSelectionContainer({
+    eventsElement: document.getElementById("__next"),
+    onSelectionChange,
+    onSelectionStart: () => { },
+    onSelectionEnd: (box) => {
+      const indexesToSelect: string[] = [];
+      selectableItems.current.forEach((item, index) => {
+        if (boxesIntersect(selectionArea.current, item)) {
+          indexesToSelect.push(item.id);
+        }
+      })
+      if (indexesToSelect.length > 0) {
+        bulkToggle(indexesToSelect);
+      }
+    },
+    selectionProps: {
+      style: {
+        border: "2px solid darkblue",
+        borderRadius: 4,
+        backgroundColor: "lightskyblue",
+        opacity: 0.5,
+        zIndex: 9999
+      },
+    },
+    isEnabled: true,
+  });
+
+  useEffect(() => {
+    if (elementsContainerRef.current && assets?.length) {
+      const containerRect = elementsContainerRef.current.getBoundingClientRect();
+      const liElements = elementsContainerRef.current.querySelectorAll('li');
+
+      selectableItems.current = new Array();
+      Array.from(liElements).forEach((item) => {
+        const { left, top, width, height } = item.getBoundingClientRect();
+        const adjustedTop = top - containerRect.top;
+        const adjustedLeft = left - containerRect.left;
+        if (item.id !== "") selectableItems.current.push({
+          left: adjustedLeft,
+          top: adjustedTop,
+          width,
+          height,
+          id: item.id,
+        })
+
+      });
+    }
+  }, [assets?.length]);
 
   return (
     <>
@@ -304,11 +355,13 @@ const AssetShare = () => {
               selectedAsset={selectedAsset}
               downloadSelectedAssets={downloadSelectedAssets}
             />
+            <DragSelection />
             <div className={styles["list-wrapper"]}>
-              <ul className={styles["grid-list"]}>
+              <ul className={styles["grid-list"]}
+                ref={elementsContainerRef}>
                 {assets.map((assetItem) => {
                   return (
-                    <li className={styles["grid-item"]} key={assetItem.asset.id}>
+                    <li className={styles["grid-item"]} key={assetItem.asset.id} id={assetItem.asset.id}>
                       <ShareItem
                         {...assetItem}
                         toggleSelected={() => {
@@ -331,7 +384,6 @@ const AssetShare = () => {
             onClose={() => {
               setShowDownloadPopup(false);
             }}
-            downloadingPercent={downloadingPercent}
             selectedAsset={selectedAsset}
           />
         )}
