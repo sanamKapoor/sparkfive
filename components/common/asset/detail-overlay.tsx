@@ -5,12 +5,15 @@ import { isMobile } from 'react-device-detect';
 import { Rnd } from 'react-rnd';
 
 import { AssetOps, Utilities } from '../../../assets';
+import { events, shareLinkEvents } from '../../../constants/analytics';
 import { sizeToZipDownload } from '../../../constants/download';
 import { ASSET_DOWNLOAD } from '../../../constants/permissions';
 import { AssetContext, FilterContext, UserContext } from '../../../context';
+import useAnalytics from '../../../hooks/useAnalytics';
 import assetApi from '../../../server-api/asset';
 import shareApi from '../../../server-api/share-collection';
 import customFileSizeApi from '../../../server-api/size';
+import cookiesApi from '../../../utils/cookies';
 import downloadUtils from '../../../utils/download';
 import { isImageType } from '../../../utils/file';
 import toastUtils from '../../../utils/toast';
@@ -121,7 +124,9 @@ const DetailOverlay = ({
   sharedCode = "",
 }) => {
   const { user, cdnAccess, transcriptAccess, hasPermission } = useContext(UserContext);
+
   const { activeSortFilter } = useContext(FilterContext);
+  const { trackEvent, trackLinkEvent } = useAnalytics();
   const [assetDetail, setAssetDetail] = useState(undefined);
 
   const [renameModalOpen, setRenameModalOpen] = useState(false);
@@ -696,6 +701,21 @@ const DetailOverlay = ({
           updateDownloadingStatus("done", 0, 0);
         }
       }
+
+      // Track download asset event
+      if (isShare) {
+        trackLinkEvent(
+          shareLinkEvents.DOWNLOAD_SHARED_ASSET,
+          {
+            email: cookiesApi.get('shared_email') || null,
+            teamId: cookiesApi.get('teamId') || null,
+            assetId: asset.id,
+          });
+      } else {
+        trackEvent(events.DOWNLOAD_ASSET, {
+          assetId: asset.id,
+        });
+      }
     } catch (e) {
       const errorResponse = (await e.response.data.text()) || "{}";
       const parsedErrorResponse = JSON.parse(errorResponse);
@@ -743,6 +763,21 @@ const DetailOverlay = ({
     if (currentAsset >= sizeToZipDownload || currentAsset.type === "video") {
       downloadSelectedAssets(id);
     } else {
+      // Track download asset event
+      if (isShare) {
+        trackLinkEvent(
+          shareLinkEvents.DOWNLOAD_SHARED_ASSET,
+          {
+            email: cookiesApi.get('shared_email') || null,
+            teamId: cookiesApi.get('teamId') || null,
+            assetId: asset.id,
+          });
+      } else {
+        trackEvent(events.DOWNLOAD_ASSET, {
+          assetId: asset.id,
+        });
+      }
+
       downloadUtils.downloadFile(versionRealUrl, currentAsset.name);
     }
   };
@@ -873,6 +908,9 @@ const DetailOverlay = ({
       if (subcollectionAssets[newIndx]) {
         closeOverlay();
         setDetailOverlayId(subcollectionAssets[newIndx].asset.id);
+        trackEvent(events.VIEW_ASSET, {
+          assetId: subcollectionAssets[newIndx].asset.id,
+        });
         if (newIndx === subcollectionAssets.length - 1) {
           loadMore();
         }
@@ -884,6 +922,9 @@ const DetailOverlay = ({
       if (assets[newIndx]) {
         closeOverlay();
         setDetailOverlayId(assets[newIndx].asset.id);
+        trackEvent(events.VIEW_ASSET, {
+          assetId: assets[newIndx].asset.id,
+        });
         if (newIndx === assets.length - 1) {
           loadMore();
         }
@@ -1038,9 +1079,13 @@ const DetailOverlay = ({
                     text={"Share"}
                     type={"button"}
                     className={`container ${styles["only-desktop-button"]} primary`}
-                    onClick={openShareAsset}
+                    onClick={() => {
+                      trackEvent(events.SHARE_ASSET, {
+                        assetId: asset.id,
+                      });
+                      openShareAsset();
+                    }}
                   />
-
                   <div className={styles["only-mobile-button"]}>
                     <IconClickable
                       additionalClass={styles["only-mobile-button"]}
@@ -1319,6 +1364,8 @@ const DetailOverlay = ({
                 onSelectChange={onSelectChange}
                 onSizeInputChange={onSizeInputChange}
                 asset={assetDetail}
+                versionRealUrl={versionRealUrl}
+                versionThumbnailUrl={versionThumbnailUrl}
                 onResetImageSize={() => {
                   resetValues();
                   setDetailPosSize({

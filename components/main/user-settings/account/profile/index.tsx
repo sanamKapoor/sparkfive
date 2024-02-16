@@ -1,13 +1,21 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from "../../../../../context";
 import styles from "./index.module.css";
 
 // Components
 import PhotoUpload from "../../../../common/account/photo-upload";
 import Basic from "./basic";
+import { pages } from "../../../../../constants/analytics";
+import useAnalytics from "../../../../../hooks/useAnalytics";
 
 const Profile: React.FC = () => {
   const { user } = useContext(UserContext);
+
+  const { pageVisit } = useAnalytics();
+
+  useEffect(() => {    
+    pageVisit(pages.PROFILE)
+  },[]);
 
   return (
     <div className={styles.container}>

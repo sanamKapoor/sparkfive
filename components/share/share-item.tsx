@@ -5,12 +5,16 @@ import { useEffect, useState } from 'react';
 import { Utilities } from '../../assets';
 import AssetIcon from '../common/asset/asset-icon';
 import AssetImg from '../common/asset/asset-img';
-import DetailOverlay from '../common/asset/detail-overlay';
 import Button from '../common/buttons/button';
 import IconClickable from '../common/buttons/icon-clickable';
 import styles from './share-item.module.css';
 
-// Component
+
+import { events, shareLinkEvents } from '../../constants/analytics';
+import useAnalytics from '../../hooks/useAnalytics'
+import { UserContext } from "../../context";
+import cookiesApi from "../../utils/cookies";
+
 const ShareItem = ({
   asset,
   thumbailUrl,
@@ -20,6 +24,9 @@ const ShareItem = ({
 }) => {
   const [visibleOverlay, setVisibleOVerlay] = useState(false);
   const router = useRouter();
+
+  const { user } = useContext(UserContext);
+  const { trackLinkEvent } = useAnalytics();
 
   useEffect(() => {
     if (visibleOverlay) {
@@ -32,6 +39,11 @@ const ShareItem = ({
 
   const viewDetails = (value) => {
     setVisibleOVerlay(true)
+    trackLinkEvent(shareLinkEvents.VIEW_SHARED_ASSET, {
+      assetId: asset.id,
+      email: cookiesApi.get('shared_email') || null,
+      teamId: cookiesApi.get('teamId') || null,
+    });
     router.push({
       pathname: `/share/assetDetail/${asset.id}`,
       query: { isShare: true, sharePath: "", sharedCode, headerName: "", activeFolder: "", availableNext: "", activeSubFolders: "" }
@@ -94,19 +106,9 @@ const ShareItem = ({
           </div>
         </div>
       </div>
-      {/* {visibleOverlay && (
-        <DetailOverlay
-          initiaParams={{ side: "detail" }}
-          asset={asset}
-          realUrl={realUrl}
-          thumbailUrl={thumbailUrl}
-          isShare={true}
-          sharedCode={sharedCode}
-          closeOverlay={() => setVisibleOVerlay(false)}
-        />
-      )} */}
     </>
   );
 };
 
 export default ShareItem;
+

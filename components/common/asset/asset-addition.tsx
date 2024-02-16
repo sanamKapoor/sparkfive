@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { useContext, useRef, useState } from "react";
+import { useContext, useRef, useState, useEffect } from "react";
 
 import { AssetOps, Assets } from "../../../assets";
 import { validation } from "../../../constants/file-validation";
@@ -20,6 +20,9 @@ import FolderModal from "../folder/folder-modal";
 import ToggleAbleAbsoluteWrapper from "../misc/toggleable-absolute-wrapper";
 import styles from "./asset-addition.module.css";
 import AssetDuplicateModal from "./asset-duplicate-modal";
+
+import { events } from '../../../constants/analytics'
+import useAnalytics from '../../../hooks/useAnalytics'
 
 const AssetAddition = ({
   activeSearchOverlay = false,
@@ -43,6 +46,8 @@ const AssetAddition = ({
   const [disableButtons, setDisableButtons] = useState(false);
   const { activeSortFilter } = useContext(FilterContext) as any;
   const { advancedConfig, hasPermission } = useContext(UserContext);
+
+  const { trackEvent } = useAnalytics();
 
   const {
     assets,
@@ -203,6 +208,12 @@ const AssetAddition = ({
         }
 
         data = data.map((item) => {
+          // Track uploaded asset info
+          trackEvent(events.UPLOAD_ASSET, {
+            uploadType: 'Device',
+            assetId: item.asset.id,
+          });
+
           item.isSelected = true;
           return item;
         });
@@ -509,6 +520,12 @@ const AssetAddition = ({
       setAddedIds(data.id);
       // Mark done
       const updatedAssets = data.map((asset) => {
+      // Track uploaded asset info
+      trackEvent(events.UPLOAD_ASSET, {
+        uploadType: 'Dropbox',
+        assetId: asset.asset.id,
+      });
+
         return { ...asset, status: "done" };
       });
 
@@ -681,6 +698,13 @@ const AssetAddition = ({
 
       // Mark done
       const updatedAssets = data.map((asset) => {
+
+        // Track uploaded asset info
+        trackEvent(events.UPLOAD_ASSET, {
+          uploadType: 'Google Drive',
+          assetId: asset.asset.id,
+        });
+
         return { ...asset, status: "done" };
       });
 
@@ -764,7 +788,9 @@ const AssetAddition = ({
       id: "file",
       label: "Upload From Computer",
       text: "png, jpg, mp4 and more",
-      onClick: () => fileBrowserRef.current.click(),
+      onClick: () => {
+        fileBrowserRef.current.click();
+      },
       icon: AssetOps.newCollection,
     },
     {
@@ -778,14 +804,15 @@ const AssetAddition = ({
       id: "dropbox",
       label: "Upload from Dropbox",
       text: "Import files",
-      onClick: openDropboxSelector,
+      onClick: (e) => {
+        openDropboxSelector(e);
+      },
       icon: Assets.dropbox,
     },
     {
       id: "gdrive",
       label: "Upload from Drive",
       text: "Import files",
-      onClick: () => { },
       icon: Assets.gdrive,
       CustomContent: ({ children }) => {
         return (

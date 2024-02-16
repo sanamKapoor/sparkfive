@@ -211,7 +211,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
   };
 
   useEffect(() => {
-    setSidenavTotalCollectionCount(0)
+    setSidenavTotalCollectionCount(0);
   }, []);
 
   useEffect(() => {
@@ -233,9 +233,11 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
       setListUpdateFlag(false);
       setShowDropdown(new Array(sidenavFolderList.length).fill(false))
       await getFolders(true);
-      Promise.all(showDropdownIds.map(async (item) => {
-        await getSubFolders(item, 1, true);
-      }))
+      Promise.all(
+        showDropdownIds.map(async (item) => {
+          await getSubFolders(item, 1, true);
+        }),
+      );
       if (
         activeSortFilter.mainFilter !== "SubCollectionView" &&
         activeSortFilter.mainFilter !== "folders" &&
@@ -248,7 +250,6 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
       } else if (activeSortFilter.mainFilter === "SubCollectionView" && activeSubFolders !== "") {
         if (Array.from(subFoldersParentId.values()).includes(activeSubFolders)) {
           await getSubFolders(activeSubFolders, 1, true);
-
         }
       }
     }
@@ -258,14 +259,15 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     getFoldersOnUpdate();
   }, [listUpdateFlag]);
 
-  const vewFolderSidenavStateActive = (recordId: string, isParentCollection: boolean, parentId: string, parentName: string, folder?: any) => {
-    viewFolder(
-      recordId,
-      isParentCollection,
-      parentId,
-      parentName
-    );
-    setCurrentFolder(folder)
+  const vewFolderSidenavStateActive = (
+    recordId: string,
+    isParentCollection: boolean,
+    parentId: string,
+    parentName: string,
+    folder?: any,
+  ) => {
+    viewFolder(recordId, isParentCollection, parentId, parentName);
+    setCurrentFolder(folder);
     if (window.innerWidth < 767) {
       setSidebarOpen(false);
     }
@@ -620,33 +622,34 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
                             </div>
                           </div>
                         ))}
-                        {keyResultsFetch(item.id, "next") >= 0 && (
-                          <div
-                            className={`${styles["load-wrapper"]} `}
-                            onClick={() => {
-                              getSubFolders(item.id, keyResultsFetch(item.id, "next"), false);
-                            }}
-                          >
-                            {subFolderLoadingState.get(item.id) ? (
-                              <span style={{ color: "#10BDA5" }}>Loading...</span>
-                            ) : (
-                              <>
-                                {/* <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} /> */}
-                                <button className={`${styles["loadMore"]} `}>Load More</button>
-                              </>
-                            )}
-                          </div>
-                        )}
+                        {
+                          keyResultsFetch(item.id, "next") >= 0 && (
+                            <div
+                              className={`${styles["load-wrapper"]} `}
+                              onClick={() => {
+                                getSubFolders(item.id, keyResultsFetch(item.id, "next"), false);
+                              }}
+                            >
+                              {subFolderLoadingState.get(item.id) ? (
+                                <span style={{ color: "#10BDA5" }}>Loading...</span>
+                              ) : (
+                                <>
+                                  {/* <IconClickable additionalClass={styles.loadIcon} src={Utilities.load} /> */}
+                                  <button className={`${styles["loadMore"]} `}>Load More</button>
+                                </>
+                              )}
+                            </div>
+                          )
+                        }
                       </>
                     )}
                   </div >
                 </div >
               )}
-            </div>
+            </div >
           </>
         );
       })}
-
       {sidenavFolderNextPage >= 0 && (
         <div onClick={() => getFolders(false)}>
           {isFolderLoading ? (
@@ -659,7 +662,6 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
           )}
         </div>
       )}
-
     </div >
   );
 };

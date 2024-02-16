@@ -18,7 +18,13 @@ import PasswordOverlay from "./password-overlay";
 import NestedFirstlist from "./shared-nested-sidenav/shared-nested-firstlist";
 import SharedPageSidenav from "./shared-nested-sidenav/shared-nested-sidenav";
 
-// Components
+import { loadTheme } from "../../utils/theme";
+
+import { defaultLogo } from "../../constants/theme";
+import cookiesApi from "../../utils/cookies";
+import { shareLinkEvents } from "../../constants/analytics";
+import useAnalytics from "../../hooks/useAnalytics";
+
 const ShareFolderMain = () => {
   const router = useRouter();
   const {
@@ -72,13 +78,16 @@ const ShareFolderMain = () => {
   const [widthCard, setWidthCard] = useState(0);
 
   const [top, setTop] = useState("calc(55px + 5rem)");
+  const { trackLinkEvent } = useAnalytics();
 
   useEffect(() => {
     const { asPath } = router;
     if (asPath) {
       // Get shareUrl from path
       const splitPath = asPath.split("collections/");
+
       const splitPathWithoutQuery = splitPath[1].split("?");
+
       setSharePath(splitPathWithoutQuery[0]);
       setContextPath(splitPathWithoutQuery[0]);
     }
@@ -177,6 +186,7 @@ const ShareFolderMain = () => {
       });
       // Set axios headers
       requestUtils.setAuthToken(data.token, "share-authorization");
+      cookiesApi.set('shared_email', email);
       getFolderInfo(true);
     } catch (err) {
       toastUtils.error("Wrong password or invalid link, please try again");
@@ -253,6 +263,7 @@ const ShareFolderMain = () => {
     try {
       const { data } = await shareCollectionApi.getFolderInfo({ sharePath });
       let sort, mode;
+
       if (firstLoaded) {
         if (data?.singleSharedCollectionId && data?.sharedFolder?.parentId) {
           sort =
@@ -278,11 +289,32 @@ const ShareFolderMain = () => {
           });
         }
       }
+
+
       setHeaderName(data.folderName);
       setFolderInfo(data);
       setAdvancedConfig(data.customAdvanceOptions);
       setActivePasswordOverlay(false);
       setLoading(false);
+      // There is team theme set
+      if (data.theme) {
+        if (data?.theme?.teamId) cookiesApi.set('teamId', data?.theme?.teamId)
+        // Load theme from team settings
+        const currentTheme = loadTheme(data.theme);
+        // @ts-ignore
+        setLogo(currentTheme.logoImage?.realUrl || defaultLogo);
+      }
+
+      // Track event
+      trackLinkEvent(shareLinkEvents.ACCESS_SHARED_LINK, {
+        link: window.location.href,
+        type: "Collection",
+        teamId: cookiesApi.get('teamId') || null,
+        email: cookiesApi.get('shared_email') || null,
+      });
+
+
+
     } catch (err) {
       // If not 500, must be auth error, request user password
       if (err.response?.status !== 500) {
@@ -321,6 +353,7 @@ const ShareFolderMain = () => {
         },
         nestedSubFolderId ? nestedSubFolderId : activeSubFolders,
       );
+
       setSubFoldersViewList(subFolders, replace);
       setLoading(false);
     } catch (err) {

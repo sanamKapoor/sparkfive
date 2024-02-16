@@ -222,7 +222,9 @@ const AssetRelatedFIles = ({
           {assets.length > 0 && <h3>Related Files</h3>}
           <IconClickable
             src={AssetOps.upload}
-            onClick={() => setUploadModalOpen(true)}
+            onClick={() => {
+              setUploadModalOpen(true)
+            }}
           />
           <ReactTooltip
             id={"upload"}

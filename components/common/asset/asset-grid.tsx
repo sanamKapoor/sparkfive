@@ -808,6 +808,7 @@ const AssetGrid = ({
                       <AssetTableHeader activeView={activeView} setSortAttribute={setSortAssetAttribute} />
                     )}
                     {sortedAssets.map((assetItem, index) => {
+
                       if (assetItem.status !== "fail") {
                         return (
                           <li

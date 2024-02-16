@@ -42,6 +42,7 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({ onBack, data,
     transcript: data?.transcript,
     ocr: data?.ocr,
     themeCustomization: data?.themeCustomization || false,
+    analytics: data?.analytics || false,
   });
   const [showPlanModal, setShowPlanModal] = useState<boolean>(false);
 
@@ -251,6 +252,21 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({ onBack, data,
               data={type}
               oneColumn={false}
               value={settings.themeCustomization}
+            />
+          </div>
+
+          <div className={"col-20 align-self-flex-end"}></div>
+        </div>
+
+        <div className={`row align-flex-start ${styles.cdnEmbedding}`}>
+          <div className={"col-20 font-weight-600"}>Analytics Embedding</div>
+
+          <div className={"col-20"}>
+            <OptionList
+              setValue={(value) => setSettings({ ...settings, analytics: value })}
+              data={type}
+              oneColumn={false}
+              value={settings.analytics}
             />
           </div>
 

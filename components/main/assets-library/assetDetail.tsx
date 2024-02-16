@@ -150,7 +150,7 @@ const DetailOverlay = ({
         operationFolder,
         operationAssets,
         setActiveFolder,
-        setActiveSubFolders
+        setActiveSubFolders,
     } = useContext(AssetContext);
 
     const { activeSortFilter } = useContext(FilterContext);

@@ -34,7 +34,9 @@
   --lighter-header-navigation-color: #374186;
   --primary-color: var(--color-prim-navy);
   --secondary-color: var(--color-prim-turquoise);
-  --additional-color: var(--color-sec-lightblue)
+  --additional-color: var(--color-sec-lightblue);
+  --color-prim-white:#ffffff;
+  --color-prim-light:#AEB0C2;
 
 }
 
