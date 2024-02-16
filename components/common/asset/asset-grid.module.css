@@ -240,7 +240,7 @@
 }
 @media (max-width: 500px) {
   .container {
-    margin-top: 195px;
+    /* margin-top: 195px; */
   }
 }
 
