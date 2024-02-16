@@ -96,7 +96,7 @@
   .inner-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 20px;
   }
   .dashboard-chart-container{
     height: unset;
@@ -190,6 +190,7 @@
   .tableResponsive {
     display: block;
     position: relative;
+    overflow-x: visible;
   }
   .table-header-tabs {
     margin-top:0px;
@@ -201,9 +202,10 @@
   }
   .inner-container {
     padding: 20px 24px 30px 24px;
+    padding: 20px 24px 0px 24px;
   }
   .dashboard-chart{
-    margin-top: 75px;
+    margin-top: 60px;
   }
   .table-header-tabs{
     width: 100%;

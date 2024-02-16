@@ -29,8 +29,6 @@ const ChartComp = ({ data, fileName = '' }) => {
                 type: 'line'
             }}
             data={chartData}
-            // height={200}
-            fileName={fileName}
         />
     )
 }

@@ -2,7 +2,7 @@ import Chart from "chart.js";
 import { useEffect, useRef, useState } from "react";
 import styles from "./chart-wrapper.module.css";
 
-const ChartWrapper = ({ chartObj, data, width = 400,  height = 400, fileName = '' }) => {
+const ChartWrapper = ({ chartObj, data }) => {
   const wrapperRef = useRef();
   const ctx = "chart";
 
@@ -35,7 +35,9 @@ const ChartWrapper = ({ chartObj, data, width = 400,  height = 400, fileName = '
           customCanvasBackgroundColor: {
             color: '#ffffff',
           }
-        }
+        },
+        responsive: true,
+        maintainAspectRatio: false,
       },  
       plugins: [
         {
@@ -48,8 +50,7 @@ const ChartWrapper = ({ chartObj, data, width = 400,  height = 400, fileName = '
             ctx.fillRect(0, 0, chart.width, chart.height);
             ctx.restore();
           }
-        },
-        
+        }, 
       ]  
     }));
   };
@@ -61,7 +62,7 @@ const ChartWrapper = ({ chartObj, data, width = 400,  height = 400, fileName = '
 
   return (
     <div className={styles.wrapper} ref={wrapperRef}>
-      <canvas id="chart" style={{width:"100%", height:"100%"}}></canvas>
+      <canvas id="chart" className={styles.graph}></canvas>
     </div>
   );
 };

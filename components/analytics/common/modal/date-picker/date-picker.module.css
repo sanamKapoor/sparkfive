@@ -18,3 +18,9 @@
     z-index: 999; 
     background: #C5C5C5E5;
   }
+
+  .small {
+    color: red;
+    margin-left: 14px;
+    padding-top: 5px;
+  }
