@@ -3,6 +3,7 @@ import { AnalyticsActiveModal, TableBodySection } from "../../../../constants/an
 import DateFormatter from "../../../../utils/date";
 import AssetIcon from "../../../common/asset/asset-icon";
 import styles from "./table-data.module.css";
+import { useRouter } from "next/router";
 
 const TableBody = ({ handleModals, data, tableFor, dashboardView }) => {
 
@@ -196,6 +197,8 @@ export const UserActivityRows = ({ data, dashboardView }) => {
   return (
     <tbody className={`${styles['tableContent']}`}>
       {data.map((row) => {
+        console.log({ row });
+        
         activityTitle = row.last_download ? "Download" : row.last_viewed ? "Viewed" : row.last_shared ? "Shared" : "";
         activityDate = row.last_download
           ? row.last_download
@@ -262,7 +265,9 @@ export const UserActivityRows = ({ data, dashboardView }) => {
                   </span>
                 </div>
               </td>
-              <td>{row.assetId ? <button className={styles.actionButton}>View Link</button> : ""}</td>
+              <td>{row.assetId ? <button className={styles.actionButton} onClick={() => {
+                  window.open(`${window.location.origin}/main/${row.assetId}`, '_blank')
+                }}>View Link</button> : ""}</td>
             </tr>
           );
         }
@@ -271,10 +276,10 @@ export const UserActivityRows = ({ data, dashboardView }) => {
   );
 };
 
-export const AssetTableDashboardRows = ({ data }) => {
+export const AssetTableDashboardRows = ({ data }) => { 
   return (
     <tbody>
-      {data.map((row) => {
+      {data.map((row) => {        
         return (
           <tr key={row.id}>
             <td>
@@ -295,8 +300,10 @@ export const AssetTableDashboardRows = ({ data }) => {
             <td>{row.downloads}</td>
             <td>{row.shares}</td>
             <td>
-              {row._id && (
-                <button className={styles.actionButton}>
+              {row.id && (
+                <button className={styles.actionButton} onClick={() => {
+                  window.open(`${window.location.origin}/main/${row.id}`, '_blank')
+                }}>
                   View asset
                 </button>
               )}
