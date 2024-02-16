@@ -45,7 +45,6 @@ const ItemAssets = ({ type, itemId }) => {
 
   useEffect(() => {
     setActivePageMode("item");
-    console.log("hello here")
     setActiveFolder("");
     getAssets();
   }, []);

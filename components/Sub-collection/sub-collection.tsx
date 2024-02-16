@@ -55,30 +55,6 @@ const SubCollection = ({
   elementsFolderContainerRef
 }: any) => {
 
-  const handleDragOver = (e) => {
-    const mouseY = e.clientY;
-    const scrollThreshold = 100;
-
-    if (mouseY < scrollThreshold) {
-      // Scroll up
-      window.scrollBy(0, -scrollThreshold);
-    } else if (mouseY > window.innerHeight - scrollThreshold) {
-      // Scroll down
-      window.scrollBy(0, scrollThreshold);
-    }
-  };
-
-
-  useEffect(() => {
-    // Attach event listener when component mounts
-    document.body.addEventListener("dragover", handleDragOver);
-
-    // Remove event listener when component unmounts
-    return () => {
-      document.body.removeEventListener("dragover", handleDragOver);
-    };
-  }, []);
-
   const {
     setActiveSubFolders,
     subFoldersViewList: { results, next, total },
@@ -351,8 +327,6 @@ const SubCollection = ({
           </div>
         </div>
       )}
-      <div className={styles.dragScroll} 
-        onDragOver={handleDragOver}>
       {!collectionHide && (
         <>
           {/* list wrapper for list view */}
@@ -413,8 +387,6 @@ const SubCollection = ({
           )}
         </>
       )}
-      </div>
-     
       {
         <>
           <div className={`${styles["heading-wrapper"]}`}>

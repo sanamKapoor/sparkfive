@@ -93,7 +93,8 @@ const AssetGrid = ({
     setDroppableId,
     setCollectionDragFlag,
     setCollectionDragId,
-    setCollectionParentDragId
+    setCollectionParentDragId,
+    collectionDragId
   } = useContext(AssetContext);
 
   const { advancedConfig, hasPermission, user } = useContext(UserContext);
@@ -136,8 +137,10 @@ const AssetGrid = ({
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
+    document.body.addEventListener("dragover", handleDragOver);
     window.addEventListener("resize", handleResize);
     return () => {
+      document.body.removeEventListener("dragover", handleDragOver);
       window.removeEventListener("resize", handleResize);
     };
   }, []);
@@ -619,8 +622,8 @@ const AssetGrid = ({
     parentFolder.current = element.id
     if (childFolder.current !== "" && childFolder.current !== parentFolder.current) {
       setMoveModalFlag(true)
-    } else if (childFolder.current === "") {
-      toastUtils.error("You can't move collection with sub-collection");
+    } else if (childFolder.current === "" && collectionDragId) {
+      toastUtils.error("You can't move collection a with sub-collection");
     }
     setCollectionDragFlag(false);// Global state in for collection drag when
     setCollectionDragId("");// Global state in for collection drag
@@ -697,6 +700,21 @@ const AssetGrid = ({
     setMoveModalFlag(false);
     setLoader(false);
   }
+  const handleDragOver = (e) => {
+    const mouseY = e.clientY;
+    const scrollThreshold = 100;
+
+    if (mouseY < scrollThreshold) {
+      // Scroll up
+      window.scrollBy(0, -scrollThreshold);
+    } else if (mouseY > window.innerHeight - scrollThreshold) {
+      // Scroll down
+      window.scrollBy(0, scrollThreshold);
+    }
+  };
+
+
+
 
   return (
     <>
@@ -710,7 +728,7 @@ const AssetGrid = ({
         {mode === "assets" && <FilterView render={render} setRender={setRender} />}
       </div>
       <section
-        className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ""} ${!sidebarOpen  ? styles["container-on-toggle"] : ""
+        className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ""} ${!sidebarOpen ? styles["container-on-toggle"] : ""
           }`}
         style={getStyling}
       >
@@ -750,6 +768,7 @@ const AssetGrid = ({
                 {...(mode === "assets" && activeView !== "list" ? { style: { marginTop: "60px" } } : {})}
                 id="asset-parent"
                 ref={elementsContainerRef}
+                onDragOver={handleDragOver}
               >
                 {mode === "SubCollectionView" && (
                   <SubCollection

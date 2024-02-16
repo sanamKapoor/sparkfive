@@ -147,7 +147,6 @@ const AssetShare = () => {
             toastUtils.error(data.errorMessage);
           }
         } else {
-          console.log(code, "code")
           setError(false);
           setLoading(false);
           setAssets(data.data);

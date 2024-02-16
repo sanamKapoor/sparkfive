@@ -149,14 +149,6 @@ export default function SharedPageSidenav({ viewFolder, headingClick, sharePath 
     setFirstLoaded(true);
   }, [firstLoaded]);
 
-  // useEffect(() => {
-  //   if (firstLoaded && activeSortFilter.mainFilter === "folders") {
-  //     getFolders(true);
-  //   }
-  //   setFirstLoaded(true);
-  // }, [activeSortFilter]);
-
-
   return (
     <>
       <div className={`${styles["shared-sidenav-outer"]}`}>
@@ -164,14 +156,7 @@ export default function SharedPageSidenav({ viewFolder, headingClick, sharePath 
           customStyle={{ cursor: "pointer" }}
           text={`Collections`}
           headingClick={headingClick}
-          icon={
-            <img
-              onClick={() => {
-                setSidebarOpen(!sidebarOpen);
-              }}
-              src={Utilities.toggleLight}
-            />
-          }
+
         />
         <div className={styles["sidenavScroll"]}>
           <div className={styles["sidenav-list1"]}>
@@ -212,43 +197,6 @@ export default function SharedPageSidenav({ viewFolder, headingClick, sharePath 
                       </div>
                     </li>
                   </div >
-                  {/* {
-                    showDropdown[index] && (
-                      <div className={styles.folder}>
-                        <div className={styles.subfolderList}>
-                          {
-                            <>
-                              {sidenavFolderList.map((record: Item, recordIndex: number) => (
-                                <div key={recordIndex}>
-                                  <div className={styles.dropdownOptions}>
-                                    <div
-                                      className={`${styles["folder-lists"]} ${activeFolder === record.id ? styles.active : ""}`}
-                                      onClick={() => {
-                                        viewFolder(record.id, true);
-                                        if (window.innerWidth < 767) {
-                                          setSidebarOpen(false);
-                                        }
-                                      }}
-                                    >
-                                      <div className={styles.dropdownIcons}>
-                                        <img className={styles.subfolder} src={Utilities.folder} />
-                                        <div className={styles["icon-descriptions"]}>
-                                          <span title={item.name}>{record.name}</span>
-                                        </div>
-                                      </div>
-                                      <div className={styles["list1-right-contents"]}>
-                                        <span>{record.assetsCount ?? 0}</span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
-                            </>
-                          }
-                        </div>
-                      </div>
-                    )
-                  } */}
 
 
                   {showDropdown[index] && (

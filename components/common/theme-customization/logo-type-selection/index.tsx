@@ -40,11 +40,11 @@ export default function LogoTypeSelection({ onSelect, onClose }: Props) {
         const updatedAssets = assets.map((asset, index) =>
           index === i
             ? {
-                ...asset,
-                status: "fail",
-                index,
-                error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
-              }
+              ...asset,
+              status: "fail",
+              index,
+              error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
+            }
             : asset,
         );
 
@@ -147,7 +147,7 @@ export default function LogoTypeSelection({ onSelect, onClose }: Props) {
 
       // Fetch logo after upload
       fetchLogos();
-    } catch (err) {}
+    } catch (err) { }
   };
 
   const onDropboxFilesGet = async (files) => {
@@ -184,11 +184,10 @@ export default function LogoTypeSelection({ onSelect, onClose }: Props) {
 
       // Fetch logo after import
       fetchLogos();
-    } catch (err) {}
+    } catch (err) { }
   };
 
   const onGdriveFilesGet = async (files) => {
-    console.log(`>>> Google drive get files`, files);
     // Loading
     setLoading(true);
 
@@ -355,7 +354,7 @@ export default function LogoTypeSelection({ onSelect, onClose }: Props) {
           onChange={(value) => {
             setSearchKey(value);
           }}
-          onClear={() => {}}
+          onClear={() => { }}
           onlyInput={true}
           styleType={styles["search-input"]}
           inputContainerStyle={styles["search-input-container"]}

@@ -364,11 +364,11 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     if (isAdmin()) {
       if (droppableId && childFolderId.current && droppableId !== childFolderId.current) {
         setMoveModalFlag(true);
-      } else if (childFolderId.current === droppableId) {
+      } else if (droppableId && childFolderId.current === droppableId) {
         moveCollectionError("You can't move collection into a same collection");
       } else if (!droppableId && draggable.current) {
         moveCollectionError("You can't move collection into a subcollection");
-      } else if (!draggable.current) {
+      } else if (!draggable.current && droppableId) {
         moveCollectionError("You can't move collection with a sub-collection");
       }
     }
@@ -428,7 +428,6 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
       }
     } else if (isAdmin() && collectionDragFlag) {
       if (collectionDragId && droppableId) {
-        console.log("hello")
         if (collectionDragId === droppableId) {
           moveCollectionError("You can't move collection into a same collection");
         } else {

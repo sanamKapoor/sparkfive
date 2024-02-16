@@ -190,7 +190,6 @@ const AssetThumbail = ({
           ...DEFAULT_DETAIL_PROPS,
           visible: !overlayProperties.visible,
         });
-        console.log(activeSubFolders)
         if (!overlayProperties.visible) {
           if (isShare) {
             router.push({
@@ -251,7 +250,7 @@ const AssetThumbail = ({
                 />
               ) : (
                 <HoverVideoPlayer
-                 data-drag="false"
+                  data-drag="false"
                   controls
                   className={styles["hover-video-player-wrapper"]}
                   videoClassName={styles["video-style"]}
@@ -309,7 +308,7 @@ const AssetThumbail = ({
             </div>
             <div data-drag="false" className={`normal-text ${styles["wrap-text"]} ${activeView === "list" && styles["list-text"]}`}>
               <span
-              data-drag="false"
+                data-drag="false"
                 id="editable-preview"
                 onClick={() => {
                   if (onView) {
@@ -337,7 +336,7 @@ const AssetThumbail = ({
           )}
           <div data-drag="false" className={activeView === "grid" && styles.sizeMargin}>
             <div
-            data-drag="false"
+              data-drag="false"
               className={`${activeView !== "list"
                 ? `secondary-text ${styles["modified-date"]} ${styles["uploadModified"]}`
                 : ""

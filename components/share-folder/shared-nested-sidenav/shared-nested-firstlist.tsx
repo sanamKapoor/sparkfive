@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 
 import { sideNavFirstList } from "../../../constants/firstList-sidenav";
-import { FilterContext, UserContext } from "../../../context";
+import { AssetContext, FilterContext, UserContext } from "../../../context";
 import shareCollectionApi from "../../../server-api/share-collection";
 import styles from "./shared-nested-firstlist.module.css";
 import ReusableHeading from "../../nested-subcollection-sidenav/nested-heading";
@@ -10,6 +10,7 @@ import { Utilities } from "../../../assets";
 const NestedFirstlist = ({ sharePath }: { sharePath: string }) => {
   const { activeSortFilter } = useContext(FilterContext);
   const { advancedConfig } = useContext(UserContext) as any;
+  const { sidebarOpen, setSidebarOpen } = useContext(AssetContext)
   const [hideFilterElements] = useState(advancedConfig.hideFilterElements);
   const [listingData, setListingData] = useState({
     image: "",
@@ -67,15 +68,21 @@ const NestedFirstlist = ({ sharePath }: { sharePath: string }) => {
         <ReusableHeading
           customStyle={{ padding: "padding: 10px 23px 0px;", cursor: "pointer" }}
           text={`Hooligan Inc.`}
-          icon={<img src={Utilities.toggleLight} />}
+          icon={
+            <img
+              onClick={() => {
+                setSidebarOpen(!sidebarOpen);
+              }}
+              src={Utilities.toggleLight}
+            />
+          }
         />
         <div className={styles["sidenav-list1"]}>
           <ul>
             {setTabsVisibility.map((item, index) => (
               <li
-                className={`${styles["list1-description"]} ${styles["border-bottom"]}  ${
-                  activeSortFilter?.mainFilter === item.name ? styles["active"] : ""
-                }`}
+                className={`${styles["list1-description"]} ${styles["border-bottom"]}  ${activeSortFilter?.mainFilter === item.name ? styles["active"] : ""
+                  }`}
                 key={index}
               >
                 <div className={styles["list1-left-contents"]}>

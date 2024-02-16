@@ -654,7 +654,6 @@ const UploadRequest = () => {
         }
       }
       if (selectedAssetIds.length > 0 && team?.id) {
-        console.log(selectedAssetIds, team?.id)
         await assetApi.reindexingData({ assetIds: selectedAssetIds, teamId: team?.id || "" });
       }
       // Save tags to asset

@@ -91,7 +91,6 @@ const ShareFolderMain = () => {
 
   useEffect(() => {
     if (sharePath && sharePath !== "[team]/[id]/[name]" && !firstLoaded) {
-      console.log("in here page shrepath");
       getFolderInfo();
     }
   }, [sharePath]);
@@ -221,12 +220,7 @@ const ShareFolderMain = () => {
   };
 
   const setInitialLoad = async (folderInfo) => {
-    console.log(
-      firstLoaded,
-      folderInfo,
-      folderInfo.customAdvanceOptions,
-      "firstLoaded && folderInfo && folderInfo.customAdvanceOptions",
-    );
+
     if (!firstLoaded && folderInfo && folderInfo.customAdvanceOptions) {
       setFirstLoaded(true);
       let mode, sort;
@@ -257,7 +251,6 @@ const ShareFolderMain = () => {
 
   const getFolderInfo = async (displayError = false, ignoreFolder = false) => {
     try {
-      console.log("hello in here");
       const { data } = await shareCollectionApi.getFolderInfo({ sharePath });
       let sort, mode;
       if (firstLoaded) {
@@ -285,7 +278,6 @@ const ShareFolderMain = () => {
           });
         }
       }
-      console.log("heeheheheh");
       setHeaderName(data.folderName);
       setFolderInfo(data);
       setAdvancedConfig(data.customAdvanceOptions);
@@ -584,9 +576,8 @@ const ShareFolderMain = () => {
     <>
       {!loading && (
         <main
-          className={`${
-            sidebarOpen ? (getSidebarRender() ? styles["container"] : styles["containerPortal"]) : styles["rightToggle"]
-          } sharefolderOuter`}
+          className={`${sidebarOpen ? (getSidebarRender() ? styles["container"] : styles["containerPortal"]) : styles["rightToggle"]
+            } sharefolderOuter`}
         >
           {getSidebarRender() && sidebarOpen && (
             <div className={`${styles["sidenav-main-wrapper"]}`}>
@@ -611,9 +602,8 @@ const ShareFolderMain = () => {
             renderSidebar={getSidebarRender()}
           />
           <div
-            className={`${assetGridWrapperStyle} ${
-              sidebarOpen && getSidebarRender() ? styles["mainContainer"] : styles["toggleContainer"]
-            } `}
+            className={`${assetGridWrapperStyle} ${sidebarOpen && getSidebarRender() ? styles["mainContainer"] : styles["toggleContainer"]
+              } `}
             style={{ marginTop: top }}
           >
             <AssetGrid
