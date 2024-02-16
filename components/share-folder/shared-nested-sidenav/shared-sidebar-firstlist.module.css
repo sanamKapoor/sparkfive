@@ -1,0 +1,110 @@
+/* .shared-sidenav-list1{
+    position:fixed;
+    width: 283px;
+    padding: 0 16px;
+    padding: 10px 23px 0px;
+    top:80px;
+} */
+
+.list1-description{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 4px 2px;
+    background: #fff;
+    margin:10px 0;
+    box-sizing: border-box;
+    
+}
+
+.border-bottom{
+    border-bottom: none;
+}
+.list1-description:hover{
+    background: var(--additional-color);
+    padding: 4px 2px;
+}
+.icon{
+    margin-right: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.list1-left-contents{
+    display: flex;
+    align-items: center;
+}
+.icon-description span{
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 18px;
+    color:var(--color--primary-color);
+}
+
+.icon-description{
+    max-width: 15ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+   
+}
+.icon-description:hover{
+    overflow:visible;
+    text-overflow: visible;
+}
+.list1-right-contents span{
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    color:#817D9D;
+}
+.active{
+    background: var(--additional-color);
+    border-radius: 4px;
+    padding: 4px 2px;
+}
+.sidenav-list1{
+    margin-bottom: 22px;
+    border-top: 1px solid #DEDAD4;
+    border-bottom: 1px solid #DEDAD4;
+}
+
+@media (max-width:820px) {
+    .border-bottom{
+        border-bottom: 1px solid #dfdad4;
+        padding: 10px 23px;
+    }
+    .list1-description{
+        margin-bottom:0px;
+    }
+    .active{
+        padding: 10px 23px;
+    }
+    .list1-description:hover{
+        
+        padding: 10px 23px;
+    }
+}
+
+@media (max-width:800px){
+    .sidenav-list1{
+       border-top:1px solid #dfdad4;
+    }
+    .border-bottom{
+        padding: 16px 23px;
+    }
+    .sidenav-list1{
+        margin-bottom: 0px;
+    }
+    
+}
+
+@media (max-width:420px){
+    .sidenav-list1{
+        margin-bottom: 0px;
+    }
+    
+}

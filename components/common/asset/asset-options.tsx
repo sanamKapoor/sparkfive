@@ -119,7 +119,7 @@ const AssetOptions = ({
       Wrapper={({ children }) => (
 
         <>
-          <IconClickable SVGElement={Utilities.more} additionalClass={styles.thumbnailDots} />
+          <IconClickable data-drag="false" SVGElement={Utilities.more} additionalClass={styles.thumbnailDots} />
           {children}
         </>
       )}

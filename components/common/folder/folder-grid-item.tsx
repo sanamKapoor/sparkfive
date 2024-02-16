@@ -1,24 +1,23 @@
-import { format } from "date-fns";
-import fileDownload from "js-file-download";
-import React, { ChangeEvent, useContext, useState } from "react";
+import { format } from 'date-fns';
+import fileDownload from 'js-file-download';
+import React, { ChangeEvent, useContext, useState } from 'react';
 
-import { Utilities } from "../../../assets";
-import { COLLECTION_NAME_UPDATED, FAILED_TO_UPDATE_COLLECTION_NAME } from "../../../constants/messages";
-import { AssetContext } from "../../../context";
-import folderApi from "../../../server-api/folder";
-import shareFolderApi from "../../../server-api/share-collection";
-import toastUtils from "../../../utils/toast";
-import RenameModal from "../../common/modals/rename-modal";
-import gridStyles from "../asset//asset-grid.module.css";
-import AssetIcon from "../asset/asset-icon";
-import AssetImg from "../asset/asset-img";
-import Button from "../buttons/button";
-import IconClickable from "../buttons/icon-clickable";
-import ConfirmModal from "../modals/confirm-modal";
-import styles from "./folder-grid-item.module.css";
-import FolderOptions from "./folder-options";
-import MoveCollectionModal from "../modals/move-collection-modal";
-import SpinnerOverlay from "../spinners/spinner-overlay";
+import { Utilities } from '../../../assets';
+import { AssetContext } from '../../../context';
+import folderApi from '../../../server-api/folder';
+import shareFolderApi from '../../../server-api/share-collection';
+import toastUtils from '../../../utils/toast';
+import RenameModal from '../../common/modals/rename-modal';
+import gridStyles from '../asset//asset-grid.module.css';
+import AssetIcon from '../asset/asset-icon';
+import AssetImg from '../asset/asset-img';
+import Button from '../buttons/button';
+import IconClickable from '../buttons/icon-clickable';
+import ConfirmModal from '../modals/confirm-modal';
+import MoveCollectionModal from '../modals/move-collection-modal';
+import SpinnerOverlay from '../spinners/spinner-overlay';
+import styles from './folder-grid-item.module.css';
+import FolderOptions from './folder-options';
 
 // Context
 // Components
@@ -46,15 +45,11 @@ const FolderGridItem = ({
   thumbnailExtension,
   thumbnails,
   activeView,
-  isThumbnailNameEditable = false,
-  focusedItem,
-  setFocusedItem,
   folderType,
   mode,
   childFolders,
-  parentId
+  parentId,
 }: any) => {
-
   const {
     updateDownloadingStatus,
     folders,
@@ -119,21 +114,17 @@ const FolderGridItem = ({
     // Show processing bar
     try {
       updateDownloadingStatus("zipping", 0, assetsCount);
-
+      let api: any;
       let payload = {
         folderIds: [id],
       };
-
       let filters = {
         estimateTime: 1,
       };
-
-      let api = folderApi;
-
+      api = folderApi;
       if (isShare) {
         api = shareFolderApi;
       }
-
       // Add sharePath property if user is at share collection page
       if (sharePath) {
         filters["sharePath"] = sharePath;
@@ -146,43 +137,6 @@ const FolderGridItem = ({
       updateDownloadingStatus("done", 0, 0);
     } catch (err) {
       updateDownloadingStatus("error", 0, 0);
-    }
-  };
-
-  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setThumbnailName(e.target.value);
-  };
-
-  const updateNameOnBlur = async (e) => {
-    console.log("onBlurr", e);
-    setFocusedItem(null);
-    setIsEditing(false);
-    //fire api only if name is changed
-
-    if (thumbnailName && name !== thumbnailName) {
-      try {
-        const data = await folderApi.updateFolder(id, {
-          name: e.target.value,
-        });
-
-        if (data) {
-          setFolders(
-            folders.map((folder) => {
-              if (folder.id === data.data.id) {
-                return { ...folder, name: data.data.name };
-              } else {
-                return folder;
-              }
-            }),
-          );
-        }
-
-        toastUtils.success(COLLECTION_NAME_UPDATED);
-      } catch (e) {
-        toastUtils.error(FAILED_TO_UPDATE_COLLECTION_NAME);
-      }
-    } else {
-      setThumbnailName(name);
     }
   };
 
@@ -210,7 +164,8 @@ const FolderGridItem = ({
         if (mode === "SubCollectionView") {
           updatedAssets = filterFolderInList(SubFolders, data.data);
           setSubFoldersViewList({
-            next: next, total: total - 1,
+            next: next,
+            total: total - 1,
             results: updatedAssets,
           });
         } else {
@@ -240,7 +195,8 @@ const FolderGridItem = ({
         if (mode === "SubCollectionView") {
           updatedAssets = updateFolderInList(SubFolders, data.data);
           setSubFoldersViewList({
-            next: next, total: total,
+            next: next,
+            total: total,
             results: updatedAssets,
           });
         } else {
@@ -272,11 +228,15 @@ const FolderGridItem = ({
   };
 
   return (
-    <div className={`${styles.container} ${activeView === "list" && styles.listContainer} ${isLoading && "loadable"}`}>
+    <div
+      data-drag="false"
+      className={`${styles.container} ${activeView === "list" && styles.listContainer} ${isLoading && "loadable"}`}
+    >
       {/* select wrapper is for list view  */}
-      <div className={activeView === "list" && styles["list-item-wrapper"]}>
+      <div data-drag="false" className={activeView === "list" && styles["list-item-wrapper"]}>
         {activeView === "list" ? (
           <div
+            data-drag="false"
             className={`${activeView === "list" && styles["list-select-icon"]} ${isSelected && styles["selected-wrapper"]
               }`}
           >
@@ -287,36 +247,40 @@ const FolderGridItem = ({
             />
           </div>
         ) : null}
-        <div className={`${styles["main-border"]} ${activeView === "list" && styles["list-main-border"]}`}>
+        <div
+          data-drag="false"
+          className={`${styles["main-border"]} ${activeView === "list" && styles["list-main-border"]}`}
+        >
           <div
+            data-drag="false"
             className={
               thumbnailPath || thumbnailExtension
-                ? `${styles.grid_border} ${activeView === "list" ? styles.grid_border_list : ""}`
+                ? `${styles.grid_border} ${activeView === "list" ? styles.grid_border_list : ""} `
                 : `${styles["image-wrapper"]} ${activeView === "list" ? styles["list-image-wrapper"] : ""}`
             }
             onClick={activeView === "list" && viewFolder}
           >
             <>
               {thumbnailPath && (
-                <AssetImg assetImg={thumbnailPath} imgClass="maxHeight" style={{ maxWidth: "330px !important" }} />
+                <AssetImg assetImg={thumbnailPath} imgClass="maxHeight userEvents" style={{ maxWidth: "330px !important" }} />
               )}
               {thumbnailExtension && !thumbnailPath && (
-                <AssetIcon extension={thumbnailExtension} imgClass="maxHeight" />
+                <AssetIcon extension={thumbnailExtension} imgClass="maxHeight userEvents" />
               )}
               {!thumbnailPath &&
                 !thumbnailExtension &&
                 previews.map((preview: any, index: number) => (
                   <div className={styles["sub-image-wrapper"]} key={index.toString()}>
                     {preview.assetImg || preview.name === "empty" ? (
-                      <AssetImg {...preview} />
+                      <AssetImg imgClass="userEvents" {...preview} />
                     ) : (
-                      <AssetIcon extension={preview.extension} isCollection={true} />
+                      <AssetIcon imgClass="userEvents" extension={preview.extension} isCollection={true} />
                     )}
                   </div>
                 ))}
               {activeView !== "list" && (
                 <div className={styles["image-button-wrapper"]}>
-                  <Button className="container primary" text={"View Collection"} type={"button"} onClick={viewFolder} />
+                  <Button data-drag="false" className="container primary" text={"View Collection"} type={"button"} onClick={viewFolder} data-drag="false" />
                 </div>
               )}
               {activeView !== "list" && (
@@ -331,21 +295,9 @@ const FolderGridItem = ({
             </>
           </div>
           {
-            // isThumbnailNameEditable &&
-            // isEditing &&
-            // focusedItem &&
-            // focusedItem === id ? (
-            //   <input
-            //     className={`normal-text ${styles["editable-field"]} ${
-            //       activeView === "list" && styles["list-editable-field"]
-            //     } ${gridStyles["editable-input"]}`}
-            //     value={thumbnailName}
-            //     onChange={handleNameChange}
-            //     onBlur={updateNameOnBlur}
-            //     autoFocus
-            //   />
-            // ) : (
+
             <span
+              data-drag="false"
               id="editable-preview"
               onClick={handleOnFocus}
               className={`normal-text ${styles["wrap-text"]} ${activeView === "list" && styles["list-wrap-text"]} ${gridStyles["editable-preview"]
@@ -353,16 +305,18 @@ const FolderGridItem = ({
             >
               {thumbnailName}
             </span>
-            // )
           }
         </div>
       </div>
 
-      <div className={`${styles["details-wrapper"]} ${activeView === "list" && styles["list-detail-wrapper"]}`}>
+      <div
+        data-drag="false"
+        className={`${styles["details-wrapper"]} ${activeView === "list" && styles["list-detail-wrapper"]}`}
+      >
         {folderType === "SubCollection" ? (
           <div className="secondary-text">{`${assetsCount ?? 0} Asset${assetsCount !== 1 ? "s" : ""}`}</div>
         ) : (
-          <div className={styles["modified-date"]}>
+          <div data-drag="false" className={styles["modified-date"]}>
             {`${Number(assetsCount ?? 0) + Number(totalchildassests ?? 0)} Asset${Number(assetsCount ?? 0) + Number(totalchildassests ?? 0) !== 1 ? "s" : ""
               } ${Number(totalchild) !== 0 ? `${totalchild ?? 0} Subcollection${Number(totalchild) !== 1 ? "s" : ""}` : ""
               }`}
@@ -405,7 +359,6 @@ const FolderGridItem = ({
         closeModal={() => setMoveCollectionOpenModal(false)}
         moveFolder={confirmMoveCollection}
         parentId={parentId}
-        itemsAmount={1}
       />
       <ConfirmModal
         closeModal={() => setDeleteOpen(false)}

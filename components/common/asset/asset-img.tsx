@@ -8,7 +8,7 @@ const AssetImg = ({
   assetImg,
   type = "image",
   opaque = false,
-  onClick = () => {},
+  onClick = () => { },
   imgClass = "",
   style = {},
   activeFilter = "",
@@ -30,26 +30,26 @@ const AssetImg = ({
     <>
       <img
         src={Assets.empty}
+        data-drag="false"
         alt={"blank"}
-        className={`${styles[activeFilter]}`}
+        className={`${styles[activeFilter]} ${styles["userEvents"]}`}
         style={
           loaded
             ? { display: "none" }
             : {
-                width: isDeletedItem ? "none" : "100%",
-                height: isDeletedItem ? "none" : "100%",
-                objectFit: "contain",
-              }
+              width: isDeletedItem ? "none" : "100%",
+              height: isDeletedItem ? "none" : "100%",
+              objectFit: "contain",
+            }
         }
       />
       <img
+        data-drag="false"
         onClick={onClick}
         src={finalImg}
-        className={`asset-img ${
-          !isResize ? styles.asset : styles.asset__crop
-        } ${opaque && styles.opaque} ${imgClass} ${styles[imgClass]} ${
-          styles[activeFilter]
-        }`}
+        className={`${styles["userEvents"]} asset-img ${!isResize ? styles.asset : styles.asset__crop
+          } ${opaque && styles.opaque} ${imgClass} ${styles[imgClass]} ${styles[activeFilter]
+          }`}
         onLoad={() => setLoaded(true)}
         onError={(e) => {
           setLoaded(false);
@@ -58,14 +58,14 @@ const AssetImg = ({
           loaded
             ? { ...style }
             : {
-                opacity: 0,
-                overflow: "hidden",
-                height: 0,
-                width: 0,
-                margin: 0,
-                padding: 0,
-                border: "none",
-              }
+              opacity: 0,
+              overflow: "hidden",
+              height: 0,
+              width: 0,
+              margin: 0,
+              padding: 0,
+              border: "none",
+            }
         }
       />
     </>

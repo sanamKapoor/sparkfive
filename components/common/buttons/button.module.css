@@ -461,6 +461,10 @@ console
   min-width: 161px;
   justify-content: center;
 }
+.confirm{
+  min-width: 153px;
+
+}
 
 .outline-text-btn{
   min-width:84px;

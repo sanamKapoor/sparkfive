@@ -1,11 +1,12 @@
-import update from "immutability-helper";
-import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import update from 'immutability-helper';
+import { useRouter } from 'next/router';
+import { useContext, useEffect, useRef, useState } from 'react';
 
-import { validation } from "../constants/file-validation";
-import { AssetContext, SocketContext } from "../context";
-import assetApi from "../server-api/asset";
-import { convertTimeFromSeconds, getFolderKeyAndNewNameByFileName } from "../utils/upload";
+import { validation } from '../constants/file-validation';
+import { AssetContext, SocketContext } from '../context';
+import assetApi from '../server-api/asset';
+import { convertTimeFromSeconds, getFolderKeyAndNewNameByFileName } from '../utils/upload';
+
 interface Asset {
   id: string;
   name: string;
@@ -83,7 +84,7 @@ export default ({ children }) => {
   const [selectedAllAssets, setSelectedAllAssets] = useState(false);
   const [selectedAllFolders, setSelectedAllFolders] = useState(false);
   const [completedAssets, setCompletedAssets] = useState([]);
-
+  const [history, setHistory] = useState("");
   // Upload process
   const [uploadingAssets, setUploadingAssets] = useState([]);
   const [uploadingType, setUploadingType] = useState();
@@ -140,6 +141,15 @@ export default ({ children }) => {
   const [currentFolder, setCurrentFolder] = useState(null);
 
   const [showSubCollectionContent, setShowSubCollectionContent] = useState(false);
+  const [assetDragFlag, setAssetDragFlag] = useState(false);
+  const [assetDragId, setAssetDragId] = useState(false);
+  const [assetDragType, setAssetDragType] = useState("")
+
+  const [droppableId, setDroppableId] = useState("");
+
+  const [collectionDragFlag, setCollectionDragFlag] = useState(false);
+  const [collectionDragId, setCollectionDragId] = useState("");
+  const [collectionParentDragId, setCollectionParentDragId] = useState("");
 
   const setPlaceHolders = (type, replace = true) => {
     if (type === "asset") {
@@ -192,6 +202,7 @@ export default ({ children }) => {
   };
 
   const subFoldersAssetList = (inputFolders: { results: Item[]; next: number; total: number }, replace = true) => {
+
     const { results, next, total } = inputFolders;
 
     setSubFoldersAssetsViewList((previousValue) => {
@@ -202,6 +213,7 @@ export default ({ children }) => {
         total,
       };
     });
+
   };
 
   const setSidenavFolderChildListItems = (inputFolders: any, id: string, replace = true) => {
@@ -344,11 +356,11 @@ export default ({ children }) => {
         const updatedAssets = assets.map((asset, index) =>
           index === retryList[i].index
             ? {
-                ...asset,
-                status: "fail",
-                index,
-                error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
-              }
+              ...asset,
+              status: "fail",
+              index,
+              error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
+            }
             : asset,
         );
 
@@ -557,13 +569,13 @@ export default ({ children }) => {
   // Reset active folders if user navigate to other pages
   useEffect(() => {
     const handleRouteChange = (url, { shallow }) => {
-      setActiveFolder("");
+      const parts = localStorage.getItem('history')?.split('/');
+      const isMainAssets = parts && parts.length > 3 && parts[1] === 'main' && parts[2] === 'assets';
+      const isCollectionsAssetDetail = parts && parts.length > 3 && parts[1] === 'collections' && parts[2] === 'assetDetail';
+      (isMainAssets || isCollectionsAssetDetail) ? null : setActiveFolder("");
+      localStorage.setItem("history", url);
     };
-
     router.events.on("routeChangeStart", handleRouteChange);
-
-    // If the component is unmounted, unsubscribe
-    // from the event with the `off` method:
     return () => {
       router.events.off("routeChangeStart", handleRouteChange);
     };
@@ -674,6 +686,22 @@ export default ({ children }) => {
     setCurrentFolder,
     showSubCollectionContent,
     setShowSubCollectionContent,
+    history,
+    setHistory,
+    assetDragFlag,
+    assetDragId,
+    assetDragType,
+    setAssetDragFlag,
+    setAssetDragId,
+    setAssetDragType,
+    droppableId,
+    setDroppableId,
+    collectionDragFlag,
+    setCollectionDragFlag,
+    collectionDragId,
+    setCollectionDragId,
+    collectionParentDragId,
+    setCollectionParentDragId
   };
   return <AssetContext.Provider value={assetsValue}>{children}</AssetContext.Provider>;
 };
