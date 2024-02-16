@@ -266,7 +266,7 @@ export const UserActivityRows = ({ data, dashboardView }) => {
                 </div>
               </td>
               <td>{row.assetId ? <button className={styles.actionButton} onClick={() => {
-                  window.open(`${window.location.origin}/main/${row.assetId}`, '_blank')
+                  // window.open(`${window.location.origin}/main/assets/${row.assetId}`, '_blank')
                 }}>View Link</button> : ""}</td>
             </tr>
           );
@@ -302,7 +302,7 @@ export const AssetTableDashboardRows = ({ data }) => {
             <td>
               {row.id && (
                 <button className={styles.actionButton} onClick={() => {
-                  window.open(`${window.location.origin}/main/${row.id}`, '_blank')
+                  // window.open(`${window.location.origin}/main/assets/${row.id}`, '_blank')
                 }}>
                   View asset
                 </button>
