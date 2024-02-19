@@ -25,6 +25,11 @@
   max-width: 370px;
   white-space: nowrap;
 }
+.share-buttons{
+  display: flex;
+  align-items: center;
+  gap:15px;
+}
 
 @media screen and (max-width: 800px) {
   .container {
