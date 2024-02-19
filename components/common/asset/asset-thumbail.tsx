@@ -25,6 +25,7 @@ import styles from './asset-thumbail.module.css';
 // Components
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
 
+
 const AssetThumbail = ({
   isShare,
   sharePath,
@@ -60,6 +61,7 @@ const AssetThumbail = ({
   mode,
   availableNext = true
 }) => {
+ 
 
   const [overlayProperties, setOverlayProperties] = useState(DEFAULT_DETAIL_PROPS);
   const router = useRouter();
@@ -211,6 +213,9 @@ const AssetThumbail = ({
     }
   }
 
+
+
+
   return (
     <>
       <div>
@@ -261,8 +266,7 @@ const AssetThumbail = ({
                   videoSrc={previewUrl ?? realUrl}
                   pausedOverlay={
                     <AssetImg
-
-                      assetImg={thumbailUrl}
+                    assetImg={thumbailUrl}
                       type={asset.type}
                       name={asset.name}
                       opaque={isUploading}

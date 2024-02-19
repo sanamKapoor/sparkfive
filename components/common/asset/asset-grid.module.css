@@ -3,8 +3,8 @@
   justify-content: center;
   position: relative;
   min-height: 60vh;
-
-  margin-top: 44px; 
+/* 
+  margin-top: 44px;  */
 }
 
 .uploadAsset {
@@ -222,7 +222,7 @@
 }
 @media (max-width: 500px) {
   .container {
-    margin-top: 195px;
+    /* margin-top: 195px; */
   }
 }
 

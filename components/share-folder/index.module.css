@@ -46,7 +46,20 @@
   border-right:1px solid #DEDAD4;
   position: fixed;
   padding: 0 16px 0 16px;
-  top:87px;
+  top:60px;
+
+}
+
+@media (max-width:820px){
+  .sidenav-main-wrapper{
+    width: 100%;
+    background: #fff;
+    z-index: 9999;
+    height: 100%;
+    padding: 0 16px 0 16px;
+    top: 113px;
+    border:none;
+  }
 
 }
 @media screen and (max-width: 900px) {

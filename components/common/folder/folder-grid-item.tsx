@@ -314,7 +314,7 @@ const FolderGridItem = ({
         className={`${styles["details-wrapper"]} ${activeView === "list" && styles["list-detail-wrapper"]}`}
       >
         {folderType === "SubCollection" ? (
-          <div className="secondary-text">{`${assetsCount ?? 0} Asset${assetsCount !== 1 ? "s" : ""}`}</div>
+          <div data-drag="false" className="secondary-text">{`${assetsCount ?? 0} Asset${assetsCount !== 1 ? "s" : ""}`}</div>
         ) : (
           <div data-drag="false" className={styles["modified-date"]}>
             {`${Number(assetsCount ?? 0) + Number(totalchildassests ?? 0)} Asset${Number(assetsCount ?? 0) + Number(totalchildassests ?? 0) !== 1 ? "s" : ""
