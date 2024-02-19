@@ -64,12 +64,15 @@ const NestedFirstlist = ({ sharePath }: { sharePath: string }) => {
   return (
     <>
       <div data-drag="false" className={styles["shared-sidenav-list1"]}>
+        <div style={{padding:"12px 0 0 0"}}>
         <ReusableHeading
         data-drag="false"
           customStyle={{ padding: "padding: 10px 23px 0px;", cursor: "pointer" }}
           text={`Hooligan Inc.`}
           icon={<img src={Utilities.toggleLight} />}
         />
+        </div>
+       
         <div data-drag="false" className={styles["sidenav-list1"]}>
           <ul data-drag="false">
             {setTabsVisibility.map((item, index) => (
