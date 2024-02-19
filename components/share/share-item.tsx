@@ -25,7 +25,6 @@ const ShareItem = ({
   const [visibleOverlay, setVisibleOVerlay] = useState(false);
   const router = useRouter();
 
-  const { user } = useContext(UserContext);
   const { trackLinkEvent } = useAnalytics();
 
   useEffect(() => {

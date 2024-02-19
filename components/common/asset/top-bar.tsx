@@ -78,6 +78,7 @@ const TopBar = ({
 
   return (
     <section
+    data-drag="false"
       className={`${renderSidebar && sidebarOpen ? styles["container"] : styles["container-on-toggle"]
         }`}
       id={"top-bar"}
@@ -87,7 +88,7 @@ const TopBar = ({
       >
         <img src={Utilities.filterBlue} alt={"filter"} />
       </div>
-      <div className={styles.wrapper}>
+      <div data-drag="false" className={styles.wrapper}>
         <div className={`${styles["main-heading-wrapper"]}`}>
           {sidebarOpen ? null : (
             <div className={styles.newsidenav}>

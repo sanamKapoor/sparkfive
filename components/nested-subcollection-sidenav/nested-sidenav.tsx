@@ -73,14 +73,15 @@ const NestedSidenav = ({ viewFolder }) => {
   };
 
   return (
-    <div className={styles.nestedsidenav}>
-      <div className={styles["sidenav-content"]}>
+    <div data-drag="false" className={styles.nestedsidenav}>
+      <div  data-drag ="false" className={styles["sidenav-content"]}>
         <ReusableHeading
           customStyle={{ padding: "0px 23px 0px 0px" }}
           text={`${user?.team?.company}`}
           headingClick={headingClick}
           icon={
             <img
+            data-drag="false"
               onClick={() => {
                 setSidebarOpen(!sidebarOpen);
               }}

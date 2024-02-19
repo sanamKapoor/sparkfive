@@ -31,6 +31,7 @@ const AssetImg = ({
       <img
         src={Assets.empty}
         data-drag="false"
+        draggable={false}
         alt={"blank"}
         className={`${styles[activeFilter]} ${styles["userEvents"]}`}
         style={
@@ -47,6 +48,7 @@ const AssetImg = ({
         data-drag="false"
         onClick={onClick}
         src={finalImg}
+        draggable={false}
         className={`${styles["userEvents"]} asset-img ${!isResize ? styles.asset : styles.asset__crop
           } ${opaque && styles.opaque} ${imgClass} ${styles[imgClass]} ${styles[activeFilter]
           }`}

@@ -99,4 +99,8 @@
   .sidenavScroll {
     max-height: calc(100vh - 160px);
   }
+  .nestedsidenav{
+    padding: 12px 0 24px 0;
+
+  }
 }

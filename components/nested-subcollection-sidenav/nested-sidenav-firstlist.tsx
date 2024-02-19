@@ -91,26 +91,27 @@ const NestedFirstlist = ({
   }, [listUpdateFlag]);
 
   return (
-    <div className={styles["sidenav-list1"]}>
-      <ul>
+    <div data-drag="false" className={styles["sidenav-list1"]}>
+      <ul data-drag="false">
         {setTabsVisibility.map((item, index) => (
           <li
+          data-drag="false"
             onClick={() => headingClick(item.name, item.description)}
             className={`${styles["list1-description"]} ${styles["border-bottom"]
               }  ${activeSortFilter?.mainFilter === item.name ? styles["active"] : ""
               }`}
             key={index}
           >
-            <div className={styles["list1-left-contents"]}>
-              <div className={styles.icon}>
-                <img src={item.icon} alt={item.description} />
+            <div data-drag="false" className={styles["list1-left-contents"]}>
+              <div data-drag="false" className={styles.icon}>
+                <img data-drag="false" src={item.icon} alt={item.description} />
               </div>
-              <div className={styles["icon-description"]}>
-                <span title={item.toString()}>{item.description}</span>
+              <div data-drag="false" className={styles["icon-description"]}>
+                <span data-drag="false" title={item.toString()}>{item.description}</span>
               </div>
             </div>
             <div className={styles["list1-right-contents"]}>
-              <span>{listingData[item.countValue] || ""}</span>
+              <span data-drag="false">{listingData[item.countValue] || ""}</span>
             </div>
           </li>
         ))}

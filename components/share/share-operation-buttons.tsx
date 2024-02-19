@@ -14,7 +14,7 @@ const ShareOperationButtons = ({
       <span className={styles["files-shared"]}>
         {totalSharedFiles} Files Shared - {sharedBy}
       </span>
-      <div>
+      <div className={styles["share-buttons"]}>
         {selectedAsset > 0 && (
           <Button
             className={`container outlined ${styles.download}`}
