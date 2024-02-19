@@ -4,13 +4,11 @@ import styles from "./recognition-user-list-modal.module.css";
 import editRecognitionUserStyles from "./edit-recognition-user-modal.module.css";
 import IconClickable from "../buttons/icon-clickable";
 import { Utilities } from "../../../assets";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import UserPhoto from "../user/user-photo";
 import EditRecognitionUserModal from "./edit-recognition-user-modal";
 
 import recognitionApi from "../../../server-api/face-recognition";
-import { LoadingContext } from "../../../context";
-import faceRecognitionApi from "../../../server-api/face-recognition";
 import superAdminApi from "../../../server-api/super-admin";
 import Spinner from "../spinners/spinner";
 
@@ -29,7 +27,7 @@ const RecognitionUserListModal: React.FC<ConfirmModalProps> = ({ open, onClose, 
   const [loading, setIsLoading] = useState(false);
 
   const fetchFaceList = async () => {
-    const { data } = await superAdminApi.getFaceList(teamId);
+    const { data } = teamId ? await superAdminApi.getFaceList(teamId) : await recognitionApi.list();
     return data.data;
   };
 

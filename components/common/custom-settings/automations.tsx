@@ -98,8 +98,12 @@ const Automations = () => {
         {user?.team?.faceRecognition && (
           <>
             <div className={`${styles.row} ${styles["no-border"]}`}>
-              {/*<FaceRecognitionOperations />*/}
-              <span className={`${styles.label}`}>Facial recognition</span>
+              <FaceRecognitionOperations
+                teamId={user.teamId}
+                fullPermission={false}
+                customLabel={<span className={`${styles.label}`}>Facial recognition</span>}
+              />
+
               <div className={styles["field-radio-wrapper"]}>
                 <div className={styles.radio}>
                   <div>On</div>

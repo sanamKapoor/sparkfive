@@ -10,7 +10,7 @@ import recognitionApi from "../../../server-api/face-recognition";
 import superAdminApi from "../../../server-api/super-admin";
 import { AssetContext } from "../../../context";
 
-export default function FaceRecognitionOperations({ teamId }: Props) {
+export default function FaceRecognitionOperations({ teamId, fullPermission = true, customLabel }: Props) {
   const { setFaceRecognitionScanning } = useContext(AssetContext);
 
   const [showRecognitionCollection, setShowRecognitionCollection] = useState(false);
@@ -37,38 +37,42 @@ export default function FaceRecognitionOperations({ teamId }: Props) {
 
   return (
     <div className={styles.container}>
-      <span className={`${styles.label} m-r-8 font-weight-600`}>Facial recognition</span>
-      <ToggleableAbsoluteWrapper
-        wrapperClass={styles["dropdown-wrapper"]}
-        Wrapper={({ children }) => (
-          <div className={"m-r-8 cursor-pointer d-flex align-items-center"}>
-            <IconClickable SVGElement={Utilities.run} additionalClass={styles["select-icon"]} onClick={() => {}} />
-            {children}
-          </div>
-        )}
-        contentClass={styles["dropdown"]}
-        Content={() => (
-          <ul className={styles["dropdown-list"]}>
-            <li className={`${styles["operation-row"]} ${styles["first-item"]}`} onClick={onRunEntireAccount}>
-              <IconClickable SVGElement={Utilities.run} additionalClass={styles["select-icon"]} />{" "}
-              <div className={"m-l-8"}>Run recognition on the entire account.</div>
-            </li>
-            <li className={styles["operation-row"]} onClick={onRunSpecificCollection}>
-              <IconClickable SVGElement={Utilities.run} additionalClass={styles["select-icon"]} />
-              <div className={"m-l-8"}>Run recognition in a specific collection(s)</div>
-            </li>
-          </ul>
-        )}
-      />
+      {customLabel ? customLabel : <span className={`${styles.label} m-r-8 font-weight-600`}>Facial recognition</span>}
+      {fullPermission && (
+        <ToggleableAbsoluteWrapper
+          wrapperClass={styles["dropdown-wrapper"]}
+          Wrapper={({ children }) => (
+            <div className={"m-r-8 cursor-pointer d-flex align-items-center"}>
+              <IconClickable SVGElement={Utilities.run} additionalClass={styles["select-icon"]} onClick={() => {}} />
+              {children}
+            </div>
+          )}
+          contentClass={styles["dropdown"]}
+          Content={() => (
+            <ul className={styles["dropdown-list"]}>
+              <li className={`${styles["operation-row"]} ${styles["first-item"]}`} onClick={onRunEntireAccount}>
+                <IconClickable SVGElement={Utilities.run} additionalClass={styles["select-icon"]} />{" "}
+                <div className={"m-l-8"}>Run recognition on the entire account.</div>
+              </li>
+              <li className={styles["operation-row"]} onClick={onRunSpecificCollection}>
+                <IconClickable SVGElement={Utilities.run} additionalClass={styles["select-icon"]} />
+                <div className={"m-l-8"}>Run recognition in a specific collection(s)</div>
+              </li>
+            </ul>
+          )}
+        />
+      )}
 
-      <div
-        className={"m-r-8 cursor-pointer d-flex align-items-center"}
-        onClick={() => {
-          setShowUserList(true);
-        }}
-      >
-        <IconClickable SVGElement={Utilities.eye} additionalClass={styles["select-icon"]} />
-      </div>
+      {!fullPermission && (
+        <div
+          className={"m-r-8 cursor-pointer d-flex align-items-center"}
+          onClick={() => {
+            setShowUserList(true);
+          }}
+        >
+          <IconClickable SVGElement={Utilities.eye} additionalClass={styles["select-icon"]} />
+        </div>
+      )}
 
       <RecognitionCollectionModal
         open={showRecognitionCollection}
@@ -90,7 +94,7 @@ export default function FaceRecognitionOperations({ teamId }: Props) {
         onClose={() => {
           setShowUserList(false);
         }}
-        teamId={teamId}
+        teamId={null}
       />
 
       <RecognitionBulkEditUserListModal
@@ -106,4 +110,6 @@ export default function FaceRecognitionOperations({ teamId }: Props) {
 
 interface Props {
   teamId: string;
+  fullPermission?: boolean;
+  customLabel?: any;
 }
