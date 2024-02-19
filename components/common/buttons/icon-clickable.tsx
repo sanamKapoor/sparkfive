@@ -18,6 +18,7 @@ const IconClickable = ({
         src={src}
         onClick={onClick}
         className={`${styles.button} ${additionalClass}`}
+        draggable={false}
       />
     )}
     {SVGElement && (
