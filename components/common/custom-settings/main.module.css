@@ -8,6 +8,12 @@
   width: 50%;
 }
 
+.action-label{
+  font-size: 14px;
+  font-weight: 400;
+  margin-right: 8px;
+}
+
 .buttons{
   display: flex;
   padding: 32px 60px 16px;
