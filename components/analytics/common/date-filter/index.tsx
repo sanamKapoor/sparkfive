@@ -159,7 +159,7 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
         {/* tab-view button */}
         <section>
           <div className={`${styles["date-filter-teb"]}`}>
-        
+
             <Button text="Date Range" className={"outline-text-btn"} onClick={() => {
               setTabView(!tabView)
             }} />
@@ -295,13 +295,13 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
               </div>}
               {dateError && <small>{dateError}</small>}
               <div className={`${styles["datepicker-buttons-outer"]}`}>
+                <Button text={"Cancel"} className={"cancel-btn"} onClick={handleCustomDateSelector}></Button>
                 <Button
                   text={"Apply"}
                   className={!customDateVal.beginDate || !customDateVal.endDate ? "apply-btn-disable" : "apply-btn"}
                   onClick={handleApplyCustomDate}
                   disabled={!customDateVal.beginDate || !customDateVal.endDate}
                 ></Button>
-                <Button text={"Cancel"} className={"cancel-btn"} onClick={handleCustomDateSelector}></Button>
               </div>
             </div>
           )

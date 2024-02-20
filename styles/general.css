@@ -67,6 +67,12 @@ body {
   /* overflow: hidden; */
 }
 
+@media (min-width:1199px){
+  body{
+    height:90vh;
+  }
+}
+
 #__next {
   height: 100%;
 }

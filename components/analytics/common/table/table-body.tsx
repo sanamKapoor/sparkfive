@@ -196,9 +196,7 @@ export const UserActivityRows = ({ data, dashboardView }) => {
   let activityDate = "";
   return (
     <tbody className={`${styles['tableContent']}`}>
-      {data.map((row) => {
-        console.log({ row });
-        
+      {data.map((row) => {        
         activityTitle = row.last_download ? "Download" : row.last_viewed ? "Viewed" : row.last_shared ? "Shared" : "";
         activityDate = row.last_download
           ? row.last_download
