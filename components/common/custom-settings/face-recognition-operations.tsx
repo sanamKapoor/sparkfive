@@ -74,20 +74,22 @@ export default function FaceRecognitionOperations({ teamId, fullPermission = tru
         </div>
       )}
 
-      <RecognitionCollectionModal
-        open={showRecognitionCollection}
-        onClose={() => {
-          setShowRecognitionCollection(false);
-        }}
-        onFinish={(data) => {
-          // Set response data
-          setFaceBulkEditList(data);
+      {fullPermission && (
+        <RecognitionCollectionModal
+          open={showRecognitionCollection}
+          onClose={() => {
+            setShowRecognitionCollection(false);
+          }}
+          onFinish={(data) => {
+            // Set response data
+            setFaceBulkEditList(data);
 
-          // Show bulk edit list
-          setShowBulkEditListModal(true);
-        }}
-        teamId={teamId}
-      />
+            // Show bulk edit list
+            setShowBulkEditListModal(true);
+          }}
+          teamId={teamId}
+        />
+      )}
 
       <RecognitionUserListModal
         open={showUserList}
