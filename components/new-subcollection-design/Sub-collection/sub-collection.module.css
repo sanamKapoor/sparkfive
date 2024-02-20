@@ -3,13 +3,9 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  margin-top:5px;
+  margin-top: 5px;
 }
-/* .sticky {
-  position: fixed;
-  top: 151px;
-  width: 100%;
-} */
+
 .sub-collection-heading span {
   font-family: "Noto Sans", sans-serif;
   font-size: 14px;
@@ -122,13 +118,13 @@
   grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
   grid-gap: 40px;
   margin-bottom: 40px;
-  }
+}
 .assetWrapper {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
   grid-gap: 40px;
   /* margin-top: 40px; */
-  margin-top:20px;
+  margin-top: 20px;
 }
 .LoadMorebtn {
   display: flex;
@@ -149,14 +145,13 @@
   margin-right: 5px;
   cursor: pointer;
 }
-.heading-wrapper{
-  margin:-20px 0px 8px 0
+.heading-wrapper {
+  margin: -20px 0px 8px 0;
 }
-.sub-collection-heading-outer{
+.sub-collection-heading-outer {
   display: flex;
   align-items: center;
   margin: 0 0 20px 0;
-
 }
 
 @media screen and (max-width: 810px) {
@@ -164,21 +159,24 @@
     margin-top: 100px;
     padding: 0 20px;
   }
+  .list-wrapper{
+    margin-top: 25px !important;
+  }
 }
 @media screen and (min-width: 811px) and (max-width: 1280px) {
   .cardsWrapper {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(187px, 1fr)) !important;
+    /* grid-template-columns: repeat(auto-fill, minmax(187px, 1fr)) !important; */
+
   }
 }
-@media (max-width:600px){
-  .heading-wrapper{
-    margin:20px;
+@media (max-width: 600px) {
+  .heading-wrapper {
+    margin: 20px;
   }
   .assetWrapper {
-    margin-top: 40px !important;
+    margin-top: 40px;
   }
-
 }
 @media screen and (max-width: 475px) {
   .cardsWrapper {
@@ -186,7 +184,9 @@
     grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
     padding: 0 20px;
   }
- 
+  .heading-wrapper {
+    margin: 0px;
+  }
 }
 @media (max-width: 420px) {
   .sub-collection-heading {
@@ -205,8 +205,11 @@
     padding: 20px 20px;
     grid-gap: 10px;
     margin-top: 100px;
+    margin-top: 0;
   }
-  
+  .sub-collection-heading-outer {
+    margin: 0;
+  }
 }
 
 @media (min-width: 420px) and (max-width: 800px) {
@@ -219,7 +222,7 @@
 /* list view css starts from here */
 .list-wrapper {
   grid-template-columns: unset;
-  grid-gap:20px;
+  grid-gap: 20px;
 }
 
 .list-asset-wrapper {
@@ -227,52 +230,50 @@
 }
 
 @media only screen and (min-width: 270px) and (max-width: 390px) {
- .rightSide{
-  margin-top: 171px;
- }
- .cardsWrapper {
-  margin-top:0px;
-  
-}
+  .rightSide {
+    margin-top: 171px;
+    margin-top: 0;
+  }
+  .cardsWrapper {
+    margin-top: 0px;
+  }
 }
 @media only screen and (min-width: 390px) and (max-width: 540px) {
-  .rightSide{
-   margin-top: 130px;
-   margin-left: 10px;
+  .rightSide {
+    margin-top: 130px;
+    margin-top: 0;
+    margin-left: 10px;
   }
   .cardsWrapper {
-   margin-top:0px;
-   
- }
- }
- 
- @media only screen and (min-width: 600px) and (max-width: 805px) {
-  .rightSide{
-   margin-top: 125px;
-   margin-left: 22px;
+    margin-top: 0px;
   }
-  .cardsWrapper {
-   margin-top:0px;
-   }
- }
- 
- .grid-item-new{
-  border:1px solid var(--color-secondary-border);
 }
-.collectionAssets{
+
+@media only screen and (min-width: 600px) and (max-width: 805px) {
+  .rightSide {
+    margin-top: 125px;
+    margin-top: 20px;
+    margin-left: 22px;
+  }
+  .cardsWrapper {
+    margin-top: 0px;
+  }
+}
+
+.grid-item-new {
+  border: 1px solid var(--color-secondary-border);
+}
+.collectionAssets {
   margin-top: 30px;
 }
-@media (min-width:800px) and (max-width:1080px){
-  .collectionAssets{
+@media (min-width: 800px) and (max-width: 1080px) {
+  .collectionAssets {
     margin-top: 80px;
   }
-  
-
+ 
 }
-@media (min-width:1100px) and (max-width:1420px){
-  .collectionAssets{
+@media (min-width: 1100px) and (max-width: 1420px) {
+  .collectionAssets {
     margin-top: 50px;
   }
-  
-
 }

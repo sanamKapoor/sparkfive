@@ -312,6 +312,17 @@
   display: none;
 }
 
+@media(max-width:1050px){
+  .menu {
+    position: relative !important;
+  }
+  .side{
+    position:unset;
+  }
+
+
+}
+
 
 @media screen and (max-width: 1200px) {
   .container {
@@ -491,7 +502,8 @@
 
   .content {
     overflow: inherit;
-    height: 100vh;
+    /* height: 100vh; */
+    height:400px;
   }
 
   .expand {

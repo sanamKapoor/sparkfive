@@ -242,6 +242,13 @@ li.dropdown-title {
     width: 100%;
     max-width: 290px;
   }
+
+.view-dropdown {
+  left: 0;
+  top: 35px;
+  width: 160px;
+}
+
  
 }
 @media screen and (max-width: 810px){
@@ -249,6 +256,11 @@ li.dropdown-title {
     width: 100%;
     margin-left: 0;
   }
+  .view-dropdown {
+    left: 0;
+ 
+  }
+  
 }
 
 @media screen and (min-width: 810px) {

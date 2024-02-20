@@ -283,6 +283,9 @@
   .load-wrapper{
     padding: 0 40px;
   }
+  .subfolderList{
+    padding: 0 24px 0 16px;
+  }
   
 }
 @media screen and (min-width: 420px) and (max-width: 800px) {

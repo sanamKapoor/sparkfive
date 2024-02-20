@@ -75,4 +75,7 @@ width: 100%;
     display: block;
     margin-left:20px;
   }
+  .icon img{
+    width: 16px;
+  }
 }

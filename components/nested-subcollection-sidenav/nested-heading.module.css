@@ -63,7 +63,7 @@
         padding: 14px 20px;
     }
   }
-  @media (max-width:420px){
+  @media (max-width:475px){
     .heading-contents{
        display: block;
     }

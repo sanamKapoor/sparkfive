@@ -83,27 +83,29 @@
 }
 .sidenav-list1 {
   margin-bottom: 10px;
+  max-height: 60vh;
+  overflow:auto;
 }
 .sidenavScroll {
   max-height: calc(100vh - 260px);
   overflow: auto;
   /* padding: 0 24px 0 24px; */
 }
-.sidenavScroll::-webkit-scrollbar {
-  width: 3px;
+.sidenav-list1::-webkit-scrollbar {
+  width: 5px;
   margin-right: 20px;
 }
 
-.sidenavScroll::-webkit-scrollbar-thumb {
+.sidenav-list1::-webkit-scrollbar-thumb {
   background-color: #aeb0c2;
   border-radius: 50px;
 }
 
-.sidenavScroll::-webkit-scrollbar-track {
+.sidenav-list1::-webkit-scrollbar-track {
   background-color: #f0f0f0;
   border-radius: 50px;
 }
-.sidenavScroll::-webkit-scrollbar-thumb:hover {
+.sidenav-list1::-webkit-scrollbar-thumb:hover {
   background-color: #7d7e8e;
   width: 6px;
   height: 6px;
