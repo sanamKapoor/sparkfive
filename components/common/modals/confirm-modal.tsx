@@ -29,6 +29,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
     closeModal={closeModal}
     headText={message}
     subText={subText}
+    additionalClasses={["confirm"]}
   >
     {secondMessage && (
       <div className={`${styles.text} ${textContentClass}`}>
@@ -41,7 +42,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
           text="Cancel"
           onClick={closeModal}
           type="button"
-          className="container secondary"
+          className="container secondary confirm"
         />
       </div>
       <div>
@@ -49,7 +50,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
           text={confirmText}
           onClick={confirmAction}
           type="button"
-          className="container primary"
+          className="container primary confirm"
         />
       </div>
     </div>

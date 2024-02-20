@@ -15,12 +15,16 @@ const AssetIcon = ({
 }) => {
   return (
     <div
+      draggable={false}
+      data-drag="false"
       onClick={onClick}
       className={`${styles.container} ${!noMargin && onList && styles.small} ${noMargin && styles.noMargin
         } ${bulkSize && styles["bulk-size"]} ${isCollection && styles.collection
         }`}
     >
       <img
+        draggable={false}
+        data-drag="false"
         className={`${styles.icon} ${styles[imgClass]} ${styles[activeFilter]}`}
         style={style}
         src={extensionToType(extension, isCollection)}

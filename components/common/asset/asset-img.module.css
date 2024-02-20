@@ -4,8 +4,9 @@
     height: auto;
     object-fit: contain;
     aspect-ratio: 1 / 1;
-}
 
+    
+}
 .asset__crop {
     transition: opacity 0.5s ease;
     width: 100%;
@@ -31,4 +32,10 @@
 .filter_open {
     height: 270px;
     max-height: 270px;
+}
+.userEvents{
+    user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+ 
 }

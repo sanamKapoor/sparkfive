@@ -61,6 +61,7 @@ const AllCollection = () => {
             </div>
             <div className={styles["image-button-wrapper"]}>
               <Button
+              data-drag="false"
                 className="container primary"
                 text={"View Collection"}
                 type={"button"}
@@ -98,6 +99,7 @@ const AllCollection = () => {
                 className="container primary"
                 text={"View Collection"}
                 type={"button"}
+                data-drag="false"
               />
             </div>
           </div>
@@ -132,6 +134,7 @@ const AllCollection = () => {
                 className="container primary"
                 text={"View Collection"}
                 type={"button"}
+                data-drag="false"
               />
             </div>
           </div>
@@ -166,6 +169,7 @@ const AllCollection = () => {
                 className="container primary"
                 text={"View Collection"}
                 type={"button"}
+                data-drag="false"
               />
             </div>
           </div>
@@ -200,6 +204,7 @@ const AllCollection = () => {
                 className="container primary"
                 text={"View Collection"}
                 type={"button"}
+                data-drag="false"
               />
             </div>
           </div>
@@ -234,6 +239,7 @@ const AllCollection = () => {
                 className="container primary"
                 text={"View Collection"}
                 type={"button"}
+                data-drag="false"
               />
             </div>
           </div>

@@ -93,13 +93,11 @@ export default ({ children }) => {
             // Load theme from team settings
             const currentTheme = loadTheme(teamResponse.data.theme);
 
-            console.log(`Current sync theme`, currentTheme);
             setLogo(currentTheme.logoImage?.realUrl || defaultLogo);
             setLogoId(currentTheme.logoImage?.asset?.id);
           } else {
             // Load theme from local storage
             const currentTheme = loadTheme();
-            console.log(`Current logo theme`, currentTheme);
             setLogo(currentTheme.logo?.url || defaultLogo);
             setLogoId(currentTheme.logo?.id);
           }

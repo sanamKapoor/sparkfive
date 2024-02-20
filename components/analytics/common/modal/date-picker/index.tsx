@@ -190,12 +190,12 @@ const DatePickerModal = ({
 
         {dateError && <small className={`${modalStyles.small}`}>{dateError}</small>}
         <div className={`${styles["datepicker-buttons-outer"]}`}>
+          <Button text={"Cancel"} className={"cancel-btn"} onClick={handleCancelDates}></Button>
           <Button
             text={"Apply"}
             className='apply-btn'
             onClick={handleApplyDate}
           ></Button>
-          <Button text={"Cancel"} className={"cancel-btn"} onClick={handleCancelDates}></Button>
         </div>
       </section>
     </div>

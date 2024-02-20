@@ -32,7 +32,7 @@ const NestedSidenav = ({ viewFolder }) => {
   };
   const {
     advancedConfig,
-    user: { team },
+    user,
   } = useContext(UserContext) as { advancedConfig: any; user: any };
 
   const headingClick = (value: string, description: string) => {
@@ -73,14 +73,15 @@ const NestedSidenav = ({ viewFolder }) => {
   };
 
   return (
-    <div className={styles.nestedsidenav}>
-      <div className={styles["sidenav-content"]}>
+    <div data-drag="false" className={styles.nestedsidenav}>
+      <div  data-drag ="false" className={styles["sidenav-content"]}>
         <ReusableHeading
           customStyle={{ padding: "0px 23px 0px 0px" }}
-          text={`${team?.company}`}
+          text={`${user?.team?.company}`}
           headingClick={headingClick}
           icon={
             <img
+            data-drag="false"
               onClick={() => {
                 setSidebarOpen(!sidebarOpen);
               }}

@@ -1,17 +1,16 @@
-import { format } from "date-fns";
-import { useContext, useEffect, useState } from "react";
-import styles from "./share-item.module.css";
+import { format } from 'date-fns';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
-import { Utilities } from "../../assets";
+import { Utilities } from '../../assets';
+import AssetIcon from '../common/asset/asset-icon';
+import AssetImg from '../common/asset/asset-img';
+import Button from '../common/buttons/button';
+import IconClickable from '../common/buttons/icon-clickable';
+import styles from './share-item.module.css';
 
-// Component
-import AssetIcon from "../common/asset/asset-icon";
-import AssetImg from "../common/asset/asset-img";
-import DetailOverlay from "../common/asset/detail-overlay";
-import Button from "../common/buttons/button";
-import IconClickable from "../common/buttons/icon-clickable";
 
-import {events, shareLinkEvents} from '../../constants/analytics';
+import { events, shareLinkEvents } from '../../constants/analytics';
 import useAnalytics from '../../hooks/useAnalytics'
 import { UserContext } from "../../context";
 import cookiesApi from "../../utils/cookies";
@@ -19,15 +18,14 @@ import cookiesApi from "../../utils/cookies";
 const ShareItem = ({
   asset,
   thumbailUrl,
-  realUrl,
   isSelected = false,
-  toggleSelected = () => {},
+  toggleSelected = () => { },
   sharedCode = ""
 }) => {
   const [visibleOverlay, setVisibleOVerlay] = useState(false);
+  const router = useRouter();
 
-  const { user } = useContext(UserContext);
-  const {trackLinkEvent} = useAnalytics();
+  const { trackLinkEvent } = useAnalytics();
 
   useEffect(() => {
     if (visibleOverlay) {
@@ -36,6 +34,20 @@ const ShareItem = ({
       document.body.classList.remove("no-overflow");
     }
   }, [visibleOverlay]);
+
+
+  const viewDetails = (value) => {
+    setVisibleOVerlay(true)
+    trackLinkEvent(shareLinkEvents.VIEW_SHARED_ASSET, {
+      assetId: asset.id,
+      email: cookiesApi.get('shared_email') || null,
+      teamId: cookiesApi.get('teamId') || null,
+    });
+    router.push({
+      pathname: `/share/assetDetail/${asset.id}`,
+      query: { isShare: true, sharePath: "", sharedCode, headerName: "", activeFolder: "", availableNext: "", activeSubFolders: "" }
+    });
+  }
 
   return (
     <>
@@ -55,9 +67,8 @@ const ShareItem = ({
           )}
 
           <div
-            className={`${styles["selectable-wrapper"]} ${
-              isSelected && styles["selected-wrapper"]
-            }`}
+            className={`${styles["selectable-wrapper"]} ${isSelected && styles["selected-wrapper"]
+              }`}
           >
             {isSelected ? (
               <IconClickable
@@ -78,14 +89,8 @@ const ShareItem = ({
               className={"container primary"}
               text={"View Details"}
               type={"button"}
-              onClick={() => {
-                trackLinkEvent(shareLinkEvents.VIEW_SHARED_ASSET, {
-                  assetId: asset.id,
-                  email: cookiesApi.get('shared_email') || null,
-                  teamId: cookiesApi.get('teamId') || null,
-                });
-                setVisibleOVerlay(true);
-              }}
+              onClick={() => viewDetails(true)}
+              data-drag="false"
             />
           </div>
         </div>
@@ -100,17 +105,6 @@ const ShareItem = ({
           </div>
         </div>
       </div>
-      {visibleOverlay && (
-        <DetailOverlay
-          initiaParams={{ side: "detail" }}
-          asset={asset}
-          realUrl={realUrl}
-          thumbailUrl={thumbailUrl}
-          isShare={true}
-          sharedCode={sharedCode}
-          closeOverlay={() => setVisibleOVerlay(false)}
-        />
-      )}
     </>
   );
 };

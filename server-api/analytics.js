@@ -3,8 +3,8 @@ import axios from "axios";
 const analyticsUrl = `${process.env.SERVER_BASE_URL}/analytics`;
 
 export default {
-  captureAnalytics: (data) => {
-    fetch(process.env.ANALYTICS_LAMBDA_ENDPOINT, {
+  captureAnalytics: async (data) => {
+    return await fetch(process.env.ANALYTICS_LAMBDA_ENDPOINT, {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {
