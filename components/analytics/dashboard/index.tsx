@@ -22,7 +22,7 @@ function Dashboard({ data }) {
       
   
     <div className={`${styles["inner-container"]}`}>
-      <section className={`${styles["inner-wrapper"]}`}>
+      <section className={`${styles["inner-wrapper-box"]}`}>
         <UserEngagment initialData={data.find(d => d.section === DashboardSections.USER)} />
         <Activity initialData={data.find(d => d.section === DashboardSections.USER_ACTIVITY)} />
       </section>

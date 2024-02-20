@@ -38,6 +38,7 @@ const ChartWrapper = ({ chartObj, data }) => {
         },
         responsive: true,
         maintainAspectRatio: false,
+        devicePixelRatio: 4
       },  
       plugins: [
         {
