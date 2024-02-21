@@ -26,7 +26,7 @@ const NavHeading = ({ isShare = false }) => {
 
   return (
     <>
-      <div className={styles.menuWrapper}>
+    <div className={`${styles.menuWrapper} ${isShare ? styles["share-page-menu-wrapper"] : ""}`}>
         <div className={styles.icon} onClick={() => { setSidebarOpen(!sidebarOpen) }}>
           {sidebarOpen ? <img src={Utilities.bigblueClose} alt="" />
             : <img src={Utilities.menu} />}

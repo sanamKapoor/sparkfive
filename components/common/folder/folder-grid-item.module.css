@@ -311,6 +311,10 @@
     display: grid;
     grid-template-columns: 50% 25% 25%;
   }
+  .details-wrapper {
+    margin-top: 14px;
+  }
+  
 }
 
 

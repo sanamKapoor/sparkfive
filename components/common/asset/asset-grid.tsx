@@ -709,11 +709,16 @@ const AssetGrid = ({
       >
         {mode === "assets" && <FilterView render={render} setRender={setRender} />}
       </div>
-      <section
+      {/* <section
         className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ""} ${!sidebarOpen  ? styles["container-on-toggle"] : ""
           }`}
         style={getStyling}
-      >
+      > */}
+      <section
+      className={`${styles.container} ${shouldShowUpload ? styles.uploadAsset : ""} ${!sidebarOpen ? styles["container-on-toggle"] : ""} ${isShare ? styles["share-page-container"] : ""}`}
+      style={getStyling}
+    >
+
         {(shouldShowUpload || isDragging) && !isShare && !hasPermission([ASSET_UPLOAD_APPROVAL]) && (
           <AssetUpload
             onDragText={"Drop files here to upload"}
@@ -739,17 +744,33 @@ const AssetGrid = ({
         {
           <div className={`${styles["collectionAssets"]} ${styles["w-100"]} `}>
             {
-              <ul
+            //   <ul
+            //     className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]} ${styles[itemSize]} ${activeView === "list" ? styles["list-view"] : ""
+            //       }    ${!sidebarOpen ? styles["marginTop"] : ""}
+            // ${mode === "assets"
+            //         ? styles["grid-" + advancedConfig.assetThumbnail]
+            //         : styles["grid-" + advancedConfig.collectionThumbnail]
+            //       }
+            // `}
+            //     {...(mode === "assets" && activeView !== "list" ? { style: { marginTop: "60px" } } : {})}
+            //     id="asset-parent"
+            //     ref={elementsContainerRef}
+            //   >
+            <ul
                 className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]} ${styles[itemSize]} ${activeView === "list" ? styles["list-view"] : ""
                   }    ${!sidebarOpen ? styles["marginTop"] : ""}
             ${mode === "assets"
                     ? styles["grid-" + advancedConfig.assetThumbnail]
                     : styles["grid-" + advancedConfig.collectionThumbnail]
                   }
+                  ${isShare ? styles["share-page-mob"] : ""}
             `}
                 {...(mode === "assets" && activeView !== "list" ? { style: { marginTop: "60px" } } : {})}
                 id="asset-parent"
-                ref={elementsContainerRef}
+              // onMouseUp={(e) => {
+              //   console.log("Mai mouse up", e.clientX, e.clientY)
+              // }}
+              // {...(mode === "assets" && !sidebarOpen && { style: { marginTop: '60px' } })}
               >
                 {mode === "SubCollectionView" && (
                   <SubCollection

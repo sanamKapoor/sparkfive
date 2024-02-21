@@ -77,10 +77,10 @@ const TopBar = ({
   };
 
   return (
-    <section
+ <section
     data-drag="false"
       className={`${renderSidebar && sidebarOpen ? styles["container"] : styles["container-on-toggle"]
-        }`}
+        } ${isShare ? styles["topbarPage"] : ""}`}
       id={"top-bar"}
     >
       <div
@@ -89,7 +89,7 @@ const TopBar = ({
         <img src={Utilities.filterBlue} alt={"filter"} />
       </div>
       <div data-drag="false" className={styles.wrapper}>
-        <div className={`${styles["main-heading-wrapper"]}`}>
+        <div className={`${styles["main-heading-wrapper"]} ${isShare ? styles["share-page-heading"] : ""}`}>
           {sidebarOpen ? null : (
             <div className={styles.newsidenav}>
               <img

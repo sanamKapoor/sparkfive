@@ -93,6 +93,12 @@
         display: none;
     }
 }
+@media (min-width:912px) and (max-width:1030px){
+    .share-landing-search{
+        width: 230px !important;
+    }
+
+}
 
 @media screen and (max-width: 1300px) {
     .share-landing-search{
