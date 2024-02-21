@@ -108,7 +108,7 @@ const SidePanel = ({ asset, isShare, closeOverlay }: Props) => {
               <div className={`normal-text ${styles["meta-text"]}`}>{fieldvalue.value}</div>
             </div>
           ))}
-          {asset.facialUser && <RecognitionUser user={asset.facialUser} onApplyFilter={closeOverlay} />}
+          {asset.facialUser && <RecognitionUser user={asset.facialUser} onApplyFilter={closeOverlay} asset={asset} />}
         </div>
       </div>
     </>
