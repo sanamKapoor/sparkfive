@@ -11,7 +11,7 @@ import recognitionApi from "../../../server-api/face-recognition";
 
 import { LoadingContext, FilterContext } from "../../../context";
 
-const RecognitionUser = ({ user = {}, onApplyFilter }: Props) => {
+const RecognitionUser = ({ user = {}, onApplyFilter, asset }: Props) => {
   const { setIsLoading } = useContext(LoadingContext);
   const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext);
 
@@ -22,7 +22,7 @@ const RecognitionUser = ({ user = {}, onApplyFilter }: Props) => {
   const onEdit = async (name: string) => {
     setIsLoading(true);
 
-    const { data } = await recognitionApi.updateName(user.id, { name });
+    const { data } = await recognitionApi.updateName(user.id, { name, assetId: asset.id });
     setUser({ ...user, name });
 
     setIsLoading(false);
@@ -81,6 +81,7 @@ const RecognitionUser = ({ user = {}, onApplyFilter }: Props) => {
 interface Props {
   user: any;
   onApplyFilter: () => void;
+  asset: any;
 }
 
 export default RecognitionUser;
