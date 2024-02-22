@@ -48,5 +48,9 @@
   user-select: none;
   -webkit-user-drag: none;
   -webkit-user-select: none;
+}
 
+.analytics-icon{
+  max-width: 28px;
+  height:100%;
 }

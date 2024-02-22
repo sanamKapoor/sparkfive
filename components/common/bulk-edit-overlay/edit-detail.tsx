@@ -46,6 +46,7 @@ const EditDetail = ({
       setInputTags(tagsResponse.data);
       setInputCustomFields(customFieldsResponse.data);
     } catch (err) {
+      console.log("🚀 ~ getInputData ~ err:", err)
       // TODO: Maybe show error?
     }
   };
@@ -91,13 +92,13 @@ const EditDetail = ({
               name={asset?.asset.name}
               assetImg={
                 asset?.asset.extension === "tiff" ||
-                asset?.asset.extension === "tif" ||
-                asset?.asset.extension === "svg" ||
-                asset?.asset.extension === "svg+xml" ||
-                asset?.asset.extension === "heif" ||
-                asset?.asset.extension === "heic" ||
-                asset?.asset.extension === "cr2" ||
-                asset?.asset.extension === "ai"
+                  asset?.asset.extension === "tif" ||
+                  asset?.asset.extension === "svg" ||
+                  asset?.asset.extension === "svg+xml" ||
+                  asset?.asset.extension === "heif" ||
+                  asset?.asset.extension === "heic" ||
+                  asset?.asset.extension === "cr2" ||
+                  asset?.asset.extension === "ai"
                   ? asset?.thumbailUrl
                   : asset?.realUrl
               }

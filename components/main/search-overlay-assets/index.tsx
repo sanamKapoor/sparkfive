@@ -9,9 +9,12 @@ import Button from "../../common/buttons/button";
 import Search from "../../common/inputs/search";
 import styles from "./index.module.css";
 
+import { events } from '../../../constants/analytics';
+import useAnalytics from '../../../hooks/useAnalytics';
+
 // Components
 const SearchOverlayAssets = ({
-  closeOverlay,
+  closeOverlay = () => { },
   importEnabled = false,
   importAssets = () => { },
   sharePath = "",
@@ -33,6 +36,7 @@ const SearchOverlayAssets = ({
 
   const [filterParams, setFilterParams] = useState({});
   const [openFilters, setOpenFilters] = useState(false);
+  const { trackEvent } = useAnalytics();
 
   const getData = async (inputTerm, replace = true, _filterParams = filterParams) => {
     try {
@@ -43,16 +47,14 @@ const SearchOverlayAssets = ({
       } else if (mode === "folders") {
         await fetchFolders(inputTerm);
       }
+      trackEvent(events.SEARCH_ASSET, { searchTerm: inputTerm });
     } catch (err) {
       console.log(err);
     }
   };
 
   const fetchAssets = async (inputTerm, replace, _filterParams) => {
-    let fetchFn = assetApi.getAssets;
-    if (sharePath) {
-      fetchFn = shareCollectionApi.getAssets;
-    }
+    const fetchFn = sharePath ? shareCollectionApi.getAssets : assetApi.getAssets;
     setPlaceHolders("asset", replace);
     if (Object.keys(_filterParams).length > 0) {
       setFilterParams(_filterParams);
@@ -73,13 +75,7 @@ const SearchOverlayAssets = ({
     const { data } = await fetchFn(params);
     setAssets(data, replace);
   };
-
-  const fetchSubFolders = async (inputTerm) => {
-    let fetchFn = folderApi.getSubFolders;
-    if (sharePath) {
-      fetchFn = shareCollectionApi.getSubFolders;
-    }
-
+  const fetchData = async (fetchFn, inputTerm, isSubFolders = false) => {
     const query = {
       page: 1,
       sortField: activeSortFilter.sort?.field || "createdAt",
@@ -88,26 +84,26 @@ const SearchOverlayAssets = ({
       sharePath,
     };
 
-    const { data: subFolders } = await fetchFn(query, activeFolder);
-    setSubFoldersViewList(subFolders, true);
+    if (isSubFolders && activeFolder) {
+      query.folderId = activeFolder;
+    }
+
+    const { data } = await fetchFn(query, isSubFolders ? activeFolder : undefined);
+    if (isSubFolders) {
+      setSubFoldersViewList(data, true);
+    } else {
+      setFolders(data, true, true);
+    }
+  };
+
+  const fetchSubFolders = async (inputTerm) => {
+    const fetchFn = sharePath ? shareCollectionApi.getSubFolders : folderApi.getSubFolders;
+    await fetchData(fetchFn, inputTerm, true);
   };
 
   const fetchFolders = async (inputTerm) => {
-    let fetchFn = folderApi.getFolders;
-    if (sharePath) {
-      fetchFn = shareCollectionApi.getFolders;
-    }
-
-    const query = {
-      page: 1,
-      sortField: activeSortFilter.sort?.field || "createdAt",
-      sortOrder: activeSortFilter.sort?.order || "desc",
-      term: inputTerm,
-      sharePath,
-    };
-
-    const { data } = await fetchFn(query);
-    setFolders(data, true, true);
+    const fetchFn = sharePath ? shareCollectionApi.getFolders : folderApi.getFolders;
+    await fetchData(fetchFn, inputTerm);
   };
 
   useEffect(() => {

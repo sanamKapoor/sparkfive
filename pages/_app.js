@@ -86,8 +86,9 @@ export default function MyApp({ Component, pageProps }) {
     }
   }, [router.asPath]);
 
-  return (
 
+
+  return (
     <LoadingContextProvider>
       <UserContextProvider>
         <SocketProvider>
@@ -109,9 +110,9 @@ export default function MyApp({ Component, pageProps }) {
                       {/**
                        * todo handle Errorboundary design in refactoring later
                        */}
-                      {/* <ErrorBoundary> */}
-                      <Component {...pageProps} />
-                      {/* </ErrorBoundary> */}
+                      <ErrorBoundary>
+                        <Component {...pageProps} />
+                      </ErrorBoundary>
                     </TeamContextProvider>
                   </AssetContextProvider>
                 </ThemeContext.Provider>

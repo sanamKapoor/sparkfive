@@ -4,7 +4,7 @@ import { Utilities } from '../../../assets';
 import { AssetContext, FilterContext } from '../../../context';
 import shareCollectionApi from '../../../server-api/share-collection';
 import ReusableHeading from '../../nested-subcollection-sidenav/nested-heading';
-import styles from './shared-nested-sidenav.module.css';
+import styles from './shared-sidebar-sidenav.module.css';
 
 interface Asset {
   id: string;
@@ -39,7 +39,6 @@ interface Item {
 export default function SharedPageSidenav({ viewFolder, headingClick, sharePath }) {
 
   const {
-    sidebarOpen,
     activeFolder,
     setSidebarOpen,
     activeSubFolders,
@@ -149,14 +148,6 @@ export default function SharedPageSidenav({ viewFolder, headingClick, sharePath 
     setFirstLoaded(true);
   }, [firstLoaded]);
 
-  // useEffect(() => {
-  //   if (firstLoaded && activeSortFilter.mainFilter === "folders") {
-  //     getFolders(true);
-  //   }
-  //   setFirstLoaded(true);
-  // }, [activeSortFilter]);
-
-
   return (
     <>
       <div className={`${styles["shared-sidenav-outer"]}`}>
@@ -164,14 +155,7 @@ export default function SharedPageSidenav({ viewFolder, headingClick, sharePath 
           customStyle={{ cursor: "pointer" }}
           text={`Collections`}
           headingClick={headingClick}
-          icon={
-            <img
-              onClick={() => {
-                setSidebarOpen(!sidebarOpen);
-              }}
-              src={Utilities.toggleLight}
-            />
-          }
+
         />
         <div className={styles["sidenavScroll"]}>
           <div data-drag="false" className={styles["sidenav-list1"]}>
@@ -182,7 +166,7 @@ export default function SharedPageSidenav({ viewFolder, headingClick, sharePath 
                     {item?.childFolders?.length > 0 ? (
                       <div className={styles.clickable} onClick={() => toggleDropdown(index, item, true)}>
                         <img
-                        data-drag="false"
+                          data-drag="false"
                           className={showDropdown[index] ? styles.iconClick : styles.rightIcon}
                           src={Utilities.caretRightSolid}
                         />
@@ -191,7 +175,7 @@ export default function SharedPageSidenav({ viewFolder, headingClick, sharePath 
                       <div className={styles.emptyBox}></div>
                     )}
                     <li
-                    data-drag="false"
+                      data-drag="false"
                       key={index}
                       className={`${styles["list1-description"]} ${styles["border-bottom"]} 
                       ${((item.id === activeSubFolders)) ? styles.active : ""}`}
@@ -214,43 +198,6 @@ export default function SharedPageSidenav({ viewFolder, headingClick, sharePath 
                       </div>
                     </li>
                   </div >
-                  {/* {
-                    showDropdown[index] && (
-                      <div className={styles.folder}>
-                        <div className={styles.subfolderList}>
-                          {
-                            <>
-                              {sidenavFolderList.map((record: Item, recordIndex: number) => (
-                                <div key={recordIndex}>
-                                  <div className={styles.dropdownOptions}>
-                                    <div
-                                      className={`${styles["folder-lists"]} ${activeFolder === record.id ? styles.active : ""}`}
-                                      onClick={() => {
-                                        viewFolder(record.id, true);
-                                        if (window.innerWidth < 767) {
-                                          setSidebarOpen(false);
-                                        }
-                                      }}
-                                    >
-                                      <div className={styles.dropdownIcons}>
-                                        <img className={styles.subfolder} src={Utilities.folder} />
-                                        <div className={styles["icon-descriptions"]}>
-                                          <span title={item.name}>{record.name}</span>
-                                        </div>
-                                      </div>
-                                      <div className={styles["list1-right-contents"]}>
-                                        <span>{record.assetsCount ?? 0}</span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
-                            </>
-                          }
-                        </div>
-                      </div>
-                    )
-                  } */}
 
 
                   {showDropdown[index] && (
@@ -278,12 +225,6 @@ export default function SharedPageSidenav({ viewFolder, headingClick, sharePath 
                                           setSidebarOpen(false);
                                         }
                                       }}
-                                    // onClick={() => {
-                                    //   vewFolderSidenavStateActive(record.id,
-                                    //     false,
-                                    //     item.id,
-                                    //     record.name, record)
-                                    // }}
                                     >
                                       <div data-drag="false" className={styles.dropdownIcons}>
                                         <img

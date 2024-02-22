@@ -570,18 +570,12 @@ export default ({ children }) => {
   useEffect(() => {
     const handleRouteChange = (url, { shallow }) => {
       const parts = localStorage.getItem('history')?.split('/');
-      if (parts && parts.length > 3 && parts[1] === 'main' && parts[2] === 'assets') {
-        localStorage.setItem("history", url)
-      } else if (parts && parts.length > 3 && parts[1] === 'collections' && parts[2] === 'assetDetail') {
-        localStorage.setItem("history", url)
-      } else {
-        setActiveFolder("");
-        localStorage.setItem("history", url)
-      }
+      const isMainAssets = parts && parts.length > 3 && parts[1] === 'main' && parts[2] === 'assets';
+      const isCollectionsAssetDetail = parts && parts.length > 3 && parts[1] === 'collections' && parts[2] === 'assetDetail';
+      (isMainAssets || isCollectionsAssetDetail) ? null : setActiveFolder("");
+      localStorage.setItem("history", url);
     };
     router.events.on("routeChangeStart", handleRouteChange);
-    // If the component is unmounted, unsubscribe
-    // from the event with the `off` method:
     return () => {
       router.events.off("routeChangeStart", handleRouteChange);
     };

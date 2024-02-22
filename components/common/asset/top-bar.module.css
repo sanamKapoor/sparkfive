@@ -38,10 +38,6 @@
     width: 100%;
     gap:10px;
   }
-  .mobile-app{
-  
-    display: none;
-  }
   .search-icon{
     display: flex;
     align-items: center;

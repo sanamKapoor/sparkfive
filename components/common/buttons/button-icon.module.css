@@ -32,6 +32,8 @@
   cursor: pointer;
 }
 
+
+
 .container-gray {
   display: flex;
   align-items: center;
@@ -58,6 +60,7 @@
 
 .container span {
   display: inline-flex;
+  
 }
 
 

@@ -1,15 +1,17 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 
 import { sideNavFirstList } from "../../../constants/firstList-sidenav";
-import { FilterContext, UserContext } from "../../../context";
+import { AssetContext, FilterContext, UserContext, ShareContext } from "../../../context";
 import shareCollectionApi from "../../../server-api/share-collection";
-import styles from "./shared-nested-firstlist.module.css";
+import styles from "./shared-sidebar-firstlist.module.css";
 import ReusableHeading from "../../nested-subcollection-sidenav/nested-heading";
 import { Utilities } from "../../../assets";
 
 const NestedFirstlist = ({ sharePath }: { sharePath: string }) => {
   const { activeSortFilter } = useContext(FilterContext);
   const { advancedConfig } = useContext(UserContext) as any;
+  const { sidebarOpen, setSidebarOpen } = useContext(AssetContext)
+  const { folderInfo } = useContext(ShareContext)
   const [hideFilterElements] = useState(advancedConfig.hideFilterElements);
   const [listingData, setListingData] = useState({
     image: "",
@@ -64,23 +66,29 @@ const NestedFirstlist = ({ sharePath }: { sharePath: string }) => {
   return (
     <>
       <div data-drag="false" className={styles["shared-sidenav-list1"]}>
-        <div style={{padding:"12px 0 0 0"}}>
-        <ReusableHeading
-        data-drag="false"
-          customStyle={{ padding: "padding: 10px 23px 0px;", cursor: "pointer" }}
-          text={`Hooligan Inc.`}
-          icon={<img src={Utilities.toggleLight} />}
-        />
+        <div style={{ padding: "12px 0 0 0" }}>
+          <ReusableHeading
+            data-drag="false"
+            customStyle={{ padding: "padding: 10px 23px 0px;", cursor: "pointer" }}
+            text={`${folderInfo?.companyName}`}
+            icon={
+              <img
+                onClick={() => {
+                  setSidebarOpen(!sidebarOpen);
+                }}
+                src={Utilities.toggleLight}
+              />
+            }
+          />
         </div>
-       
+
         <div data-drag="false" className={styles["sidenav-list1"]}>
           <ul data-drag="false">
             {setTabsVisibility.map((item, index) => (
               <li
-              data-drag="false"
-                className={`${styles["list1-description"]} ${styles["border-bottom"]}  ${
-                  activeSortFilter?.mainFilter === item.name ? styles["active"] : ""
-                }`}
+                data-drag="false"
+                className={`${styles["list1-description"]} ${styles["border-bottom"]}  ${activeSortFilter?.mainFilter === item.name ? styles["active"] : ""
+                  }`}
                 key={index}
               >
                 <div data-drag="false" className={styles["list1-left-contents"]}>

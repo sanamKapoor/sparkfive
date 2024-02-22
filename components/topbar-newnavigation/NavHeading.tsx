@@ -19,7 +19,6 @@ const NavHeading = ({ isShare = false }) => {
 
   useEffect(() => {
     if (!isShare && headerName === "") {
-      console.log("hello header", headerName)
       setHeaderName(`${activeSortFilter.mainFilter === "folders" ? "All Collections" : "All Assets"}`)
     }
   }, [])

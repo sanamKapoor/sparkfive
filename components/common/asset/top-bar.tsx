@@ -30,10 +30,10 @@ const TopBar = ({
   activeSearchOverlay,
   closeSearchOverlay,
   sharePath,
-  renderSidebar=true,
+  renderSidebar = true,
   isFolder,
 }: any) => {
-  
+
   const {
     selectAllAssets,
     selectAllFolders,
@@ -75,7 +75,6 @@ const TopBar = ({
       sort,
     });
   };
-
   return (
  <section
     data-drag="false"
@@ -129,7 +128,7 @@ const TopBar = ({
           </div>
         </div>
         <div className={styles["sec-filters"]}>
-          {!isMobile && !activeSearchOverlay && (
+          {!activeSearchOverlay && (
             <div className={styles["search-icon"]}>
               <img
                 src={Utilities.search}
@@ -152,7 +151,6 @@ const TopBar = ({
             </div>
           )}
           {activeSearchOverlay &&
-            // !(isShare && isFolder) && 
             (
               <SearchOverlay
                 closeOverlay={closeSearchOverlay}
@@ -264,39 +262,6 @@ const TopBar = ({
               onChange={(selected) => setSortFilterValue("sort", selected)}
               placeholder="Sort By"
             />
-          </div>
-        </div>
-        <div className={styles["mobile-app"]}>
-          <div className={styles["outer-box"]}>
-            <div className={styles["selected-wrapper-mob"]}>
-              <Button
-                type="button"
-                text="Select All"
-                className="container secondary mobile-select"
-                onClick={selectAll}
-              />
-            </div>
-            <div className={styles["sort-wrapper-mob"]}>
-              <Select
-                label={"Sort By"}
-                options={selectOptions.sort.filter((item) => {
-                  if (
-                    activeSortFilter.mainFilter === "folders" &&
-                    item.value === "size"
-                  ) {
-                    return !item;
-                  }
-                  return activeSortFilter.mainFilter === "folders" &&
-                    item.value === "none"
-                    ? !item
-                    : item;
-                })}
-                value={activeSortFilter.sort}
-                styleType="filter filter-schedule"
-                onChange={(selected) => setSortFilterValue("sort", selected)}
-                placeholder="Sort By"
-              />
-            </div>
           </div>
         </div>
       </div>

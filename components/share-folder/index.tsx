@@ -15,10 +15,16 @@ import TopBar from "../common/asset/top-bar";
 import Spinner from "../common/spinners/spinner";
 import styles from "./index.module.css";
 import PasswordOverlay from "./password-overlay";
-import NestedFirstlist from "./shared-nested-sidenav/shared-nested-firstlist";
-import SharedPageSidenav from "./shared-nested-sidenav/shared-nested-sidenav";
+import NestedFirstlist from "./shared-nested-sidenav/shared-sidebar-firstlist";
+import SharedPageSidenav from "./shared-nested-sidenav/shared-sidebar-sidenav";
 
-// Components
+import { loadTheme } from "../../utils/theme";
+
+import { defaultLogo } from "../../constants/theme";
+import cookiesApi from "../../utils/cookies";
+import { shareLinkEvents } from "../../constants/analytics";
+import useAnalytics from "../../hooks/useAnalytics";
+
 const ShareFolderMain = () => {
   const router = useRouter();
   const {
@@ -50,7 +56,7 @@ const ShareFolderMain = () => {
     selectedAllSubAssets,
     setSelectedAllSubAssets,
     selectedAllSubFoldersAndAssets,
-    sidebarOpen,
+    sidebarOpen
   } = useContext(AssetContext);
 
   const { user, advancedConfig, setAdvancedConfig, setLogo } = useContext(UserContext);
@@ -72,12 +78,14 @@ const ShareFolderMain = () => {
   const [widthCard, setWidthCard] = useState(0);
 
   const [top, setTop] = useState("calc(55px + 5rem)");
+  const { trackLinkEvent } = useAnalytics();
 
   useEffect(() => {
     const { asPath } = router;
     if (asPath) {
       // Get shareUrl from path
       const splitPath = asPath.split("collections/");
+
       const splitPathWithoutQuery = splitPath[1].split("?");
       setSharePath(splitPathWithoutQuery[0]);
       setContextPath(splitPathWithoutQuery[0]);
@@ -87,11 +95,11 @@ const ShareFolderMain = () => {
     return () => {
       window.removeEventListener("resize", onChangeWidth);
     };
+
   }, [router.asPath]);
 
   useEffect(() => {
-    if (sharePath && sharePath !== "[team]/[id]/[name]" && !firstLoaded) {
-      console.log("in here page shrepath");
+    if (sharePath && sharePath !== "[team]/[id]/[name]") {
       getFolderInfo();
     }
   }, [sharePath]);
@@ -178,6 +186,7 @@ const ShareFolderMain = () => {
       });
       // Set axios headers
       requestUtils.setAuthToken(data.token, "share-authorization");
+      cookiesApi.set('shared_email', email);
       getFolderInfo(true);
     } catch (err) {
       toastUtils.error("Wrong password or invalid link, please try again");
@@ -197,7 +206,6 @@ const ShareFolderMain = () => {
         sortOrder: order,
         sharePath,
       };
-
       if (!replace && addedIds.length > 0) {
         // @ts-ignore
         queryParams.excludeIds = addedIds.join(",");
@@ -210,8 +218,8 @@ const ShareFolderMain = () => {
         ...queryParams,
         ...(term && { term }),
       });
-      let assetList = { ...data, results: data.results };
-      setFolders(assetList, replace);
+      let foldersList = { ...data, results: data.results };
+      setFolders(foldersList, replace);
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -221,12 +229,7 @@ const ShareFolderMain = () => {
   };
 
   const setInitialLoad = async (folderInfo) => {
-    console.log(
-      firstLoaded,
-      folderInfo,
-      folderInfo.customAdvanceOptions,
-      "firstLoaded && folderInfo && folderInfo.customAdvanceOptions",
-    );
+
     if (!firstLoaded && folderInfo && folderInfo.customAdvanceOptions) {
       setFirstLoaded(true);
       let mode, sort;
@@ -257,9 +260,9 @@ const ShareFolderMain = () => {
 
   const getFolderInfo = async (displayError = false, ignoreFolder = false) => {
     try {
-      console.log("hello in here");
       const { data } = await shareCollectionApi.getFolderInfo({ sharePath });
       let sort, mode;
+
       if (firstLoaded) {
         if (data?.singleSharedCollectionId && data?.sharedFolder?.parentId) {
           sort =
@@ -285,12 +288,29 @@ const ShareFolderMain = () => {
           });
         }
       }
-      console.log("heeheheheh");
+
       setHeaderName(data.folderName);
       setFolderInfo(data);
       setAdvancedConfig(data.customAdvanceOptions);
       setActivePasswordOverlay(false);
+
       setLoading(false);
+      // There is team theme set
+      if (data.theme) {
+        if (data?.theme?.teamId) cookiesApi.set('teamId', data?.theme?.teamId)
+        // Load theme from team settings
+        const currentTheme = loadTheme(data.theme);
+        // @ts-ignore
+        setLogo(currentTheme.logoImage?.realUrl || defaultLogo);
+      }
+      // Track event
+      trackLinkEvent(shareLinkEvents.ACCESS_SHARED_LINK, {
+        link: window.location.href,
+        type: "Collection",
+        teamId: cookiesApi.get('teamId') || null,
+        email: cookiesApi.get('shared_email') || null,
+      });
+
     } catch (err) {
       // If not 500, must be auth error, request user password
       if (err.response?.status !== 500) {
@@ -329,6 +349,7 @@ const ShareFolderMain = () => {
         },
         nestedSubFolderId ? nestedSubFolderId : activeSubFolders,
       );
+
       setSubFoldersViewList(subFolders, replace);
       setLoading(false);
     } catch (err) {
@@ -440,6 +461,10 @@ const ShareFolderMain = () => {
       const folderIndex = subFoldersViewList.results.findIndex((folder) => folder.id === id);
 
       if (folderIndex !== -1) {
+        if (subFoldersViewList.results[folderIndex]?.isSelected) {
+          setSelectedAllSubFoldersAndAssets(false);
+        }
+        setSelectedAllSubAssets(false);
         setSubFoldersViewList({
           ...subFoldersViewList,
           results: update(subFoldersViewList.results, {
@@ -459,6 +484,10 @@ const ShareFolderMain = () => {
         });
       }
       if (assetIndex !== -1) {
+        setSelectedAllSubFoldersAndAssets(false);
+        if (subFoldersAssetsViewList.results[assetIndex]?.isSelected) {
+          setSelectedAllSubAssets(false);
+        }
         setSubFoldersAssetsViewList({
           ...subFoldersAssetsViewList,
           results: update(subFoldersAssetsViewList.results, {
@@ -535,7 +564,6 @@ const ShareFolderMain = () => {
       setHeaderName(folderName ? folderName : folders.find((folder: any) => folder.id === id)?.name || "");
     }
   };
-
   // TODO uncomment all
   const onChangeWidth = () => {
     if (!loading) {
@@ -584,9 +612,8 @@ const ShareFolderMain = () => {
     <>
       {!loading && (
         <main
-          className={`${
-            sidebarOpen ? (getSidebarRender() ? styles["container"] : styles["containerPortal"]) : styles["rightToggle"]
-          } sharefolderOuter`}
+          className={`${sidebarOpen ? (getSidebarRender() ? styles["container"] : styles["containerPortal"]) : styles["rightToggle"]
+            } sharefolderOuter`}
         >
           {getSidebarRender() && sidebarOpen && (
             <div className={`${styles["sidenav-main-wrapper"]}`}>
@@ -612,9 +639,8 @@ const ShareFolderMain = () => {
             renderSidebar={getSidebarRender()}
           />
           <div
-            className={`${assetGridWrapperStyle} ${
-              sidebarOpen && getSidebarRender() ? styles["mainContainer"] : styles["toggleContainer"]
-            } `}
+            className={`${assetGridWrapperStyle} ${sidebarOpen && getSidebarRender() ? styles["mainContainer"] : styles["toggleContainer"]
+              } `}
             style={{ marginTop: top }}
           >
             <AssetGrid

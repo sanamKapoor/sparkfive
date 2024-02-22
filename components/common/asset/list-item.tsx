@@ -348,6 +348,8 @@ const ListItem = ({
                 <AssetOptions
                   itemType={type}
                   asset={asset}
+                  realUrl={realUrl}
+                  thumbailUrl={thumbailUrl}
                   openArchiveAsset={openArchiveAsset}
                   openDeleteAsset={openDeleteAsset}
                   openMoveAsset={openMoveAsset}

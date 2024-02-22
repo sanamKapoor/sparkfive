@@ -112,7 +112,7 @@ const TopBar = ({
         onClick={toggleHamurgerList}
       />
       <div className={styles.filters} ref={filtersRef}>
-        <div>
+        {allCampaigns && allCampaigns.length > 0 && <div>
           <FiltersSelect
             options={allCampaigns.map((campaign) => ({
               label: campaign.name,
@@ -126,7 +126,7 @@ const TopBar = ({
             value={filters.campaign}
             isClearable={true}
           />
-        </div>
+        </div>}
         <div>
           <FiltersSelect
             options={itemStatus.map((status) => ({

@@ -8,8 +8,10 @@ import NestedSidenavDropdown from "./nested-sidenav-dropdown-list";
 import NestedFirstlist from "./nested-sidenav-firstlist";
 import styles from "./nested-sidenav.module.css";
 
-const NestedSidenav = ({ viewFolder }) => {
+import useAnalytics from "../../hooks/useAnalytics";
+import { events } from "../../constants/analytics";
 
+const NestedSidenav = ({ viewFolder }) => {
   const {
     sidebarOpen,
     setSidebarOpen,
@@ -18,12 +20,15 @@ const NestedSidenav = ({ viewFolder }) => {
     setLastUploadedFolder,
     setHeaderName,
     setActiveSubFolders,
-    setActiveFolder
+    setActiveFolder,
   } = useContext(AssetContext);
 
-  const { setActiveSortFilter, activeSortFilter } = useContext(
-    FilterContext
-  ) as { setActiveSortFilter: Function; activeSortFilter: any };
+  const { trackEvent } = useAnalytics();
+
+  const { setActiveSortFilter, activeSortFilter } = useContext(FilterContext) as {
+    setActiveSortFilter: Function;
+    activeSortFilter: any;
+  };
   const {
     advancedConfig,
     user,
@@ -36,16 +41,10 @@ const NestedSidenav = ({ viewFolder }) => {
     let sort = activeSortFilter.sort;
     if (value === "folders") {
       if (activeSortFilter.mainFilter !== "folders") {
-        sort =
-          advancedConfig.collectionSortView === "alphabetical"
-            ? selectOptions.sort[3]
-            : selectOptions.sort[1];
+        sort = advancedConfig.collectionSortView === "alphabetical" ? selectOptions.sort[3] : selectOptions.sort[1];
       }
     } else {
-      sort =
-        advancedConfig.assetSortView === "newest"
-          ? selectOptions.sort[1]
-          : selectOptions.sort[3];
+      sort = advancedConfig.assetSortView === "newest" ? selectOptions.sort[1] : selectOptions.sort[3];
     }
     // Reset select all status
     selectAllAssets(false);
@@ -62,8 +61,13 @@ const NestedSidenav = ({ viewFolder }) => {
       ["mainFilter"]: value,
       sort,
     });
+
+    trackEvent(events.VIEW_TAB, {
+      tabName: value
+    })
+    
     if (window.innerWidth < 767) {
-      setSidebarOpen(false)
+      setSidebarOpen(false);
     }
   };
 
@@ -86,8 +90,7 @@ const NestedSidenav = ({ viewFolder }) => {
         />
         <div className={styles.sidenavScroll}>
           <NestedFirstlist headingClick={headingClick} />
-          <NestedSidenavDropdown
-            viewFolder={viewFolder} headingClick={headingClick} />
+          <NestedSidenavDropdown viewFolder={viewFolder} headingClick={headingClick} />
         </div>
       </div>
     </div>

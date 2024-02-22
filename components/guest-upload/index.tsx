@@ -43,7 +43,6 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
   setBanner,
 }) => {
   const { query } = useRouter();
-
   const { socket, connected, connectSocket } = useContext(SocketContext);
 
   const [guestInfo, setGuestInfo] = useState<IGuestUserInfo>(defaultInfo);
@@ -406,7 +405,7 @@ const GuestUploadMain: React.FC<GuestUploadMainProps> = ({
         closeModal={() => setIsModalOpen(false)}
         modalIsOpen={isModalOpen}
         confirmText=""
-        confirmAction={() => {}}
+        confirmAction={() => { }}
       >
         <div className={styles.uploadMOdal}>
           <h2>Upload Files</h2>

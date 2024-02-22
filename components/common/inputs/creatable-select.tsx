@@ -102,7 +102,6 @@ const CreatableSelect = ({
           (selectedItem) => item.label === selectedItem.name
         ) === -1
       ) {
-        console.log("inside index", item);
         const newItem = { name: item.label };
         if (!isNew) newItem.id = item.value;
         if (type) {
@@ -110,11 +109,9 @@ const CreatableSelect = ({
         }
         try {
           const { data } = await asyncCreateFn(newItem);
-
           if (data?.status === false) {
             toastUtils.success(data?.message);
           }
-
           let stateItemsUpdate;
           if (!isNew) {
             stateItemsUpdate = update(selectedItems, { $push: [newItem] });
@@ -230,64 +227,64 @@ const CreatableSelect = ({
         </p>
         {((!isShare && canAdd && hasPermission([ASSET_EDIT])) ||
           ignorePermission) && (
-          <>
-            {dropdownIsActive ? (
-              <div className={`tag-select ${selectClass}`}>
-                {creatable && (
-                  <ReactCreatableSelect
-                    placeholder={selectPlaceholder}
-                    options={avilableItems.map((item) => ({
-                      ...item,
-                      label: item.name,
-                      value: item.id,
-                    }))}
-                    onChange={onChange}
-                    styleType={"regular item"}
-                    menuPlacement={"auto"}
-                    menuPosition={menuPosition}
-                    isClearable={true}
-                    className="creatable-select"
-                    styles={menuStyles}
-                  />
-                )}
-
-                {!creatable && (
-                  <ReactSelect
-                    placeholder={selectPlaceholder}
-                    options={avilableItems.map((item) => ({
-                      ...item,
-                      label: item.name,
-                      value: item.id,
-                    }))}
-                    onChange={onChange}
-                    styleType={"regular item"}
-                    menuPlacement={"auto"}
-                    menuPosition={menuPosition}
-                    isClearable={true}
-                    className={`${styles["creatable-select"]}`}
-                    styles={menuStyles}
-                  />
-                )}
-              </div>
-            ) : (
-              <>
-                {allowEdit && (
-                  <div
-                    className={`add ${styles["select-add"]}`}
-                    onClick={onAddClick}
-                  >
-                    <IconClickable
-                      src={
-                        isAddIconDark ? Utilities.adddark : Utilities.addLight
-                      }
+            <>
+              {dropdownIsActive ? (
+                <div className={`tag-select ${selectClass}`}>
+                  {creatable && (
+                    <ReactCreatableSelect
+                      placeholder={selectPlaceholder}
+                      options={avilableItems.map((item) => ({
+                        ...item,
+                        label: item.name,
+                        value: item.id,
+                      }))}
+                      onChange={onChange}
+                      styleType={"regular item"}
+                      menuPlacement={"auto"}
+                      menuPosition={menuPosition}
+                      isClearable={true}
+                      className="creatable-select"
+                      styles={menuStyles}
                     />
-                    <span>{addText}</span>
-                  </div>
-                )}
-              </>
-            )}
-          </>
-        )}
+                  )}
+
+                  {!creatable && (
+                    <ReactSelect
+                      placeholder={selectPlaceholder}
+                      options={avilableItems.map((item) => ({
+                        ...item,
+                        label: item.name,
+                        value: item.id,
+                      }))}
+                      onChange={onChange}
+                      styleType={"regular item"}
+                      menuPlacement={"auto"}
+                      menuPosition={menuPosition}
+                      isClearable={true}
+                      className={`${styles["creatable-select"]}`}
+                      styles={menuStyles}
+                    />
+                  )}
+                </div>
+              ) : (
+                <>
+                  {allowEdit && (
+                    <div
+                      className={`add ${styles["select-add"]}`}
+                      onClick={onAddClick}
+                    >
+                      <IconClickable
+                        src={
+                          isAddIconDark ? Utilities.adddark : Utilities.addLight
+                        }
+                      />
+                      <span>{addText}</span>
+                    </div>
+                  )}
+                </>
+              )}
+            </>
+          )}
       </div>
     </>
   );

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { ASSET_ACCESS } from "../../constants/permissions";
 import FilterProvider from "../../context/filter-provider";
 
@@ -9,9 +9,18 @@ import UploadApproval from "../../components/main/upload-approval";
 
 import AppLayout from "../../components/common/layouts/app-layout";
 import { AssetContext } from "../../context";
+import { pages } from "../../constants/analytics";
+import useAnalytics from "../../hooks/useAnalytics";
 
 const UploadApprovalPage = () => {
   const { uploadingStatus, uploadingAssets } = useContext(AssetContext);
+
+  const { pageVisit } = useAnalytics();
+
+  useEffect(() => {
+    pageVisit(pages.UPLOAD_APPROVAL)
+  }, []);
+
   return (
     <FilterProvider>
       <AppLayout title="Upload Approval">

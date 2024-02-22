@@ -1,14 +1,16 @@
 import { format } from 'date-fns';
 import filesize from 'filesize';
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useState } from 'react';
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import HoverVideoPlayer from 'react-hover-video-player';
 
 import { Utilities } from '../../../assets';
-import { AssetContext } from '../../../context';
+import { events, shareLinkEvents } from '../../../constants/analytics';
+import { AssetContext, UserContext } from '../../../context';
+import useAnalytics from '../../../hooks/useAnalytics';
 import assetApi from '../../../server-api/asset';
 import { removeExtension } from '../../../utils/asset';
+import cookiesApi from '../../../utils/cookies';
 import toastUtils from '../../../utils/toast';
 import RenameModal from '../../common/modals/rename-modal';
 import Button from '../buttons/button';
@@ -19,8 +21,7 @@ import AssetIcon from './asset-icon';
 import AssetImg from './asset-img';
 import AssetOptions from './asset-options';
 import styles from './asset-thumbail.module.css';
-import DetailOverlay from './detail-overlay';
-// import Cookies from 'universal-cookie';
+
 // Components
 const DEFAULT_DETAIL_PROPS = { visible: false, side: "detail" };
 
@@ -75,6 +76,7 @@ const AssetThumbail = ({
     activeSubFolders,
     headerName
   } = useContext(AssetContext);
+  const { user } = useContext(UserContext);
 
   const isAssetACopy = asset.name.endsWith(" - COPY");
 
@@ -85,6 +87,8 @@ const AssetThumbail = ({
   const [isEditing, setIsEditing] = useState(false);
   const dateFormat = "MMM do, yyyy";
   const [assetRenameModalOpen, setAssetRenameModalOpen] = useState(false);
+
+  const { trackEvent, trackLinkEvent } = useAnalytics();
 
   useEffect(() => {
     setThumbnailName(assetName);
@@ -185,30 +189,29 @@ const AssetThumbail = ({
 
   const handleViewDetails = (type: string) => {
     if (type === "button" || (type === "wrapper" && activeView === "list")) {
-      if (onView) {
-        onView(asset.id);
-      } else {
-        setOverlayProperties({
-          ...DEFAULT_DETAIL_PROPS,
-          visible: !overlayProperties.visible,
-        });
-        console.log(activeSubFolders)
-        if (!overlayProperties.visible) {
-          if (isShare) {
-            router.push({
-              pathname: `/collections/assetDetail/${asset.id}`,
-              query: { isShare, sharePath, sharedCode: "", headerName, activeFolder, availableNext, activeSubFolders }
-            });
-          } else {
-            router.push({
-              pathname: `/main/assets/${asset.id}`,
-              query: { isShare, sharePath, sharedCode: "", headerName, activeFolder, availableNext, activeSubFolders }
-            });
-          }
+      if (!overlayProperties.visible) {
+        if (isShare) {
+          trackLinkEvent(shareLinkEvents.VIEW_SHARED_ASSET, {
+            assetId: asset.id,
+            email: cookiesApi.get('shared_email') || null,
+            teamId: cookiesApi.get('teamId') || null,
+          })
+          router.push({
+            pathname: `/collections/assetDetail/${asset.id}`,
+            query: { isShare, sharePath, sharedCode: "", headerName, activeFolder, availableNext, activeSubFolders }
+          });
+        } else {
+          trackEvent(events.VIEW_ASSET, {
+            assetId: asset.id,
+          });
+          router.push({
+            pathname: `/main/assets/${asset.id}`,
+            query: { isShare, sharePath, sharedCode: "", headerName, activeFolder, availableNext, activeSubFolders }
+          });
         }
       }
     }
-  };
+  }
 
 
 
@@ -256,7 +259,7 @@ const AssetThumbail = ({
                 />
               ) : (
                 <HoverVideoPlayer
-                 data-drag="false"
+                  data-drag="false"
                   controls
                   className={styles["hover-video-player-wrapper"]}
                   videoClassName={styles["video-style"]}
@@ -313,17 +316,13 @@ const AssetThumbail = ({
             </div>
             <div data-drag="false" className={`normal-text ${styles["wrap-text"]} ${activeView === "list" && styles["list-text"]}`}>
               <span
-              data-drag="false"
+                data-drag="false"
                 id="editable-preview"
                 onClick={() => {
-                  if (onView) {
-                    onView(asset.id);
-                  } else {
-                    setOverlayProperties({
-                      ...DEFAULT_DETAIL_PROPS,
-                      visible: !overlayProperties.visible,
-                    });
-                  }
+                  setOverlayProperties({
+                    ...DEFAULT_DETAIL_PROPS,
+                    visible: !overlayProperties.visible,
+                  });
                 }}
                 className={
                   isThumbnailNameEditable
@@ -367,6 +366,8 @@ const AssetThumbail = ({
             <AssetOptions
               itemType={type}
               asset={asset}
+              thumbailUrl={thumbailUrl}
+              realUrl={realUrl}
               openArchiveAsset={openArchiveAsset}
               openDeleteAsset={openDeleteAsset}
               openMoveAsset={openMoveAsset}
@@ -385,6 +386,8 @@ const AssetThumbail = ({
             <AssetOptions
               itemType={type}
               asset={asset}
+              thumbailUrl={thumbailUrl}
+              realUrl={realUrl}
               openDeleteAsset={openDeleteAsset}
               downloadAsset={downloadAsset}
               isAssetRelated
@@ -405,21 +408,6 @@ const AssetThumbail = ({
         type={"Asset"}
         initialValue={assetName}
       />
-      {/* {overlayProperties.visible && (
-        <DetailOverlay
-          sharePath={sharePath}
-          isShare={isShare}
-          asset={asset}
-          realUrl={asset.extension === "tiff" || asset.extension === "tif" ? thumbailUrl : realUrl}
-          activeFolder={activeFolder}
-          thumbailUrl={thumbailUrl}
-          initialParams={overlayProperties}
-          openShareAsset={openShareAsset}
-          openDeleteAsset={openDeleteAsset}
-          closeOverlay={onCloseOverlay}
-          loadMore={loadMore}
-        />
-      )} */}
     </>
   );
 };

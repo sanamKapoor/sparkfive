@@ -11,11 +11,19 @@ import {
   SECURITY_TITLE,
 } from "../../../../../constants/strings";
 import UserPreference from "../../../../common/account/user-preference";
+import { pages } from "../../../../../constants/analytics";
+import useAnalytics from "../../../../../hooks/useAnalytics";
 
 const Notifications: React.FC = () => {
   const { user, setUser } = useContext(UserContext);
 
   const [enabledTwoFactor, setEnabledTwoFactor] = useState<boolean>(false);
+
+  const { pageVisit } = useAnalytics();
+
+  useEffect(() => {    
+    pageVisit(pages.SECURITY)
+  },[]);
 
   useEffect(() => {
     if (user) {

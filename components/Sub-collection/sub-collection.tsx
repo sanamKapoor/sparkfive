@@ -54,28 +54,6 @@ const SubCollection = ({
   elementsAssetContainerRef,
   elementsFolderContainerRef,
 }: any) => {
-  const handleDragOver = (e) => {
-    const mouseY = e.clientY;
-    const scrollThreshold = 100;
-
-    if (mouseY < scrollThreshold) {
-      // Scroll up
-      window.scrollBy(0, -scrollThreshold);
-    } else if (mouseY > window.innerHeight - scrollThreshold) {
-      // Scroll down
-      window.scrollBy(0, scrollThreshold);
-    }
-  };
-
-  useEffect(() => {
-    // Attach event listener when component mounts
-    document.body.addEventListener("dragover", handleDragOver);
-
-    // Remove event listener when component unmounts
-    return () => {
-      document.body.removeEventListener("dragover", handleDragOver);
-    };
-  }, []);
 
   const {
     setActiveSubFolders,
@@ -116,20 +94,16 @@ const SubCollection = ({
   const [moveModalFlag, setMoveModalFlag] = useState(false);
   const [loader, setLoader] = useState(false);
 
-  useEffect(() => {
-    return () => {
-      setActiveSubFolders("");
-      // setSubFoldersAssetsViewList({ results: [], next: 0, total: 0 });
-      setShowSubCollectionContent(false);
-    };
-  }, []);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      setActiveSubFolders("");
+      // setSubFoldersAssetsViewList({ results: [], next: 0, total: 0 });
+      setShowSubCollectionContent(false);
+      window.removeEventListener('scroll', handleScroll);
     };
-  });
+  }, []);
 
   //For handling the show subcollection checkbox button for collection change
   useEffect(() => {
@@ -166,16 +140,14 @@ const SubCollection = ({
   };
 
   const handleScroll = (e: any) => {
-    const element = document.getElementById("filter-view") as HTMLElement;
-    const { top, height } = element.getBoundingClientRect();
-    const element2 = document.getElementById("asset-view") as HTMLElement;
-    const { top: top2 } = element2.getBoundingClientRect();
-    const element3 = document.getElementById("top-bar") as HTMLElement;
-    const { bottom } = element3.getBoundingClientRect();
+    const filterElement = document.getElementById('filter-view') as HTMLElement;
+    const { top, height } = filterElement.getBoundingClientRect();
+    const assetElement = document.getElementById('asset-view') as HTMLElement;
+    const { top: top2 } = assetElement.getBoundingClientRect();
+    const topBarElement = document.getElementById('top-bar') as HTMLElement;
+    const { bottom } = topBarElement.getBoundingClientRect();
     if (top < bottom) {
-      setBottom1((prev) => {
-        return bottom;
-      });
+      setBottom1(() => bottom)
       setIsSticky(true);
     } else if (top2 > bottom + height) {
       setIsSticky(false);
@@ -188,32 +160,22 @@ const SubCollection = ({
   };
   //Handle the selctable Item for the drag selct area at initial load and load more functionality
   useEffect(() => {
+    let liElements, containerRect; // Declare liElements in the outer scope
+
     if (elementsFolderContainerRef.current && sortedFolders?.length && sortedAssets?.length === 0) {
-      const containerRect = elementsFolderContainerRef.current.getBoundingClientRect();
-      const liElements = elementsFolderContainerRef.current.querySelectorAll("li");
-      selectableItemsRef.current = new Array();
-      Array.from(liElements).forEach((item) => {
-        const { left, top, width, height } = item.getBoundingClientRect();
-        const adjustedTop = top - containerRect.top;
-        const adjustedLeft = left - containerRect.left;
-        if (item.id !== "")
-          selectableItemsRef.current.push({
-            left: adjustedLeft,
-            top: adjustedTop,
-            width,
-            height,
-            id: item.id,
-          });
-      });
+      containerRect = elementsFolderContainerRef.current.getBoundingClientRect();
+      liElements = elementsFolderContainerRef.current.querySelectorAll('li');
     } else if (sortedAssets?.length && elementsAssetContainerRef.current) {
-      const containerRect = elementsAssetContainerRef.current.getBoundingClientRect();
-      const liElements = elementsAssetContainerRef.current.querySelectorAll("li");
+      containerRect = elementsAssetContainerRef.current.getBoundingClientRect();
+      liElements = elementsAssetContainerRef.current.querySelectorAll('li');
+    }
+    if (liElements) {
       selectableItemsRef.current = new Array();
       Array.from(liElements).forEach((item) => {
         const { left, top, width, height } = item.getBoundingClientRect();
         const adjustedTop = top - containerRect.top;
         const adjustedLeft = left - containerRect.left;
-        if (item.id !== "")
+        if (item.id !== "") {
           selectableItemsRef.current.push({
             left: adjustedLeft,
             top: adjustedTop,
@@ -221,6 +183,7 @@ const SubCollection = ({
             height,
             id: item.id,
           });
+        }
       });
     }
   }, [sortedFolders?.length, activeView, sortedAssets?.length]);
@@ -549,7 +512,7 @@ const SubCollection = ({
                 </>
               ) : (
                 <>
-                  {!loadingAssetsFolders && (
+                  {!loadingAssetsFolders && !assetsHide && (
                     <div className={styles.LoadMorebtn}>
                       <Button
                         text="Load More"
