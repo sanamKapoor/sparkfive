@@ -69,17 +69,15 @@ const OptionsData: React.FC<OptionsDataProps> = ({
       [filterKey]: newFilters,
     });
   };
-
-  const containerClass = options && options.length >= 10 ? styles["outer-wrapper"] : styles["outer-grid"];
-
+  const containerClass = options && options.length >= 10 ? `${styles["outer-wrapper"]} data-drag="false"` : styles["outer-grid"];
 
   return (
-    <div className={containerClass}>
+    <div data-drag="false" className={containerClass}>
       {options?.length === 0 ? (
         <p>No Results Found.</p>
       ) : (
         options?.map((item, index) => (
-          <div className={styles["grid-item"]} key={index}>
+          <div data-drag="false" className={styles["grid-item"]} key={index}>
             <OptionDataItem
               name={item[dataKey]}
               count={item.count}

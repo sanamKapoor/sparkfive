@@ -19,8 +19,8 @@ const OptionDataItem: React.FC<OptionDataItemProps> = ({
   onDeselect,
 }) => {
   return (
-    <div className={`${styles["tags-wrapper"]}`}>
-      <div className={`${styles["tags-left-side"]}`}>
+    <div data-drag="false" className={`${styles["tags-wrapper"]}`}>
+      <div data-drag="false" className={`${styles["tags-left-side"]}`}>
         {isSelected ? (
           <IconClickable
             src={Utilities.radioButtonEnabled}
@@ -30,10 +30,10 @@ const OptionDataItem: React.FC<OptionDataItemProps> = ({
         ) : (
           <IconClickable additionalClass={styles["radio-icon"]} src={Utilities.radioButtonNormal} onClick={onSelect} />
         )}
-        <span className={`${styles["select-name"]}`}>{name}</span>
+        <span data-drag="false" className={`${styles["select-name"]}`}>{name}</span>
       </div>
-      <div className={styles.filterCount}>
-        <span>{count}</span>
+      <div data-drag="false" className={styles.filterCount}>
+        <span data-drag="false">{count}</span>
       </div>
     </div>
   );

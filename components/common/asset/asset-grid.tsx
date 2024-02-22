@@ -767,6 +767,7 @@ const AssetGrid = ({
             `}
                 {...(mode === "assets" && activeView !== "list" ? { style: { marginTop: "60px" } } : {})}
                 id="asset-parent"
+                ref={elementsContainerRef}
               // onMouseUp={(e) => {
               //   console.log("Mai mouse up", e.clientX, e.clientY)
               // }}

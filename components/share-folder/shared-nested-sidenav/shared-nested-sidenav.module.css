@@ -83,14 +83,10 @@
 }
 .sidenav-list1 {
   margin-bottom: 10px;
-  max-height: 60vh;
+  max-height: 70vh;
   overflow:auto;
 }
-.sidenavScroll {
-  max-height: calc(100vh - 260px);
-  overflow: auto;
-  /* padding: 0 24px 0 24px; */
-}
+
 .sidenav-list1::-webkit-scrollbar {
   width: 5px;
   margin-right: 20px;
@@ -329,10 +325,12 @@
     transform: translate(-50%, -50%) rotate(360deg);
   }
 }
+
 .load-wrapper {
   display: flex;
   align-items: center;
   margin-top: 10px;
+  color:var(--secondary-color)
 }
 .loadIcon {
   width: 18px;
