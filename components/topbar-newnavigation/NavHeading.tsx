@@ -38,7 +38,7 @@ const NavHeading = ({ isShare = false }) => {
       </div>
       <div className={styles.navHeadings}>
         <div className={styles.headingWrapper}>
-          <div className={styles.icon}>
+          <div className={styles.assetIcon}>
             <img src={Utilities.assets} />
 
           </div>

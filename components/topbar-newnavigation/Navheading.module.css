@@ -17,6 +17,14 @@
   display: none;
  
 }
+.assetIcon{
+  display: none;
+
+}
+.assetIcon img{
+  display: flex;
+  align-items: center;
+}
 .icon img{
   display: flex;
   align-items: center;
@@ -42,6 +50,11 @@
   .menuHeading{
     margin-left: 10px;
    
+  }
+  .assetIcon{
+    margin-left: 34px;
+    display: block;
+
   }
   .icon{
     display: block;
@@ -77,6 +90,11 @@ width: 100%;
   }
   .icon img{
     width: 16px;
+  }
+  .assetIcon{
+    margin-left: 10px;
+    display: block;
+
   }
 }
 @media (min-width:700px) and (max-width:1025px){
