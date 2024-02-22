@@ -484,7 +484,7 @@ const SubCollection = ({
                 </>
               ) : (
                 <>
-                  {!loadingAssetsFolders && (
+                  {!loadingAssetsFolders && !assetsHide && (
                     <div className={styles.LoadMorebtn}>
                       <Button
                         text="Load More"
