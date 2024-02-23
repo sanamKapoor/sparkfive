@@ -1,7 +1,7 @@
 // TableComponent.js
 
 import React, { useEffect, useState } from "react";
-import { AnalyticsLayoutSection, InsightsApiEndpoint, TABLE_REC_LEN, TableBodySection } from "../../../constants/analytics";
+import { AnalyticsLayoutSection, DASHBOARD_TABLE_REC_LEN, InsightsApiEndpoint, TABLE_REC_LEN, TableBodySection } from "../../../constants/analytics";
 import { UserTableColumns, arrowColumns } from "../../../data/analytics";
 import useInsights from "../../../hooks/useInsights";
 import DateFilter from "../common/date-filter";
@@ -42,9 +42,6 @@ const Users = ({
   const [emptyRows, setEmptyRows] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalUsersData, setTotalUsersData] = useState([]);
-  const [toggleMainContainer, setToggleMainContainer] = useState(false);
-
-  
 
   useEffect(() => {
     if (totalRecords > 0 && data.length > 0) {

@@ -164,13 +164,13 @@ export const AssetTableRows = ({ data, handleModals }) => {
               {row.name && (
                 <div className={styles["usernameWithImage"]}>
                   <div className={`${styles["image-wrapper"]}`}>
-                    {row.thumbnail ? (
+                    {(row.type === 'image' || row.type === 'video') ? (
                       <img src={row.thumbnail} alt="user" className={styles.assetImage} />
                     ) : (
                       <AssetIcon imgClass={"analytics-icon"} extension={row.extension} />
                     )}
                   </div>
-                  <span className={`${styles["user-name"]}`}>{row.name}</span>
+                  <span>{row.name}</span>
                 </div>
               )}
             </td>
@@ -284,13 +284,13 @@ export const AssetTableDashboardRows = ({ data }) => {
               {row.name && (
                 <div className={styles["usernameWithImage"]}>
                   <div className={`${styles["image-wrapper"]}`}>
-                    {row.thumbnail ? (
+                    {(row.type === 'image' || row.type === 'video') ? (
                       <img src={row.thumbnail} alt="user" className={styles.assetImage} />
                     ) : (
                       <AssetIcon imgClass={"analytics-icon"} extension={row.extension} />
                     )}
                   </div>
-                  <span className={`${styles["user-name"]}`}>{row.name}</span>
+                  <span>{row.name}</span>
                 </div>
               )}
             </td>

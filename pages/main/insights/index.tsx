@@ -60,7 +60,7 @@ export async function getServerSideProps({ req, res, query }) {
       payload = {
         ...payload,
         page: 1,
-        limit: 6,
+        limit: DashboardSections[endpoint] === DashboardSections.ASSET ? 9 : 6,
         sortBy: "",
         sortOrder: true,
       }

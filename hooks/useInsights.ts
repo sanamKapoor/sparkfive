@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { calculateBeginDate } from "../config/data/filter";
 import {
     AnalyticsRoutes,
+    DASHBOARD_ASSET_TABLE_REC_LEN,
     DASHBOARD_REC_LIMIT,
+    DashboardSections,
     InsightsApiEndpoint,
     LIMIT,
     PAGE
@@ -42,9 +44,11 @@ const useInsights = ({ section, endpoint }: { section?: string; endpoint?: strin
       setData([]);
       setTotalRecords(0);
 
+      const applyLimit = router.pathname !== AnalyticsRoutes.DASHBOARD ? limit : apiEndpoint.includes(DashboardSections.ASSET) ? DASHBOARD_ASSET_TABLE_REC_LEN : DASHBOARD_REC_LIMIT;
+
       let payload: Record<string, unknown> = {
         page: defaultPage ? defaultPage : page,
-        limit: router.pathname === AnalyticsRoutes.DASHBOARD ? DASHBOARD_REC_LIMIT : limit,
+        limit: applyLimit,
         search,
         sortBy,
         sortOrder,

@@ -13,6 +13,7 @@ const AssetIcon = ({
   imgClass = {},
   activeFilter = "",
 }) => {
+  
   return (
     <div
       draggable={false}
