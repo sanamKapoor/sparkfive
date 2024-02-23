@@ -18,11 +18,10 @@ const TableHeader = ({
                 {columns.map((column, index) => {
                     let sortCol = arrowColumns.filter((col) => col.label === column)[0];
                     return (
-                        <th key={index}>
+                        <th key={index} className={sortCol && sortBy === sortCol.value ? styles['active_table-head'] : ''}>
                             {sortCol && totalRecords > 0 ? (
                                 <div
-                                    className={`${styles["headingIcon"]} ${sortBy === sortCol.value ? styles["active_table-head"] : ""
-                                        }`}
+                                    className={`${styles["headingIcon"]}`}
                                 >
                                     {column}{" "}
                                     <div className={`${styles["flip-direction"]} ${styles["outer-wrapper"]}`}>
