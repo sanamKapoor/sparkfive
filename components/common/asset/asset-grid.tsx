@@ -1,37 +1,37 @@
-import { boxesIntersect, useSelectionContainer } from '@air/react-drag-to-select';
-import copyClipboard from 'copy-to-clipboard';
-import update from 'immutability-helper';
-import fileDownload from 'js-file-download';
-import { CSSProperties, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import React from 'react';
-import { Waypoint } from 'react-waypoint';
+import { boxesIntersect, useSelectionContainer } from "@air/react-drag-to-select";
+import copyClipboard from "copy-to-clipboard";
+import update from "immutability-helper";
+import fileDownload from "js-file-download";
+import { CSSProperties, useContext, useEffect, useMemo, useRef, useState } from "react";
+import React from "react";
+import { Waypoint } from "react-waypoint";
 
-import { sizeToZipDownload } from '../../../constants/download';
-import { ASSET_ACCESS, ASSET_UPLOAD_APPROVAL } from '../../../constants/permissions';
-import { AssetContext, FilterContext, LoadingContext, UserContext } from '../../../context';
-import useSortedAssets from '../../../hooks/use-sorted-assets';
-import assetApi from '../../../server-api/asset';
-import folderApi from '../../../server-api/folder';
-import shareApi from '../../../server-api/share-collection';
-import { checkIfUserCanEditThumbnail } from '../../../utils/asset';
-import downloadUtils from '../../../utils/download';
-import toastUtils from '../../../utils/toast';
-import urlUtils from '../../../utils/url';
-import SubCollection from '../../Sub-collection/sub-collection';
-import Button from '../buttons/button';
-import FilterView from '../filter-view';
-import FolderGridItem from '../folder/folder-grid-item';
-import useDropzone from '../misc/dropzone';
-import ChangeThumbnail from '../modals/change-thumnail-modal';
-import ConfirmModal from '../modals/confirm-modal';
-import SpinnerOverlay from '../spinners/spinner-overlay';
-import AssetAddition from './asset-addition';
-import styles from './asset-grid.module.css';
-import AssetTableHeader from './Asset-table-header/asset-table-header';
-import AssetThumbail from './asset-thumbail';
-import AssetUpload from './asset-upload';
-import DetailOverlay from './detail-overlay';
-import FolderTableHeader from './Folder-table-header/folder-table-header';
+import { sizeToZipDownload } from "../../../constants/download";
+import { ASSET_ACCESS, ASSET_UPLOAD_APPROVAL } from "../../../constants/permissions";
+import { AssetContext, FilterContext, LoadingContext, UserContext } from "../../../context";
+import useSortedAssets from "../../../hooks/use-sorted-assets";
+import assetApi from "../../../server-api/asset";
+import folderApi from "../../../server-api/folder";
+import shareApi from "../../../server-api/share-collection";
+import { checkIfUserCanEditThumbnail } from "../../../utils/asset";
+import downloadUtils from "../../../utils/download";
+import toastUtils from "../../../utils/toast";
+import urlUtils from "../../../utils/url";
+import SubCollection from "../../Sub-collection/sub-collection";
+import Button from "../buttons/button";
+import FilterView from "../filter-view";
+import FolderGridItem from "../folder/folder-grid-item";
+import useDropzone from "../misc/dropzone";
+import ChangeThumbnail from "../modals/change-thumnail-modal";
+import ConfirmModal from "../modals/confirm-modal";
+import SpinnerOverlay from "../spinners/spinner-overlay";
+import AssetAddition from "./asset-addition";
+import styles from "./asset-grid.module.css";
+import AssetTableHeader from "./Asset-table-header/asset-table-header";
+import AssetThumbail from "./asset-thumbail";
+import AssetUpload from "./asset-upload";
+import DetailOverlay from "./detail-overlay";
+import FolderTableHeader from "./Folder-table-header/folder-table-header";
 
 interface Box {
   left: number;
@@ -45,19 +45,19 @@ interface Box {
 const AssetGrid = ({
   activeView = "grid",
   isShare = false,
-  onFilesDataGet = (files: any) => { },
+  onFilesDataGet = (files: any) => {},
   toggleSelected,
   mode = "assets",
-  deleteFolder = (id: string) => { },
+  deleteFolder = (id: string) => {},
   itemSize = "regular",
   activeFolder = "",
   type = "",
   itemId = "",
-  getFolders = () => { },
-  loadMore = () => { },
-  viewFolder = (id: string) => { },
+  getFolders = () => {},
+  loadMore = () => {},
+  viewFolder = (id: string) => {},
   sharePath = "",
-  onCloseDetailOverlay = (assetData) => { },
+  onCloseDetailOverlay = (assetData) => {},
   setWidthCard,
   widthCard,
   getSubCollectionsAssetData,
@@ -94,7 +94,7 @@ const AssetGrid = ({
     setCollectionDragFlag,
     setCollectionDragId,
     setCollectionParentDragId,
-    collectionDragId
+    collectionDragId,
   } = useContext(AssetContext);
 
   const { advancedConfig, hasPermission, user } = useContext(UserContext);
@@ -102,8 +102,8 @@ const AssetGrid = ({
   const { setIsLoading } = useContext(LoadingContext);
 
   // Ref values
-  const childFolder = useRef("")
-  const parentFolder = useRef("")
+  const childFolder = useRef("");
+  const parentFolder = useRef("");
 
   const ref = useRef(null);
   const selectionArea = useRef({});
@@ -413,26 +413,23 @@ const AssetGrid = ({
         top: box.top - containerRect.top,
         left: box.left - containerRect.left,
       };
-      selectionArea.current = scrollAwareBox
-    } else if (elementsFolderContainerRef.current
-      && subFoldersAssetsViewList.results.length === 0
-    ) {
+      selectionArea.current = scrollAwareBox;
+    } else if (elementsFolderContainerRef.current && subFoldersAssetsViewList.results.length === 0) {
       const containerRect = elementsFolderContainerRef.current.getBoundingClientRect();
       const scrollAwareBox = {
         ...box,
         top: box.top - containerRect.top,
-        left: box.left - containerRect.left
+        left: box.left - containerRect.left,
       };
-      selectionArea.current = scrollAwareBox
-    }
-    else if (elementsAssetContainerRef.current && subFoldersAssetsViewList.results.length > 0) {
+      selectionArea.current = scrollAwareBox;
+    } else if (elementsAssetContainerRef.current && subFoldersAssetsViewList.results.length > 0) {
       const containerRect = elementsAssetContainerRef.current.getBoundingClientRect();
       const scrollAwareBox = {
         ...box,
         top: box.top - containerRect.top,
-        left: box.left - containerRect.left
+        left: box.left - containerRect.left,
       };
-      selectionArea.current = scrollAwareBox
+      selectionArea.current = scrollAwareBox;
     }
   };
 
@@ -466,37 +463,40 @@ const AssetGrid = ({
       setFolders(updatedFolders);
     } else if (mode === "SubCollectionView") {
       if (results.length !== 0 && subFoldersAssetsViewList.results.length === 0) {
-        setSelectedAllSubFoldersAndAssets(false)
-        setSelectedAllSubAssets(false)
+        setSelectedAllSubFoldersAndAssets(false);
+        setSelectedAllSubAssets(false);
         const updatedFolders = results.map((folder, index) => {
           // Check if the object's ID is in the idsToFind array
           if (idsToFind.includes(folder.id)) {
             return {
               ...folder,
-              isSelected: true
+              isSelected: true,
             };
           }
           return folder; // Return the original object for non-matching IDs
         });
         setSubFoldersViewList({
-          results: updatedFolders, next, total
+          results: updatedFolders,
+          next,
+          total,
         });
       } else if (subFoldersAssetsViewList.results.length > 0) {
-        setSelectedAllSubFoldersAndAssets(false)
-        setSelectedAllSubAssets(false)
+        setSelectedAllSubFoldersAndAssets(false);
+        setSelectedAllSubAssets(false);
 
         const updatedAssets = subFoldersAssetsViewList.results.map((asset, index) => {
           if (idsToFind.includes(asset.asset.id)) {
             return {
               ...asset,
-              isSelected: true
+              isSelected: true,
             };
           }
           return asset; // Return the original object for non-matching IDs
         });
         setSubFoldersAssetsViewList({ ...subFoldersAssetsViewList, results: updatedAssets });
         setSubFoldersViewList({
-          next, total,
+          next,
+          total,
           results: results.map((folder: any) => ({
             ...folder,
             isSelected: false,
@@ -505,18 +505,18 @@ const AssetGrid = ({
       }
     }
     selectionArea.current = {};
-  }
+  };
 
   //library initialization
   const { DragSelection } = useSelectionContainer({
     eventsElement: document.getElementById("__next"),
     onSelectionChange,
     shouldStartSelecting: (target) => {
-      const dragValue = target?.dataset?.drag
+      const dragValue = target?.dataset?.drag;
       const isDraggable = dragValue === "false" ? false : true; // Adjust the condition based on your needs
       return isDraggable;
     },
-    onSelectionStart: () => { },
+    onSelectionStart: () => {},
     onSelectionEnd: () => {
       const indexesToSelect: string[] = [];
       selectableItemsRef.current.forEach((item) => {
@@ -534,55 +534,55 @@ const AssetGrid = ({
         borderRadius: 4,
         backgroundColor: "lightskyblue",
         opacity: 0.5,
-        zIndex: 9999
+        zIndex: 9999,
       },
     },
-    isEnabled: true
+    isEnabled: true,
   });
 
-  //Handle the selctable Item for the drag selct area at initial load and load more functionality 
+  //Handle the selctable Item for the drag selct area at initial load and load more functionality
   useEffect(() => {
     if (elementsContainerRef.current && mode !== "SubCollectionView") {
       if (sortedFolders?.length) {
         const containerRect = elementsContainerRef.current.getBoundingClientRect();
-        const liElements = elementsContainerRef.current.querySelectorAll('li');
+        const liElements = elementsContainerRef.current.querySelectorAll("li");
         selectableItemsRef.current = new Array();
         Array.from(liElements).forEach((item) => {
           const { left, top, width, height } = item.getBoundingClientRect();
           const adjustedTop = top - containerRect.top;
           const adjustedLeft = left - containerRect.left;
-          if (item.id !== "") selectableItemsRef.current.push({
-            left: adjustedLeft,
-            top: adjustedTop,
-            width,
-            height,
-            id: item.id,
-          })
+          if (item.id !== "")
+            selectableItemsRef.current.push({
+              left: adjustedLeft,
+              top: adjustedTop,
+              width,
+              height,
+              id: item.id,
+            });
         });
       } else if (sortedAssets?.length) {
         const containerRect = elementsContainerRef.current.getBoundingClientRect();
-        const liElements = elementsContainerRef.current.querySelectorAll('li');
+        const liElements = elementsContainerRef.current.querySelectorAll("li");
         selectableItemsRef.current = new Array();
         Array.from(liElements).forEach((item) => {
           const { left, top, width, height } = item.getBoundingClientRect();
           const adjustedTop = top - containerRect.top;
           const adjustedLeft = left - containerRect.left;
-          if (item.id !== "") selectableItemsRef.current.push({
-            left: adjustedLeft,
-            top: adjustedTop,
-            width,
-            height,
-            id: item.id,
-          })
-
+          if (item.id !== "")
+            selectableItemsRef.current.push({
+              left: adjustedLeft,
+              top: adjustedTop,
+              width,
+              height,
+              id: item.id,
+            });
         });
       }
     }
   }, [sortedFolders?.length, activeView, sortedAssets?.length]);
   //------Drag-Select-area-------End======//
 
-  //Handle the dynamically stopage of filters at top of page position on scroll down  
-
+  //Handle the dynamically stopage of filters at top of page position on scroll down
 
   const filterRef = useRef<HTMLDivElement>(null);
 
@@ -608,7 +608,7 @@ const AssetGrid = ({
 
   const onDragStart = (evt) => {
     const element = evt.currentTarget;
-    childFolder.current = element.id
+    childFolder.current = element.id;
   };
 
   const filterFolderInList = (folderList, updatedFolder) => {
@@ -618,26 +618,25 @@ const AssetGrid = ({
   };
 
   const onDragDrop = async (evt) => {
-    const element = evt.currentTarget
-    parentFolder.current = element.id
+    const element = evt.currentTarget;
+    parentFolder.current = element.id;
     if (childFolder.current !== "" && childFolder.current !== parentFolder.current) {
-      setMoveModalFlag(true)
+      setMoveModalFlag(true);
     } else if (childFolder.current === "" && collectionDragId) {
       toastUtils.error("You can't move collection a with sub-collection");
     }
-    setCollectionDragFlag(false);// Global state in for collection drag when
-    setCollectionDragId("");// Global state in for collection drag
-    setCollectionParentDragId("")
-    setDroppableId("")
+    setCollectionDragFlag(false); // Global state in for collection drag when
+    setCollectionDragId(""); // Global state in for collection drag
+    setCollectionParentDragId("");
+    setDroppableId("");
   };
-
 
   // Helper function to handle drag start
   const handleDragStart = (e, folder) => {
     if (!folder?.childFolders?.length > 0) {
       onDragStart(e);
       setCollectionDragFlag(true);
-      setCollectionDragId(e.currentTarget.id)
+      setCollectionDragId(e.currentTarget.id);
     }
   };
 
@@ -646,14 +645,14 @@ const AssetGrid = ({
     setAssetDragFlag(true);
     setAssetDragId(element.id);
     setAssetDragType(activeFolder === "" ? "copy" : "move");
-  }
+  };
 
   const handleAssetDrop = (e) => {
     setAssetDragFlag(false);
     setAssetDragId("");
     setAssetDragType("");
-    setDroppableId("")
-  }
+    setDroppableId("");
+  };
   // Helper function to handle drop (assuming onDragDrop is your drop handler)
   const handleDrop = (e) => {
     onDragDrop(e);
@@ -671,8 +670,8 @@ const AssetGrid = ({
         const updatedFolders = filterFolderInList(folders, data.data);
         setFolders(updatedFolders);
       }
-      childFolder.current = ""
-      parentFolder.current = ""
+      childFolder.current = "";
+      parentFolder.current = "";
       setMoveModalFlag(false);
       setListUpdateFlag(true);
       setLoader(false);
@@ -689,7 +688,7 @@ const AssetGrid = ({
     parentFolder.current = "";
     setMoveModalFlag(false);
     setLoader(false);
-  }
+  };
   const handleDragOver = (e) => {
     const mouseY = e.clientY;
     const scrollThreshold = 100;
@@ -703,26 +702,24 @@ const AssetGrid = ({
     }
   };
 
-
-
-
   return (
     <>
       {loader && <SpinnerOverlay />}
       <div
         ref={filterRef}
         id="filter-container-height"
-        className={`${isShare ? styles["share-page-filter"] : ""} ${styles["filter-view-container"]} ${!sidebarOpen && isShare ? styles["share-page-open"] : ""
-          }`}
+        className={`${isShare ? styles["share-page-filter"] : ""} ${styles["filter-view-container"]} ${
+          !sidebarOpen && isShare ? styles["share-page-open"] : ""
+        }`}
       >
         {mode === "assets" && <FilterView render={render} setRender={setRender} />}
       </div>
       <section
-        className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ""} ${!sidebarOpen  ? styles["container-on-toggle"] : ""
-          }`}
+        className={`${styles.container}  ${shouldShowUpload ? styles.uploadAsset : ""} ${
+          !sidebarOpen ? styles["container-on-toggle"] : ""
+        }`}
         style={getStyling}
       >
-
         {(shouldShowUpload || isDragging) && !isShare && !hasPermission([ASSET_UPLOAD_APPROVAL]) && (
           <AssetUpload
             onDragText={"Drop files here to upload"}
@@ -748,14 +745,30 @@ const AssetGrid = ({
         {
           <div className={`${styles["collectionAssets"]} ${styles["w-100"]} `}>
             {
-            <ul
-                className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]} ${styles[itemSize]} ${activeView === "list" ? styles["list-view"] : ""
-                  }    ${!sidebarOpen ? styles["marginTop"] : ""}
-            ${mode === "assets"
-                    ? styles["grid-" + advancedConfig.assetThumbnail]
-                    : styles["grid-" + advancedConfig.collectionThumbnail]
-                  }
-            `}
+              // <ul
+              //     className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]} ${styles[itemSize]} ${activeView === "list" ? styles["list-view"] : ""
+              //       }    ${!sidebarOpen ? styles["marginTop"] : ""}
+              // ${mode === "assets"
+              //         ? styles["grid-" + advancedConfig.assetThumbnail]
+              //         : styles["grid-" + advancedConfig.collectionThumbnail]
+              //       }
+              // `}
+              //     {...(mode === "assets" && activeView !== "list" ? { style: { marginTop: "60px" } } : {})}
+              //     id="asset-parent"
+              //     ref={elementsContainerRef}
+              //     onDragOver={handleDragOver}
+              //   >
+              <ul
+                className={`${mode === "SubCollectionView" ? "" : styles["grid-list"]} ${styles[itemSize]} ${
+                  activeView === "list" ? styles["list-view"] : ""
+                }
+    ${isShare ? styles["marginTopShare"] : styles["marginTop"]}
+    ${
+      mode === "assets"
+        ? styles["grid-" + advancedConfig.assetThumbnail]
+        : styles["grid-" + advancedConfig.collectionThumbnail]
+    }
+  `}
                 {...(mode === "assets" && activeView !== "list" ? { style: { marginTop: "60px" } } : {})}
                 id="asset-parent"
                 ref={elementsContainerRef}
@@ -799,11 +812,12 @@ const AssetGrid = ({
                       <AssetTableHeader activeView={activeView} setSortAttribute={setSortAssetAttribute} />
                     )}
                     {sortedAssets.map((assetItem, index) => {
-
                       if (assetItem.status !== "fail") {
                         return (
                           <li
-                            className={`${styles["grid-item"]} ${styles["asset-image-outer"]} ${activeView === "grid" ? styles["grid-item-new"] : ""}
+                            className={`${styles["grid-item"]} ${styles["asset-image-outer"]} ${
+                              activeView === "grid" ? styles["grid-item-new"] : ""
+                            }
                             ${activeView === "grid" && styles["list-wrapper-asset"]}
                             `}
                             key={index}
@@ -813,7 +827,9 @@ const AssetGrid = ({
                             draggable={isShare ? false : true}
                             onDragStart={(e) => handleAssetDragStart(e)}
                             onDragOver={(ev) => ev.preventDefault()}
-                            onDrop={e => { handleAssetDrop(e) }}
+                            onDrop={(e) => {
+                              handleAssetDrop(e);
+                            }}
                           >
                             <div className={activeView === "grid" && styles["collection-assets"]}>
                               <AssetThumbail
@@ -919,7 +935,7 @@ const AssetGrid = ({
           additionalClasses={["visible-block"]}
           modalData={modalData}
           modalIsOpen={modalOpen}
-          confirmAction={() => { }}
+          confirmAction={() => {}}
           getSubFolders={getSubFolders}
         />
         {/* Delete modal */}
@@ -979,10 +995,9 @@ const AssetGrid = ({
             availableNext={nextPage !== -1}
           />
         )}
-      </section >
+      </section>
     </>
   );
 };
-
 
 export default AssetGrid;

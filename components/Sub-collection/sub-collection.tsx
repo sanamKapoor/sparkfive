@@ -325,7 +325,7 @@ const SubCollection = ({
           </div>
         </div>
       )}
-      <div className={styles.dragScroll} onDragOver={handleDragOver}>
+      <div className={styles.dragScroll}>
         {!collectionHide && (
           <>
             {/* list wrapper for list view */}

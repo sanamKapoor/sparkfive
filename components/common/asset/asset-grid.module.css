@@ -55,9 +55,9 @@
 
 /* List view code starts form here */
 .list-view {
-  display: flex;
-  flex-direction: column;
-  grid-gap: 16px;
+  display: flex !important;
+  flex-direction: column !important;
+  grid-gap: 16px !important;
 }
 
 .listHeader {
@@ -203,9 +203,6 @@
   }
 }
 @media (min-width: 500px) and (max-width: 764px) {
-  .list-wrapper-asset {
-    /* margin-top: 248px; */
-  }
   .filter-view-container {
     top: 220px;
   }
@@ -213,7 +210,7 @@
 
  @media screen and (max-width: 600px) {
   .grid-list {
-    margin-top: 171px !important;
+    margin-top: 170px !important;
   }
   .share-page-container{
     margin-top: -6px;
@@ -238,11 +235,17 @@
   .marginTop{
     margin-top:40px;
   }
+  .marginTopShare{
+    margin-top:123px !important;
+  }
 }
 
-@media (max-width:375px){
+@media (max-width:390px){
   .share-page-container{
     margin-top: 39px;
+  }
+  .marginTopShare{
+    margin-top: 182px !important;
   }
 
 }
@@ -253,3 +256,6 @@
   }
 }
 
+.marginTopShare{
+  margin-top: 10px;
+}

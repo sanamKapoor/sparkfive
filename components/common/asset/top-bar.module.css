@@ -478,7 +478,8 @@ li.dropdown-title {
     display: none;
   }
   .sort-wrapper{
-    display: none;
+    display: block;
+    width: 44%;
   }
   .sort-wrapper div>div>{
     outline: none;
@@ -488,8 +489,9 @@ li.dropdown-title {
     display: none;
   }
   .sec-filters {
-   justify-content: space-between;
+   /* justify-content: space-between; */
    padding: 0 20px;
+   flex-wrap: wrap;
   }
   .mobile-app{
     display: block;
@@ -503,6 +505,7 @@ li.dropdown-title {
   }
   .nested-wrapper Button{
     display: block;
+    height: 34px;
   }
   
   .newsidenav{
@@ -513,6 +516,12 @@ li.dropdown-title {
   }
    .outer-box{
     padding:0 20px;
+   }
+   .search-icon{
+    width: 100% !important;
+   }
+   .nested-wrapper{
+    width: 50%;
    }
 
 }
@@ -538,4 +547,5 @@ li.dropdown-title {
     width:61%
   }
 }
+
 

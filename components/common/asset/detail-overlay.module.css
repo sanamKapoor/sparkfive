@@ -362,14 +362,11 @@
 
   .share .side {
     width: calc(100% - 49px);
-    position: absolute;
-    right: 50px;
+    /* position: absolute;
+    right: 50px; */
   }
 
-  .share .content {
-    width: 100%;
 
-  }
 }
 
 .notes-container{
@@ -412,6 +409,7 @@
   .share .side {
     position: relative !important;
     width: 100% !important;
+    right:0 !important;
   
    
   }
@@ -430,6 +428,7 @@
   .img-wrapper>img,
   .share-img-wrapper>img {
     max-width: 100%;
+    padding: 20px 0;
   }
 
   .share.container {
@@ -504,7 +503,7 @@
   }
 
   .top-wrapper {
-    height: 47px;
+    height: 74px;
   }
 
   .content {
