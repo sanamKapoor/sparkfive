@@ -41,7 +41,7 @@
 .count{
   display: none;
 }
-@media screen and (max-width: 810px) {
+@media screen and (max-width: 1025px) {
   .navigationLinkheading{
     margin-left: 10px;
     font-weight: 500;

@@ -294,7 +294,7 @@ li.dropdown-title {
 
 }
 
-@media screen and (max-width: 810px) {
+@media screen and (max-width: 1025px) {
   .sec-filters {
     gap: 8px;
     margin-top: 20px;
@@ -538,7 +538,7 @@ li.dropdown-title {
   
 }
 
-@media (max-width:810px) {
+@media (max-width:1025px) {
   .container-on-toggle{
    padding:33.5px 0;
   }
