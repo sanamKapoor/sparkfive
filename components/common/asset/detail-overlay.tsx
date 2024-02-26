@@ -1307,91 +1307,68 @@ const DetailOverlay = ({
           </div>
         </section>
       )}
-      {
-        sideOpen && (
-          <section className={styles.side}>
-            {assetDetail && activeSideComponent === "detail" && (
-              <>
-                {mode === "detail" && (
-                  <SidePanel
-                    asset={assetDetail}
-                    updateAsset={updateAsset}
-                    setAssetDetail={setAssetDetail}
-                    isShare={isShare}
-                  />
-                )}
-              </>
-            )}
-            {activeSideComponent === "download" && (
-              <CropSidePanel
-                isShare={isShare}
-                sharePath={sharePath}
-                imageType={imageType}
-                onImageTypeChange={(type) => {
-                  setImageType(type);
-                }}
-                downloadImageTypes={downloadImageTypes}
-                presetTypes={presetTypes}
-                presetTypeValue={preset}
-                sizes={sizes}
-                sizeValue={size}
-                mode={mode}
-                widthOriginal={width}
-                heightOriginal={height}
-                onModeChange={(mode) => {
-                  setMode(mode);
-                  if (mode === "crop") {
-                    setSizeOfCrop({
-                      width: Math.round(width / 2),
-                      height: Math.round(height / 2),
-                    });
-                  }
-                }}
-                onSelectChange={onSelectChange}
-                onSizeInputChange={onSizeInputChange}
-                asset={assetDetail}
-                versionRealUrl={versionRealUrl}
-                versionThumbnailUrl={versionThumbnailUrl}
-                onResetImageSize={() => {
-                  resetValues();
-                  setDetailPosSize({
-                    ...detailPosSize,
-                    width: defaultSize.width,
-                    height: defaultSize.height,
-                  });
-                }}
-                sizeOfCrop={sizeOfCrop}
-                setSizeOfCrop={setSizeOfCrop}
-                detailPosSize={detailPosSize}
-                onAddAssociate={(asset) => {
-                  const detail = { ...assetDetail };
-                  detail.fileAssociations.push(asset);
+      {sideOpen && (
+        <section className={styles.side}>
+          {assetDetail && activeSideComponent === "detail" && (
+            <>
+              {mode === "detail" && (
+                <SidePanel
+                  asset={assetDetail}
+                  updateAsset={updateAsset}
+                  setAssetDetail={setAssetDetail}
+                  isShare={isShare}
+                  closeOverlay={closeOverlay}
+                />
+              )}
+            </>
+          )}
+          {assetDetail && activeSideComponent === "attributes" && (
+            <>
+              {mode === "detail" && (
+                <AttributeSidePanel
+                  asset={assetDetail}
+                  updateAsset={updateAsset}
+                  setAssetDetail={setAssetDetail}
+                  isShare={isShare}
+                />
+              )}
+            </>
+          )}
 
-                  setAssetDetail(detail);
-                }}
-                setRenameData={setRenameValue}
-              />
-            )}
-            {!isShare && activeSideComponent === "comments" && <ConversationList itemId={asset?.id} itemType="assets" />}
-            {!isShare && activeSideComponent === "versions" && (
-              <VersionList versions={versions} currentAsset={currentAsset} triggerUserEvent={onUserEvent} />
-            )}
-            {activeSideComponent === "cdn" && <CdnPanel assetDetail={assetDetail} />}
-
-            {activeSideComponent === "notes" && notes && <AssetNotes asset={asset} notes={notes} applyCrud={applyCrud} />}
-
-            {activeSideComponent === "related" && (
-              <AssetRelatedFilesList
-                currentAsset={assetDetail}
-                relatedAssets={assetDetail?.fileAssociations || []}
-                associateFileId={currentAsset.id}
-                onChangeRelatedFiles={onChangeRelatedFiles}
-                onAddRelatedFiles={(data) => {
-                  let updatedAssets = [...assetDetail.fileAssociations];
-                  updatedAssets = updatedAssets.concat(data);
-                  setAssetDetail({
-                    ...assetDetail,
-                    fileAssociations: updatedAssets,
+          {assetDetail && activeSideComponent === "folder" && (
+            <>
+              {mode === "detail" && (
+                <FolderSidePanel
+                  asset={assetDetail}
+                  updateAsset={updateAsset}
+                  setAssetDetail={setAssetDetail}
+                  isShare={isShare}
+                />
+              )}
+            </>
+          )}
+          {activeSideComponent === "download" && (
+            <CropSidePanel
+              isShare={isShare}
+              sharePath={sharePath}
+              imageType={imageType}
+              onImageTypeChange={(type) => {
+                setImageType(type);
+              }}
+              downloadImageTypes={downloadImageTypes}
+              presetTypes={presetTypes}
+              presetTypeValue={preset}
+              sizes={sizes}
+              sizeValue={size}
+              mode={mode}
+              widthOriginal={width}
+              heightOriginal={height}
+              onModeChange={(mode) => {
+                setMode(mode);
+                if (mode === "crop") {
+                  setSizeOfCrop({
+                    width: Math.round(width / 2),
+                    height: Math.round(height / 2),
                   });
                 }
               }}
