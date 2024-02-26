@@ -31,18 +31,19 @@ const ReusableHeading = ({
     text === "All Collections" && hasPermission([ASSET_UPLOAD_NO_APPROVAL]);
 
   return (
-    <div className={`${styles["heading-contents"]} ${icon ? styles["heading-mob"] : ""}`} style={{...customStyle,fontSize}}>
-      <div
+    <div data-drag="false" className={`${styles["heading-contents"]} ${icon ? styles["heading-mob"] : ""}`} style={{...customStyle,fontSize}}>
+      <div 
+      data-drag="false"
         className={`normal-text ${styles["sidenav-heading"]} ${headingTrue ? styles["active"] : ""
           }`}
        
       >
-        <div onClick={() => headingClick(headingClickType, description)}>
+        <div data-drag="false" onClick={() => headingClick(headingClickType, description)}>
           {`${text} ${totalCount ? `(${totalCount})` : ""}`}
         </div>
         {showCollectionCreateIcon && <NestedButton type={"collection"} />}
       </div>
-      {icon && <div className="left-icon">{icon}</div>}
+      {icon && <div data-drag="false" className="left-icon">{icon}</div>}
     </div>
   );
 };

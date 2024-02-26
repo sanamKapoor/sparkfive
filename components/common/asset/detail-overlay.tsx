@@ -1,47 +1,44 @@
-import update from "immutability-helper";
-import { useContext, useEffect, useRef, useState } from "react";
-import { Rnd } from "react-rnd";
-import { AssetOps, Utilities } from "../../../assets";
-import { AssetContext, UserContext, FilterContext } from "../../../context";
-import assetApi from "../../../server-api/asset";
-import shareApi from "../../../server-api/share-collection";
-import customFileSizeApi from "../../../server-api/size";
-import toastUtils from "../../../utils/toast";
-import urlUtils from "../../../utils/url";
-import AssetAddition from "./asset-addition";
-import styles from "./detail-overlay.module.css";
-import VersionList from "./version-list";
+import update from 'immutability-helper';
+import fileDownload from 'js-file-download';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { isMobile } from 'react-device-detect';
+import { Rnd } from 'react-rnd';
 
-import { isMobile } from "react-device-detect";
-
-import { ASSET_DOWNLOAD } from "../../../constants/permissions";
+import { AssetOps, Utilities } from '../../../assets';
+import { events, shareLinkEvents } from '../../../constants/analytics';
+import { sizeToZipDownload } from '../../../constants/download';
+import { ASSET_DOWNLOAD } from '../../../constants/permissions';
+import { AssetContext, FilterContext, UserContext } from '../../../context';
+import useAnalytics from '../../../hooks/useAnalytics';
+import assetApi from '../../../server-api/asset';
+import shareApi from '../../../server-api/share-collection';
+import customFileSizeApi from '../../../server-api/size';
+import cookiesApi from '../../../utils/cookies';
+import downloadUtils from '../../../utils/download';
+import { isImageType } from '../../../utils/file';
+import toastUtils from '../../../utils/toast';
+import urlUtils from '../../../utils/url';
+import Button from '../buttons/button';
+import IconClickable from '../buttons/icon-clickable';
+import ConversationList from '../conversation/conversation-list';
+import Dropdown from '../inputs/dropdown';
+import RenameModal from '../modals/rename-modal';
+import AssetAddition from './asset-addition';
+import AssetCropImg from './asset-crop-img';
+import AssetIcon from './asset-icon';
+import AssetImg from './asset-img';
+import AssetNote from './asset-note';
+import AssetNotes from './asset-notes';
+import AssetPdf from './asset-pdf';
+import AssetRelatedFilesList from './asset-related-files-list';
+import AssetTranscript from './asset-transcript';
+import CdnPanel from './cdn-panel';
+import CropSidePanel from './crop-side-panel';
+import styles from './detail-overlay.module.css';
+import SidePanel from './detail-side-panel';
+import VersionList from './version-list';
 
 // Components
-import fileDownload from "js-file-download";
-import Button from "../buttons/button";
-import IconClickable from "../buttons/icon-clickable";
-import ConversationList from "../conversation/conversation-list";
-import RenameModal from "../modals/rename-modal";
-import AssetCropImg from "./asset-crop-img";
-import AssetIcon from "./asset-icon";
-import AssetImg from "./asset-img";
-import AssetPdf from "./asset-pdf";
-import CdnPanel from "./cdn-panel";
-import CropSidePanel from "./crop-side-panel";
-import SidePanel from "./detail-side-panel";
-
-import { isImageType } from "../../../utils/file";
-
-import AssetNote from "./asset-note";
-import AssetNotes from "./asset-notes";
-import AssetTranscript from "./asset-transcript";
-
-import Dropdown from "../inputs/dropdown";
-import AssetRelatedFilesList from "./asset-related-files-list";
-
-import downloadUtils from "../../../utils/download";
-import { sizeToZipDownload } from "../../../constants/download";
-
 const getDefaultDownloadImageType = (extension) => {
   const defaultDownloadImageTypes = [
     {
@@ -124,12 +121,12 @@ const DetailOverlay = ({
   activeFolder = "",
   initialParams,
   availableNext = true,
-  outsideDetailOverlay = false,
   sharedCode = "",
 }) => {
-  const { hasPermission } = useContext(UserContext);
-  const { user, cdnAccess, transcriptAccess } = useContext(UserContext);
+  const { user, cdnAccess, transcriptAccess, hasPermission } = useContext(UserContext);
+
   const { activeSortFilter } = useContext(FilterContext);
+  const { trackEvent, trackLinkEvent } = useAnalytics();
   const [assetDetail, setAssetDetail] = useState(undefined);
 
   const [renameModalOpen, setRenameModalOpen] = useState(false);
@@ -144,7 +141,14 @@ const DetailOverlay = ({
 
   const [activeSideComponent, setActiveSidecomponent] = useState("detail");
 
-  const { assets, setAssets, folders, needsFetch, updateDownloadingStatus, setDetailOverlayId, setOperationAssets,
+  const {
+    assets,
+    setAssets,
+    folders,
+    needsFetch,
+    updateDownloadingStatus,
+    setDetailOverlayId,
+    setOperationAssets,
     subFoldersAssetsViewList: {
       results: subcollectionAssets,
       next: nextAsset,
@@ -697,6 +701,21 @@ const DetailOverlay = ({
           updateDownloadingStatus("done", 0, 0);
         }
       }
+
+      // Track download asset event
+      if (isShare) {
+        trackLinkEvent(
+          shareLinkEvents.DOWNLOAD_SHARED_ASSET,
+          {
+            email: cookiesApi.get('shared_email') || null,
+            teamId: cookiesApi.get('teamId') || null,
+            assetId: asset.id,
+          });
+      } else {
+        trackEvent(events.DOWNLOAD_ASSET, {
+          assetId: asset.id,
+        });
+      }
     } catch (e) {
       const errorResponse = (await e.response.data.text()) || "{}";
       const parsedErrorResponse = JSON.parse(errorResponse);
@@ -744,6 +763,21 @@ const DetailOverlay = ({
     if (currentAsset >= sizeToZipDownload || currentAsset.type === "video") {
       downloadSelectedAssets(id);
     } else {
+      // Track download asset event
+      if (isShare) {
+        trackLinkEvent(
+          shareLinkEvents.DOWNLOAD_SHARED_ASSET,
+          {
+            email: cookiesApi.get('shared_email') || null,
+            teamId: cookiesApi.get('teamId') || null,
+            assetId: asset.id,
+          });
+      } else {
+        trackEvent(events.DOWNLOAD_ASSET, {
+          assetId: asset.id,
+        });
+      }
+
       downloadUtils.downloadFile(versionRealUrl, currentAsset.name);
     }
   };
@@ -874,6 +908,9 @@ const DetailOverlay = ({
       if (subcollectionAssets[newIndx]) {
         closeOverlay();
         setDetailOverlayId(subcollectionAssets[newIndx].asset.id);
+        trackEvent(events.VIEW_ASSET, {
+          assetId: subcollectionAssets[newIndx].asset.id,
+        });
         if (newIndx === subcollectionAssets.length - 1) {
           loadMore();
         }
@@ -885,6 +922,9 @@ const DetailOverlay = ({
       if (assets[newIndx]) {
         closeOverlay();
         setDetailOverlayId(assets[newIndx].asset.id);
+        trackEvent(events.VIEW_ASSET, {
+          assetId: assets[newIndx].asset.id,
+        });
         if (newIndx === assets.length - 1) {
           loadMore();
         }
@@ -973,6 +1013,7 @@ const DetailOverlay = ({
       }
     }
   };
+
   return (
     <div className={`app-overlay ${styles.container} ${isShare ? styles.share : ""}`}>
       {assetDetail && (
@@ -1038,9 +1079,13 @@ const DetailOverlay = ({
                     text={"Share"}
                     type={"button"}
                     className={`container ${styles["only-desktop-button"]} primary`}
-                    onClick={openShareAsset}
+                    onClick={() => {
+                      trackEvent(events.SHARE_ASSET, {
+                        assetId: asset.id,
+                      });
+                      openShareAsset();
+                    }}
                   />
-
                   <div className={styles["only-mobile-button"]}>
                     <IconClickable
                       additionalClass={styles["only-mobile-button"]}
@@ -1319,6 +1364,8 @@ const DetailOverlay = ({
                 onSelectChange={onSelectChange}
                 onSizeInputChange={onSizeInputChange}
                 asset={assetDetail}
+                versionRealUrl={versionRealUrl}
+                versionThumbnailUrl={versionThumbnailUrl}
                 onResetImageSize={() => {
                   resetValues();
                   setDetailPosSize({

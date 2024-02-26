@@ -34,7 +34,6 @@ import dragndropPolyfill from "../polyfills/dragndroptouch";
 // Contexts
 import { LanguageContext, ThemeContext } from "../context";
 import AssetContextProvider from "../context/asset-provider";
-import AssetContextDetailProvider from "../context/asset-detail";
 import LoadingContextProvider from "../context/loading-provider";
 import ScheduleProvider from "../context/schedule-provider";
 import ShareProvider from "../context/share-provider";
@@ -87,8 +86,9 @@ export default function MyApp({ Component, pageProps }) {
     }
   }, [router.asPath]);
 
-  return (
 
+
+  return (
     <LoadingContextProvider>
       <UserContextProvider>
         <SocketProvider>
@@ -98,23 +98,21 @@ export default function MyApp({ Component, pageProps }) {
                 <ThemeContext.Provider value={themeValue}>
                   <AssetContextProvider>
                     <TeamContextProvider>
-                      <AssetContextDetailProvider>
-                        <Head>
-                          <script
-                            type="text/javascript"
-                            src="https://www.dropbox.com/static/api/2/dropins.js"
-                            id="dropboxjs"
-                            data-app-key={process.env.DROPBOX_API_KEY}
-                          ></script>
-                        </Head>
-                        {process.env.INCLUDE_PIXEL === "yes" && <FBPixel />}
-                        {/**
+                      <Head>
+                        <script
+                          type="text/javascript"
+                          src="https://www.dropbox.com/static/api/2/dropins.js"
+                          id="dropboxjs"
+                          data-app-key={process.env.DROPBOX_API_KEY}
+                        ></script>
+                      </Head>
+                      {process.env.INCLUDE_PIXEL === "yes" && <FBPixel />}
+                      {/**
                        * todo handle Errorboundary design in refactoring later
                        */}
-                        {/* <ErrorBoundary> */}
+                      <ErrorBoundary>
                         <Component {...pageProps} />
-                        {/* </ErrorBoundary> */}
-                      </AssetContextDetailProvider>
+                      </ErrorBoundary>
                     </TeamContextProvider>
                   </AssetContextProvider>
                 </ThemeContext.Provider>

@@ -1,11 +1,27 @@
 .container {
-  padding: 0 0 0 40px;
+  padding: 0 0 0 20px;
+}
+
+.containerPortal{
+  padding: 0;
+  padding: 0 40px;
+
 }
 
 .mainContainer {
   max-width: calc(100% - 283px);
   position: relative;
   left: 283px;
+  padding: 60px 35px;
+  width: 100%;
+  top: 81px;
+  top: 15px;
+}
+
+.mainContainer-portal{
+  width:100%;
+  position: relative;
+  left: 0px;
   padding: 60px 35px;
   width: 100%;
   top: 81px;
@@ -22,6 +38,29 @@
   top: 179px;
   top: 162px;
   margin-bottom: 30px;
+  
+}
+.sidenav-main-wrapper{
+  width: 283px;
+  height:100%;
+  border-right:1px solid #DEDAD4;
+  position: fixed;
+  padding: 0 16px 0 16px;
+  top:60px;
+
+}
+
+@media (max-width:820px){
+  .sidenav-main-wrapper{
+    width: 100%;
+    background: #fff;
+    z-index: 9999;
+    height: 100%;
+    padding: 0 16px 0 16px;
+    top: 113px;
+    border:none;
+  }
+
 }
 @media screen and (max-width: 900px) {
   .container {

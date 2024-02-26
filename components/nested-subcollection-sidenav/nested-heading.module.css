@@ -73,6 +73,7 @@
     }
     .heading-mob{
         display: none;
+        display: flex;
     }
     .active{
         padding: 14px 20px;

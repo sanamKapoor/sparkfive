@@ -9,6 +9,9 @@ import NestedSidenavDropdown from "./nested-sidenav-dropdown-list";
 import NestedFirstlist from "./nested-sidenav-firstlist";
 import styles from "./nested-sidenav.module.css";
 
+import useAnalytics from "../../hooks/useAnalytics";
+import { events } from "../../constants/analytics";
+
 const NestedSidenav = ({ viewFolder }) => {
   const {
     sidebarOpen,
@@ -21,13 +24,15 @@ const NestedSidenav = ({ viewFolder }) => {
     setActiveFolder,
   } = useContext(AssetContext);
 
+  const { trackEvent } = useAnalytics();
+
   const { setActiveSortFilter, activeSortFilter } = useContext(FilterContext) as {
     setActiveSortFilter: Function;
     activeSortFilter: any;
   };
   const {
     advancedConfig,
-    user: { team },
+    user,
   } = useContext(UserContext) as { advancedConfig: any; user: any };
 
   const headingClick = (value: string, description: string) => {
@@ -57,20 +62,26 @@ const NestedSidenav = ({ viewFolder }) => {
       ["mainFilter"]: value,
       sort,
     });
+
+    trackEvent(events.VIEW_TAB, {
+      tabName: value
+    })
+    
     if (window.innerWidth < 767) {
       setSidebarOpen(false);
     }
   };
 
   return (
-    <div className={styles.nestedsidenav}>
-      <div className={styles["sidenav-content"]}>
+    <div data-drag="false" className={styles.nestedsidenav}>
+      <div  data-drag ="false" className={styles["sidenav-content"]}>
         <ReusableHeading
           customStyle={{ padding: "0px 23px 0px 0px" }}
-          text={`${team?.company}`}
+          text={`${user?.team?.company}`}
           headingClick={headingClick}
           icon={
             <img
+            data-drag="false"
               onClick={() => {
                 setSidebarOpen(!sidebarOpen);
               }}

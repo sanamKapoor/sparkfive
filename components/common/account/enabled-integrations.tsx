@@ -3,9 +3,18 @@ import { useEffect, useState } from "react";
 import userApi from "../../../server-api/user";
 import IntegrationItem from "./integration-item";
 import styles from "./integrations.module.css";
+import analyticsApi from "../../../server-api/analytics";
+import { pages } from "../../../constants/analytics";
+import useAnalytics from "../../../hooks/useAnalytics";
 
 const EnabledIntegrations = () => {
   const [integrations, setIntegrations] = useState([]);
+
+  const { pageVisit } = useAnalytics();
+
+  useEffect(() => {    
+    pageVisit(pages.INTEGRATIONS)
+  },[]);
 
   useEffect(() => {
     getIntegrations();

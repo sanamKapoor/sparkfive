@@ -1,12 +1,13 @@
-.shared-sidenav-outer {
+/* .shared-sidenav-outer {
   width: 283px;
 
   border-radius: 6px;
-  border: 1px solid #dedad4;
+
   position: fixed;
   top: 78px;
+  top:340px;
   height: 75vh;
-}
+} */
 .collection-heading {
   margin: 24px;
   cursor: pointer;
@@ -64,7 +65,7 @@
   white-space: nowrap;
 }
 .icon-description:hover {
-  overflow: visible;
+  /* overflow: visible; */
   text-overflow: visible;
   /* text-wrap: wrap; */
 }
@@ -78,7 +79,7 @@
 .active {
   background: var(--additional-color);
   border-radius: 4px;
-  padding: 6px 6px;
+  /* padding: 6px 6px; */
 }
 .sidenav-list1 {
   margin-bottom: 10px;
@@ -86,7 +87,7 @@
 .sidenavScroll {
   max-height: calc(100vh - 260px);
   overflow: auto;
-  padding: 0 24px 0 24px;
+  /* padding: 0 24px 0 24px; */
 }
 .sidenavScroll::-webkit-scrollbar {
   width: 3px;
@@ -242,7 +243,7 @@
 .active {
   background: var(--additional-color);
   border-radius: 4px;
-  padding: 7.5px;
+  /* padding: 7.5px; */
 }
 .subfolderList {
   padding: 0px 0px 0px 16px;

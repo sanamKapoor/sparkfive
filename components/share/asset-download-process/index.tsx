@@ -35,7 +35,6 @@ const AssetDownloadProcess = (props) => {
                 x
               </div>
             )}
-
             {(downloadingStatus === "zipping" || downloadingStatus === "preparing") && (
               <Line percent={downloadingPercent} strokeWidth={1} strokeColor="#fff" trailColor={"#9597a6"} />
             )}
@@ -47,17 +46,9 @@ const AssetDownloadProcess = (props) => {
           <div className={styles["zip-header"]}>Zipping {selectedAsset} assets</div>
           <div>Estimated Time: less than a minute</div>
           <div className={styles["zip-download-text"]}>Please wait - download in process</div>
-
           <div>
             <div className={`dot-flashing ${styles["zip-loading"]}`}></div>
           </div>
-
-          {/*<button*/}
-          {/*    className={styles["zip-cancel-btn"]}*/}
-          {/*    onClick={() => {*/}
-          {/*      downloadController.abort();*/}
-          {/*    }}*/}
-          {/*>Cancel</button>*/}
         </div>
       )}
     </>

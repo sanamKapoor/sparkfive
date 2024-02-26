@@ -34,6 +34,7 @@ import { initialActiveSortFilters } from "../../../config/data/filter";
 // Components
 
 const AssetsLibrary = () => {
+
   const [activeView, setActiveView] = useState("grid");
   const [showOverlayLoader, setShowOverlayLoader] = useState(false);
 
@@ -260,6 +261,7 @@ const AssetsLibrary = () => {
 
   useEffect(() => {
     if (firstLoaded && activeFolder) {
+
       setActiveSortFilter({
         ...activeSortFilter,
         mainFilter: activeFolder ? "all" : activeSortFilter.mainFilter,
@@ -283,6 +285,7 @@ const AssetsLibrary = () => {
     if (activeMode === "folders") {
       setAssets(assets.map((asset) => ({ ...asset, isSelected: false })));
     }
+
     if (activeMode === "assets") {
       setFolders(folders.map((folder) => ({ ...folder, isSelected: false })));
     }
@@ -301,6 +304,7 @@ const AssetsLibrary = () => {
       ...initialActiveSortFilters,
       ...DEFAULT_CUSTOM_FIELD_FILTERS(activeSortFilter),
     });
+
   }, [activeMode]);
 
   useEffect(() => {
@@ -318,15 +322,6 @@ const AssetsLibrary = () => {
     return () => clearTimeout(timer);
   }, [loadingAssets]);
 
-  const clearFilters = (data = {}) => {
-    setActiveSortFilter({
-      ...activeSortFilter,
-      ...DEFAULT_FILTERS,
-      ...DEFAULT_CUSTOM_FIELD_FILTERS(activeSortFilter),
-      ...data,
-    });
-  };
-
   const updateSortFilterByAdvConfig = async (params: any = {}) => {
     let defaultTab = getDefaultTab();
     const filters = Object.keys(router.query);
@@ -335,7 +330,6 @@ const AssetsLibrary = () => {
     } else if (params.mainFilter) {
       defaultTab = params.mainFilter;
     }
-
     let sort = { ...activeSortFilter.sort };
     if (defaultTab === "folders" && !params.folderId) {
       sort = advancedConfig.collectionSortView === "alphabetical" ? selectOptions.sort[3] : selectOptions.sort[1];
@@ -345,7 +339,7 @@ const AssetsLibrary = () => {
 
     setActiveSortFilter({
       ...activeSortFilter,
-      mainFilter: defaultTab,
+      mainFilter: activeFolder ? "all" : activeSubFolders ? "SubCollectionView" : defaultTab,
       sort,
     });
   };
@@ -378,11 +372,11 @@ const AssetsLibrary = () => {
         const updatedAssets = assets.map((asset, index) =>
           index === i
             ? {
-                ...asset,
-                status: "fail",
-                index,
-                error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
-              }
+              ...asset,
+              status: "fail",
+              index,
+              error: validation.UPLOAD.MAX_SIZE.ERROR_MESSAGE,
+            }
             : asset,
         );
 
@@ -433,8 +427,8 @@ const AssetsLibrary = () => {
           assets[i].dragDropFolderUpload
             ? new Date((file.lastModifiedDate || new Date(file.lastModified)).toUTCString()).toISOString()
             : new Date(
-                (file.originalFile.lastModifiedDate || new Date(file.originalFile.lastModified)).toUTCString(),
-              ).toISOString(),
+              (file.originalFile.lastModifiedDate || new Date(file.originalFile.lastModified)).toUTCString(),
+            ).toISOString(),
         );
 
         let size = totalSize;
@@ -749,15 +743,7 @@ const AssetsLibrary = () => {
       if (activeSortFilter.mainFilter !== "SubCollectionView") {
         return;
       }
-      // let sort;
-      // sort =
-      //   advancedConfig.collectionSortView === "alphabetical"
-      //     ? selectOptions.sort[3]
-      //     : selectOptions.sort[1];
-
-      // const { field, order } = sort;
       const { field, order } = activeSortFilter.sort;
-
       const { next } = subFoldersViewList;
       const queryParams = {
         page: replace ? 1 : next,
@@ -785,17 +771,7 @@ const AssetsLibrary = () => {
         return;
       }
       const { results: SubFolders } = subFoldersViewList;
-      // const obj = {
-      //   ...getAssetsSort(activeSortFilter)
-      // }
-      // let sort;
-      // sort =
-      //   advancedConfig.collectionSortView === "alphabetical"
-      //     ? selectOptions.sort[3]
-      //     : selectOptions.sort[1];
-      // const sortingString = `${sort.field},${sort.order}`;
       const { next } = subFoldersAssetsViewList;
-
       const { data: subFolderAssets } = await assetApi.getAssets({
         ...getAssetsFilters({
           replace,
@@ -817,25 +793,23 @@ const AssetsLibrary = () => {
     }
   };
 
-  const toggleSelected = (id: string) => {
+  const toggleSelected = async (id: string) => {
     if (activeMode === "assets") {
-      const assetIndex = assets.findIndex((assetItem) => assetItem.asset.id === id);
-      if (assets[assetIndex].isSelected) {
-        selectAllAssets(false);
-      }
-      setAssets(
-        update(assets, {
-          [assetIndex]: {
-            isSelected: { $set: !assets[assetIndex].isSelected },
-          },
-        }),
+      const assetIndex = assets.findIndex(
+        (assetItem) => assetItem.asset.id === id
+      );
+
+      setAssets((prev) => update(prev, {
+        [assetIndex]: {
+          isSelected: { $set: !prev[assetIndex].isSelected },
+        },
+      }),
       );
     } else if (activeMode === "folders") {
       const folderIndex = folders.findIndex((folder) => folder.id === id);
       if (folders[folderIndex].isSelected) {
         selectAllFolders(false);
       }
-
       setFolders(
         update(folders, {
           [folderIndex]: {
@@ -846,7 +820,6 @@ const AssetsLibrary = () => {
     } else if (activeMode === "SubCollectionView") {
       const assetIndex = subFoldersAssetsViewList.results.findIndex((assetItem) => assetItem.asset.id === id);
       const folderIndex = subFoldersViewList.results.findIndex((folder) => folder.id === id);
-
       if (folderIndex !== -1) {
         if (subFoldersViewList.results[folderIndex]?.isSelected) {
           setSelectedAllSubFoldersAndAssets(false);
@@ -875,7 +848,6 @@ const AssetsLibrary = () => {
         if (subFoldersAssetsViewList.results[assetIndex]?.isSelected) {
           setSelectedAllSubAssets(false);
         }
-
         setSubFoldersAssetsViewList({
           ...subFoldersAssetsViewList,
           results: update(subFoldersAssetsViewList.results, {
@@ -983,7 +955,6 @@ const AssetsLibrary = () => {
   const deleteFolder = async (id) => {
     try {
       await folderApi.deleteFolder(id);
-
       if (activeMode === "SubCollectionView") {
         const folderIndex = subFoldersViewList?.results?.findIndex((folder) => folder.id === id);
         if (folderIndex !== -1) {
@@ -1059,17 +1030,17 @@ const AssetsLibrary = () => {
       {(activeMode === "assets"
         ? selectedAssets.length
         : activeMode === "folders"
-        ? selectedFolders.length
-        : selectedSubFoldersAndAssets.folders.length || selectedSubFoldersAndAssets.assets.length) > 0 && (
-        <AssetHeaderOps
-          isUnarchive={activeSortFilter.mainFilter === "archived"}
-          isFolder={activeMode === "folders"}
-          deletedAssets={false}
-          activeMode={activeMode}
-          selectedFolders={selectedFolders}
-          selectedSubFoldersAndAssets={selectedSubFoldersAndAssets}
-        />
-      )}
+          ? selectedFolders.length
+          : selectedSubFoldersAndAssets.folders.length || selectedSubFoldersAndAssets.assets.length) > 0 && (
+          <AssetHeaderOps
+            isUnarchive={activeSortFilter.mainFilter === "archived"}
+            isFolder={activeMode === "folders"}
+            deletedAssets={false}
+            activeMode={activeMode}
+            selectedFolders={selectedFolders}
+            selectedSubFoldersAndAssets={selectedSubFoldersAndAssets}
+          />
+        )}
       {hasPermission([ASSET_ACCESS]) || hasPermission([ASSET_UPLOAD_APPROVAL]) ? (
         <>
           <main className={`${styles.container}`}>
@@ -1105,9 +1076,8 @@ const AssetsLibrary = () => {
                   )}
                 </div>
                 <div
-                  className={`${sidebarOpen ? styles["grid-wrapper-web"] : styles["grid-wrapper"]} ${
-                    activeFolder && styles["active-breadcrumb-item"]
-                  }`}
+                  className={`${sidebarOpen ? styles["grid-wrapper-web"] : styles["grid-wrapper"]} ${activeFolder && styles["active-breadcrumb-item"]
+                    }`}
                 >
                   <DropzoneProvider>
                     {advancedConfig.set && (

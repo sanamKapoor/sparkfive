@@ -1,8 +1,66 @@
 import { createContext } from "react";
+import { calculateBeginDate } from "../config/data/filter";
+import { AnalyticsLayoutSection } from "../constants/analytics";
 
 export const LoadingContext = createContext({
   isLoading: false,
   setIsLoading: (value) => { },
+});
+
+export const AnalyticsContext = createContext({
+  apiEndpoint: "",
+  activeSection: AnalyticsLayoutSection.DASHBOARD,
+  search: '',
+  filter: {
+    endDate: new Date(),
+    beginDate: calculateBeginDate(7, 1)
+  },
+  customDates: false,
+  sortBy: '',
+  sortOrder: true,
+  page: 1,
+  limit: 3,
+  error: "",
+  data: [],
+  loading: false,
+  tableLoading: false,
+  totalRecords: 0,
+  downloadCSV: false,
+  initialRender: true,
+  tableRows: 15,
+  dashboardView: false,
+  dashboardData: {},
+  sortFor: [],
+  filterFor: [],
+  customDatesFor: [],
+  errorFor: [],
+  loadingFor: [],
+  tableLoadingFor: [],
+  setActiveSection: (value) => { },
+  setApiEndpoint: (value) => { },
+  setSearch: (value) => { },
+  setFilter: (value) => { },
+  setCustomDates: (value) => { },
+  setSortBy: (value) => { },
+  setSortOrder: (value) => { },
+  setPage: (value) => { },
+  setLimit: (value) => { },
+  setError: (value) => { },
+  setData: (value) => { },
+  setLoading: (value) => { },
+  setTableLoading: (value) => { },
+  setTotalRecords: (value) => { },
+  setDownloadCSV: (value) => { },
+  setInitialRender: (value) => { },
+  setTableRows: (value) => { },
+  setDashboardView: (value) => { },
+  setSortFor: (value) => { },
+  setFilterFor: (value) => { },
+  setDashboardData: (value) => { },
+  setCustomDatesFor: (value) => { },
+  setErrorFor: (value) => { },
+  setLoadingFor: (value) => { },
+  setTableLoadingFor: (value) => { },
 });
 
 export const UserContext = createContext({
@@ -95,16 +153,7 @@ export const AssetContext = createContext({
   setUploadingType: (uploadingType) => { },
   uploadDetailOverlay: false,
   setUploadDetailOverlay: (show) => { },
-  reUploadAsset: (
-    i,
-    assets,
-    currentDataClone,
-    totalSize,
-    retryList,
-    folderId,
-    folderGroups,
-    subFolderAutoTag
-  ) => { },
+  reUploadAsset: (i, assets, currentDataClone, totalSize, retryList, folderId, folderGroups, subFolderAutoTag) => { },
 
   uploadingFileName: "",
   setUploadingFileName: (name) => { },
@@ -171,23 +220,34 @@ export const AssetContext = createContext({
 
   // Sub Collection select All Folders and assets in subCollection
   selectedAllSubFoldersAndAssets: false,
-
-
   setSelectedAllSubFoldersAndAssets: (value) => { },
   selectedAllSubAssets: false,
   setSelectedAllSubAssets: (value) => { },
   setListUpdateFlag: (value) => { },
   listUpdateFlag: false,
-  appendNewSubSidenavFolders: (inputFolders,
-    id,
-    remove,
-    removeId) => { },
+  appendNewSubSidenavFolders: (inputFolders, id, remove, removeId) => { },
   downloadController: undefined,
   setDownloadController: (controller) => { },
   currentFolder: null,
   setCurrentFolder: (value) => { },
   showSubCollectionContent: false,
-  setShowSubCollectionContent: (value) => { }
+  setShowSubCollectionContent: (value) => { },
+  history: "",
+  setHistory: (value) => { },
+  assetDragFlag: false,
+  setAssetDragFlag: (value) => { },
+  assetDragId: "",
+  setAssetDragId: (value) => { },
+  assetDragType: "",
+  setAssetDragType: (value) => { },
+  setDroppableId: (value) => { },
+  droppableId: "",
+  collectionDragFlag: false,
+  setCollectionDragFlag: (value) => { },
+  collectionDragId: "",
+  setCollectionDragId: (value) => { },
+  collectionParentDragId: "",
+  setCollectionParentDragId: (value) => { },
 });
 
 export const TeamContext = createContext({
@@ -278,13 +338,14 @@ export const FilterContext = createContext({
   renderFlag: false,
   setRenderedFlag: (val) => { },
   preparingAssets: { current: "" },
-
 });
 
 export const ShareContext = createContext({
   folderInfo: undefined,
   setFolderInfo: (folderInfo) => { },
   activePasswordOverlay: true,
+  email: "",
+  setEmail: (value) => { },
   setActivePasswordOverlay: (value) => { },
 });
 
@@ -301,21 +362,4 @@ export const GuestUploadContext = createContext({
   updateLogo: (url) => { },
   banner: "",
   setBanner: (banner) => { },
-});
-
-export const AssetDetailContext = createContext({
-  sharePath: "",
-  isShare: "",
-  asset: {},
-  realUrl: "",
-  activeFolder: "",
-  thumbnailUrl: "",
-  initialParams: {},
-  setSharePath: (data) => { },
-  setisShare: (data) => { },
-  setAsset: (record) => { },
-  setrealUrl: (data) => { },
-  setactiveFolder: (data) => { },
-  setThumbnailURL: (data) => { },
-  setInitialParam: (record) => { },
 });

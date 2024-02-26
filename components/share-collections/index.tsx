@@ -77,7 +77,6 @@ const ShareCollectionMain = () => {
       });
       // Set axios headers
       requestUtils.setAuthToken(data.token, "share-authorization");
-
       getShareInfo(true);
     } catch (err) {
       console.log(err);
@@ -111,11 +110,9 @@ const ShareCollectionMain = () => {
         setFolderInfo(err.response.data);
         setActivePasswordOverlay(true);
       }
-      console.log(err);
       if (displayError) {
         toastUtils.error("Wrong email/password or invalid link, please try again");
       }
-
       setLoading(false);
     }
   };
@@ -143,9 +140,7 @@ const ShareCollectionMain = () => {
   const setInitialLoad = async (folderInfo) => {
     if (!firstLoaded && folderInfo) {
       setFirstLoaded(true);
-
       const mode = folderInfo.singleSharedCollectionId ? "all" : "folders";
-
       let sort = { ...activeSortFilter.sort };
       if (mode === "folders") {
         sort =
@@ -153,7 +148,6 @@ const ShareCollectionMain = () => {
             ? selectOptions.sort[3]
             : selectOptions.sort[1];
       }
-
       setActiveSortFilter({
         ...activeSortFilter,
         mainFilter: folderInfo.singleSharedCollectionId ? "all" : "folders", // Set to all if only folder is shared
@@ -339,7 +333,7 @@ const ShareCollectionMain = () => {
       {!loading && (
         <main className={styles.container}>
           <TopBar
-            activeSortFilter={activeSortFilter}
+
             setActiveSortFilter={setActiveSortFilter}
             setActiveView={setActiveView}
             setActiveSearchOverlay={() => setActiveSearchOverlay(true)}
@@ -353,7 +347,6 @@ const ShareCollectionMain = () => {
               activeFolder={activeFolder}
               getFolders={getFolders}
               activeView={activeView}
-              activeSortFilter={activeSortFilter}
               toggleSelected={toggleSelected}
               isShare={true}
               mode={activeMode}

@@ -38,6 +38,7 @@ export interface ITeam {
   ocr?: boolean;
   address?: string | null;
   advancedCollectionShareLink?: boolean;
+  analytics: boolean | null;
   cdnAccess?: boolean;
   city?: string | null;
   companySize?: string;

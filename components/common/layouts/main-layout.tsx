@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import { useContext, useRef, useState } from "react";
-import { GeneralImg, Navigation } from "../../../assets";
+import { GeneralImg, Navigation, insights } from "../../../assets";
 import { ASSET_UPLOAD_APPROVAL, SETTINGS_TEAM, SUPERADMIN_ACCESS } from "../../../constants/permissions";
 import { LoadingContext, TeamContext, UserContext } from "../../../context";
 import cookiesUtils from "../../../utils/cookies";
@@ -19,14 +19,44 @@ import Notification from "../notifications/notification";
 import SpinnerOverlay from "../spinners/spinner-overlay";
 import UserPhoto from "../user/user-photo";
 
-const MainLayout = ({ children, requiredPermissions = [] }) => {
+const MainLayout = ({ children, requiredPermissions = [], headerZIndex}) => {
+  const headerStyle = {
+    zIndex: typeof headerZIndex !== 'undefined' ? headerZIndex : '1500',
+  };
+
   const { user, logOut, hasPermission, logo } = useContext(UserContext);
   const { isLoading } = useContext(LoadingContext);
   const pageListRef = useRef(null);
+  const router = useRouter();
 
   const { plan } = useContext(TeamContext);
 
   const [menuOpen, setMenuOpen] = useState(false);
+
+  let menuOptions = [
+    {
+      id: "assets",
+      label: "Assets",
+      onClick: () => { 
+        router.push("/main/assets")
+      },
+    },
+    // {
+    //   id: "templates",
+    //   label: "Templates",
+    //   onClick: () => { },
+    // },
+  ]
+
+  if(user?.team?.analytics && user?.roleId === 'admin') {
+    menuOptions.push({
+      id: "insights",
+      label: "Insights",
+      onClick: () => { 
+        router.push("/main/insights")
+      },
+    })
+  }
 
   const SettingsLink = ({ settingRef, name }) => (
     <Link href={`/main/user-settings/${settingRef}`}>
@@ -103,13 +133,13 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
     <>
       {user && (
         <>
-          <header id={"main-header"} className={styles.header}>
+          <header id={"main-header"} className={styles.header}  style={headerStyle}>
             <Link href={plan?.type === "marketing_hub" ? "/main/overview" : "/main/assets"}>
               <a>
                 <img className={styles["logo-img"]} src={logo} alt={"logo"} />
               </a>
             </Link>
-            <div className={styles["mobile-navigation-links"]}>
+            {/* <div className={styles["mobile-navigation-links"]}>
               <div onClick={() => setMenuOpen(true)}>
                 <HeaderLink
                   href={""}
@@ -123,26 +153,10 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
                 <Dropdown
                   additionalClass={styles["menu-dropdown"]}
                   onClickOutside={() => setMenuOpen(false)}
-                  options={[
-                    {
-                      id: "assets",
-                      label: "Assets",
-                      onClick: () => { },
-                    },
-                    {
-                      id: "insights",
-                      label: "Insights",
-                      onClick: () => { },
-                    },
-                    {
-                      id: "templates",
-                      label: "Templates",
-                      onClick: () => { },
-                    },
-                  ]}
+                  options={menuOptions}
                 />
               )}
-            </div>
+            </div> */}
             <ul className={styles["navigation-links"]} ref={pageListRef}>
               {plan?.type === "marketing_hub" && (
                 <HeaderLink
@@ -156,24 +170,25 @@ const MainLayout = ({ children, requiredPermissions = [] }) => {
               <HeaderLink
                 active={Router.pathname.indexOf("assets") !== -1}
                 href="/main/assets"
-                img={Router.pathname.indexOf("assets") !== -1 ? Navigation.assetsSelected : Navigation.assets}
-                imgHover={Navigation.assetsSelected}
+                img={Router.pathname.indexOf("assets") !== -1 ? insights.insightAsset : insights.insightAsset}
+                imgHover={insights.insightAsset}
                 text="Assets"
               />
-              <HeaderLink
+              
+              {(user?.team?.analytics && user?.roleId === 'admin') && <HeaderLink
                 active={Router.pathname.indexOf("insights") !== -1}
                 href="/main/insights"
-                img={Router.pathname.indexOf("insights") !== -1 ? Navigation.assetsSelected : Navigation.assets}
-                imgHover={Navigation.assetsSelected}
+                img={Router.pathname.indexOf("insights") !== -1 ? Navigation.insightSelected : Navigation.insights}
+                imgHover={Navigation.insights}
                 text="Insights"
-              />
-              <HeaderLink
+              />}
+              {/* <HeaderLink
                 active={Router.pathname.indexOf("templates") !== -1}
                 href="/main/templates"
                 img={Router.pathname.indexOf("templates") !== -1 ? Navigation.assetsSelected : Navigation.assets}
                 imgHover={Navigation.assetsSelected}
                 text="Templates"
-              />
+              /> */}
               {plan?.type === "marketing_hub" && (
                 <HeaderLink
                   active={Router.pathname.indexOf("schedule") !== -1}

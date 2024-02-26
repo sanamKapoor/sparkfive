@@ -11,6 +11,8 @@ import { BillingTabs } from "../../../../../interfaces/common/tabs";
 import Invoices from "./invoices";
 import PaymentMethod from "./payment-method";
 import Subscription from "./subscription";
+import { pages } from "../../../../../constants/analytics";
+import useAnalytics from "../../../../../hooks/useAnalytics";
 
 const SETTING_SECTIONS_CONTENT = {
   subscription: Subscription,
@@ -40,6 +42,12 @@ const Billing = () => {
   useEffect(() => {
     getPaymentMethod();
   }, []);
+
+  const { pageVisit } = useAnalytics();
+
+  useEffect(() => {    
+    pageVisit(pages.BILLING)
+  },[]);
 
   const getPaymentMethod = async () => {
     try {

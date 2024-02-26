@@ -34,7 +34,7 @@ export default ({ children }) => {
 
       // Connect success
       client.on("connect", function () {
-      console.log(`Socket init successfully`);
+        console.log(`Socket init successfully`);
 
         setSocketInstance(client);
         setConnected(true);
@@ -49,8 +49,6 @@ export default ({ children }) => {
       });
 
       client.on("error", function (e) {
-        console.log(`Error`);
-        console.log(e);
 
         setConnected(false);
         // Destroy event

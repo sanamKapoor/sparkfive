@@ -34,7 +34,9 @@
   --lighter-header-navigation-color: #374186;
   --primary-color: var(--color-prim-navy);
   --secondary-color: var(--color-prim-turquoise);
-  --additional-color: var(--color-sec-lightblue)
+  --additional-color: var(--color-sec-lightblue);
+  --color-prim-white:#ffffff;
+  --color-prim-light:#AEB0C2;
 
 }
 
@@ -63,6 +65,12 @@ body {
   height: 100%;
   /*!*overflow-x: hidden;*! THis prevent sticky*/
   /* overflow: hidden; */
+}
+
+@media (min-width:1199px){
+  body{
+    height:90vh;
+  }
 }
 
 #__next {
@@ -188,7 +196,10 @@ ul {
   /* prevents background page from scrolling when the modal is open */
 }
 
-
+.confirm{
+ min-width: 550px !important;
+ max-width: 550px!important;
+}
 
 .app-overlay {
   position: fixed;

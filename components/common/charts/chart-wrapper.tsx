@@ -14,24 +14,56 @@ const ChartWrapper = ({ chartObj, data }) => {
     }
   }, [chartObj.type]);
 
-  useEffect(() => {
-    updateChart();
+  useEffect(() => {    
+    if (chart && data.labels && data.datasets) {
+      updateChart();
+    }
   }, [data]);
 
   const drawChart = () => {
-    setChart(new Chart(ctx, { ...chartObj, data }));
+    setChart(new Chart(ctx, { ...chartObj, data, 
+      options: {
+        color: "#ffffff",
+        scales: {
+          yAxes: [{
+              ticks: {
+                  beginAtZero:true
+              }
+          }]
+        },    
+        plugins: {
+          customCanvasBackgroundColor: {
+            color: '#ffffff',
+          }
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        devicePixelRatio: 4
+      },  
+      plugins: [
+        {
+          id: 'chart',
+          beforeDraw: (chart, args, options) => {
+            const {ctx} = chart;
+            ctx.save();
+            ctx.globalCompositeOperation = 'destination-over';
+            ctx.fillStyle = options.color || '#ffffff';
+            ctx.fillRect(0, 0, chart.width, chart.height);
+            ctx.restore();
+          }
+        }, 
+      ]  
+    }));
   };
 
-  const updateChart = () => {
-    if (chart) {
-      chart.data = Object.assign({}, data);
-      chart.update();
-    }
-  };
+  const updateChart = () => {      
+    chart.data = data;
+    chart.update();
+  };  
 
   return (
     <div className={styles.wrapper} ref={wrapperRef}>
-      <canvas id="chart" width="400" height="400"></canvas>
+      <canvas id="chart" className={styles.graph}></canvas>
     </div>
   );
 };
