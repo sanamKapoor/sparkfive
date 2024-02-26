@@ -12,6 +12,7 @@ import toastUtils from "../../../../../utils/toast";
 import Input from "../../../../common/inputs/input";
 import PlanModal from "../../SuperAdmin/PlanModal";
 import OptionList from "../option-list";
+import FaceRecognitionOperations from "../../../../common/custom-settings/face-recognition-operations";
 
 interface CompanySettingsViewProps {
   onBack: () => void;
@@ -43,6 +44,7 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({ onBack, data,
     ocr: data?.ocr,
     themeCustomization: data?.themeCustomization || false,
     analytics: data?.analytics || false,
+    faceRecognition: data?.faceRecognition || false,
   });
   const [showPlanModal, setShowPlanModal] = useState<boolean>(false);
 
@@ -174,7 +176,7 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({ onBack, data,
                 </label>
                 <Input
                   id={"link"}
-                  onChange={(e) => { }}
+                  onChange={(e) => {}}
                   value={settings.subdomain}
                   additionalClasses={"font-14"}
                   placeholder={"Link URL"}
@@ -259,6 +261,7 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({ onBack, data,
         </div>
 
         <div className={`row align-flex-start ${styles.cdnEmbedding}`}>
+<<<<<<< HEAD
           <div className={"col-20 font-weight-600"}>Analytics Embedding</div>
 
           <div className={"col-20"}>
@@ -267,13 +270,29 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({ onBack, data,
               data={type}
               oneColumn={false}
               value={settings.analytics}
+=======
+          <div className={"col-20 font-weight-600"}>
+            <FaceRecognitionOperations teamId={data.id} />
+          </div>
+
+          <div className={"col-20"}>
+            <OptionList
+              setValue={(value) => setSettings({ ...settings, faceRecognition: value })}
+              data={type}
+              oneColumn={false}
+              value={settings.faceRecognition}
+>>>>>>> d6c824a35951734d6a4438a6fcaa15174188ee6d
             />
           </div>
 
           <div className={"col-20 align-self-flex-end"}></div>
         </div>
 
+<<<<<<< HEAD
         <div className={styles.featuresbtn}>
+=======
+        <div className={`${styles.featuresbtn} m-b-32`}>
+>>>>>>> d6c824a35951734d6a4438a6fcaa15174188ee6d
           <Button
             className={"container exclude-min-height primary"}
             type={"button"}

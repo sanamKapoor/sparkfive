@@ -14,6 +14,7 @@ export const DEFAULT_FILTERS = {
   filterProductType: [],
   filterCustomFields: [],
   filterResolutions: [],
+  filterFaceRecognition: [],
   allNonAiTags: "all",
   allAiTags: "all",
   allCampaigns: "all",
@@ -134,6 +135,7 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = "",
     filterFileTypes,
     filterOrientations,
     filterResolutions,
+    filterFaceRecognitions = [],
     dimensionWidth,
     dimensionHeight,
     dimensionsActive,
@@ -173,6 +175,11 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = "",
   addFilterToQuery(filters, filterFileTypes, "fileTypes");
   addFilterToQuery(filters, filterOrientations, "orientations");
   addFilterToQuery(filters, filterResolutions, "resolutions");
+
+  console.log(`>>> Check filterFaceRecognitions`, userFilterObject);
+  if (filterFaceRecognitions.length > 0) {
+    filters.faceRecognitions = filterFaceRecognitions.map((face) => face.id).join(",");
+  }
 
   Object.keys(userFilterObject).map((key) => {
     // Custom fields key
@@ -296,21 +303,13 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = "",
   if (dateUploaded) {
     if (dateUploaded.beginDate) {
       const bd = new Date(dateUploaded.beginDate);
-      const newBeginDate = new Date(
-        bd.getFullYear(),
-        bd.getMonth(),
-        bd.getDate()
-      );
+      const newBeginDate = new Date(bd.getFullYear(), bd.getMonth(), bd.getDate());
 
       filters.beginDate = new Date(newBeginDate.toUTCString()).toISOString();
     }
     if (dateUploaded.endDate) {
       const ed = new Date(dateUploaded.endDate);
-      const newEndDate = new Date(
-        ed.getFullYear(),
-        ed.getMonth(),
-        ed.getDate()
-      );
+      const newEndDate = new Date(ed.getFullYear(), ed.getMonth(), ed.getDate());
 
       filters.endDate = new Date(newEndDate.toUTCString()).toISOString();
     }
@@ -319,28 +318,16 @@ export const getAssetsFilters = ({ replace, userFilterObject, activeFolder = "",
   if (lastUpdated) {
     if (lastUpdated.beginDate) {
       const ld = new Date(lastUpdated.beginDate);
-      const newBeginDate = new Date(
-        ld.getFullYear(),
-        ld.getMonth(),
-        ld.getDate()
-      );
+      const newBeginDate = new Date(ld.getFullYear(), ld.getMonth(), ld.getDate());
 
-      filters.fileModifiedBeginDate = new Date(
-        newBeginDate.toUTCString()
-      ).toISOString();
+      filters.fileModifiedBeginDate = new Date(newBeginDate.toUTCString()).toISOString();
     }
 
     if (lastUpdated.endDate) {
       const ed = new Date(lastUpdated.endDate);
-      const newEndDate = new Date(
-        ed.getFullYear(),
-        ed.getMonth(),
-        ed.getDate()
-      );
+      const newEndDate = new Date(ed.getFullYear(), ed.getMonth(), ed.getDate());
 
-      filters.fileModifiedEndDate = new Date(
-        newEndDate.toUTCString()
-      ).toISOString();
+      filters.fileModifiedEndDate = new Date(newEndDate.toUTCString()).toISOString();
     }
   }
 

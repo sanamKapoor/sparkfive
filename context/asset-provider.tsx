@@ -151,6 +151,9 @@ export default ({ children }) => {
   const [collectionDragId, setCollectionDragId] = useState("");
   const [collectionParentDragId, setCollectionParentDragId] = useState("");
 
+  const [faceRecognitionScanning, setFaceRecognitionScanning] = useState(false);
+  const [faceRecognitionScanningPercent, setFaceRecognitionScanningPercent] = useState(0);
+
   const setPlaceHolders = (type, replace = true) => {
     if (type === "asset") {
       if (replace) setAssets(Array(10).fill(loadingDefaultAsset));
@@ -560,8 +563,16 @@ export default ({ children }) => {
         }
       });
 
-      socket.on("downloadFilesProgress", function (data) {
+      socket.on("downloadFilesProgress", function (data: any) {
         setDownloadingPercent(data.percent);
+      });
+
+      socket.on("faceRecognitionScanningProgress", function (data: any) {
+        if (data.status === "scanning") {
+          setFaceRecognitionScanningPercent(data.percent);
+        } else {
+          setFaceRecognitionScanning(false);
+        }
       });
     }
   }, [socket, connected]);
@@ -701,7 +712,10 @@ export default ({ children }) => {
     collectionDragId,
     setCollectionDragId,
     collectionParentDragId,
-    setCollectionParentDragId
+    setCollectionParentDragId,
+    faceRecognitionScanningPercent,
+    faceRecognitionScanning,
+    setFaceRecognitionScanning,
   };
   return <AssetContext.Provider value={assetsValue}>{children}</AssetContext.Provider>;
 };

@@ -406,6 +406,10 @@ input[role="combobox"] {
   object-fit: contain;
 }
 
+.theme-stroke-icon{
+  stroke: var(--primary-color);
+}
+
 .theme-icon{
   fill: var(--primary-color);
 }
