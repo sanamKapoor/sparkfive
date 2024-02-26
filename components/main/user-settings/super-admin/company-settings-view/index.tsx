@@ -261,7 +261,6 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({ onBack, data,
         </div>
 
         <div className={`row align-flex-start ${styles.cdnEmbedding}`}>
-<<<<<<< HEAD
           <div className={"col-20 font-weight-600"}>Analytics Embedding</div>
 
           <div className={"col-20"}>
@@ -270,29 +269,13 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({ onBack, data,
               data={type}
               oneColumn={false}
               value={settings.analytics}
-=======
-          <div className={"col-20 font-weight-600"}>
-            <FaceRecognitionOperations teamId={data.id} />
-          </div>
-
-          <div className={"col-20"}>
-            <OptionList
-              setValue={(value) => setSettings({ ...settings, faceRecognition: value })}
-              data={type}
-              oneColumn={false}
-              value={settings.faceRecognition}
->>>>>>> d6c824a35951734d6a4438a6fcaa15174188ee6d
             />
           </div>
 
           <div className={"col-20 align-self-flex-end"}></div>
         </div>
 
-<<<<<<< HEAD
         <div className={styles.featuresbtn}>
-=======
-        <div className={`${styles.featuresbtn} m-b-32`}>
->>>>>>> d6c824a35951734d6a4438a6fcaa15174188ee6d
           <Button
             className={"container exclude-min-height primary"}
             type={"button"}

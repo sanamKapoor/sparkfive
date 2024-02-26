@@ -149,15 +149,11 @@ const DetailOverlay = ({
     updateDownloadingStatus,
     setDetailOverlayId,
     setOperationAssets,
-<<<<<<< HEAD
     subFoldersAssetsViewList: {
       results: subcollectionAssets,
       next: nextAsset,
       total: totalAssets,
     },
-=======
-    subFoldersAssetsViewList: { results: subcollectionAssets, next: nextAsset, total: totalAssets },
->>>>>>> d6c824a35951734d6a4438a6fcaa15174188ee6d
     activeSubFolders,
     setSubFoldersAssetsViewList,
     subFoldersViewList,
@@ -1311,7 +1307,6 @@ const DetailOverlay = ({
           </div>
         </section>
       )}
-<<<<<<< HEAD
       {
         sideOpen && (
           <section className={styles.side}>
@@ -1397,70 +1392,6 @@ const DetailOverlay = ({
                   setAssetDetail({
                     ...assetDetail,
                     fileAssociations: updatedAssets,
-=======
-      {sideOpen && (
-        <section className={styles.side}>
-          {assetDetail && activeSideComponent === "detail" && (
-            <>
-              {mode === "detail" && (
-                <SidePanel
-                  asset={assetDetail}
-                  updateAsset={updateAsset}
-                  setAssetDetail={setAssetDetail}
-                  isShare={isShare}
-                  closeOverlay={closeOverlay}
-                />
-              )}
-            </>
-          )}
-          {assetDetail && activeSideComponent === "attributes" && (
-            <>
-              {mode === "detail" && (
-                <AttributeSidePanel
-                  asset={assetDetail}
-                  updateAsset={updateAsset}
-                  setAssetDetail={setAssetDetail}
-                  isShare={isShare}
-                />
-              )}
-            </>
-          )}
-
-          {assetDetail && activeSideComponent === "folder" && (
-            <>
-              {mode === "detail" && (
-                <FolderSidePanel
-                  asset={assetDetail}
-                  updateAsset={updateAsset}
-                  setAssetDetail={setAssetDetail}
-                  isShare={isShare}
-                />
-              )}
-            </>
-          )}
-          {activeSideComponent === "download" && (
-            <CropSidePanel
-              isShare={isShare}
-              sharePath={sharePath}
-              imageType={imageType}
-              onImageTypeChange={(type) => {
-                setImageType(type);
-              }}
-              downloadImageTypes={downloadImageTypes}
-              presetTypes={presetTypes}
-              presetTypeValue={preset}
-              sizes={sizes}
-              sizeValue={size}
-              mode={mode}
-              widthOriginal={width}
-              heightOriginal={height}
-              onModeChange={(mode) => {
-                setMode(mode);
-                if (mode === "crop") {
-                  setSizeOfCrop({
-                    width: Math.round(width / 2),
-                    height: Math.round(height / 2),
->>>>>>> d6c824a35951734d6a4438a6fcaa15174188ee6d
                   });
                 }
               }}
