@@ -106,7 +106,7 @@ const AssetGrid = ({
   const parentFolder = useRef("")
 
   const ref = useRef(null);
-  const selectionArea = useRef(null);
+  const selectionArea = useRef({});
   const selectableItemsRef = useRef<Box[]>([]);
   const elementsContainerRef = useRef<HTMLDivElement | null>(null);
   const elementsAssetContainerRef = useRef<HTMLDivElement | null>(null);
@@ -464,8 +464,7 @@ const AssetGrid = ({
       });
       selectAllFolders(false);
       setFolders(updatedFolders);
-    }
-    else if (mode === "SubCollectionView") {
+    } else if (mode === "SubCollectionView") {
       if (results.length !== 0 && subFoldersAssetsViewList.results.length === 0) {
         setSelectedAllSubFoldersAndAssets(false)
         setSelectedAllSubAssets(false)
@@ -505,6 +504,7 @@ const AssetGrid = ({
         });
       }
     }
+    selectionArea.current = {};
   }
 
   //library initialization
@@ -512,7 +512,7 @@ const AssetGrid = ({
     eventsElement: document.getElementById("__next"),
     onSelectionChange,
     shouldStartSelecting: (target) => {
-      const dragValue = target.dataset.drag
+      const dragValue = target?.dataset?.drag
       const isDraggable = dragValue === "false" ? false : true; // Adjust the condition based on your needs
       return isDraggable;
     },
@@ -631,14 +631,6 @@ const AssetGrid = ({
     setDroppableId("")
   };
 
-  const isAdmin = () => {
-    return user?.role?.id === "admin" || user?.role?.id === "super_admin";
-  };
-
-  // Helper function to determine if the item is draggable
-  const isDraggable = () => {
-    return isAdmin();
-  };
 
   // Helper function to handle drag start
   const handleDragStart = (e, folder) => {
@@ -664,9 +656,7 @@ const AssetGrid = ({
   }
   // Helper function to handle drop (assuming onDragDrop is your drop handler)
   const handleDrop = (e) => {
-    if (isAdmin()) {
-      onDragDrop(e);
-    }
+    onDragDrop(e);
   };
 
   const moveCollection = async () => {
@@ -819,7 +809,7 @@ const AssetGrid = ({
                             id={assetItem.asset?.id}
                             onClick={(e) => handleFocusChange(e, assetItem.asset.id)}
                             style={{ width: `$${widthCard} px` }}
-                            draggable={isDraggable()}
+                            draggable={isShare ? false : true}
                             onDragStart={(e) => handleAssetDragStart(e)}
                             onDragOver={(ev) => ev.preventDefault()}
                             onDrop={e => { handleAssetDrop(e) }}
@@ -864,7 +854,7 @@ const AssetGrid = ({
                     {sortedFolders.map((folder, index) => {
                       return (
                         <li
-                          draggable={isDraggable()}
+                          draggable={isShare ? false : true}
                           onDragStart={(e) => handleDragStart(e, folder)}
                           onDragOver={(ev) => ev.preventDefault()}
                           onDrop={(e) => handleDrop(e)}

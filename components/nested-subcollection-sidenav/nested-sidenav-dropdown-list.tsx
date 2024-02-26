@@ -363,17 +363,17 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
 
   // handling the move Collection in side bar only 
   const handleDragEnd = () => {
-    if (isAdmin()) {
-      if (droppableId && childFolderId.current && droppableId !== childFolderId.current) {
-        setMoveModalFlag(true);
-      } else if (droppableId && childFolderId.current === droppableId) {
-        moveCollectionError("You can't move collection into a same collection");
-      } else if (!droppableId && draggable.current) {
-        moveCollectionError("You can't move collection into a subcollection");
-      } else if (!draggable.current && droppableId) {
-        moveCollectionError("You can't move collection with a sub-collection");
-      }
+    // if (isAdmin()) {
+    if (droppableId && childFolderId.current && droppableId !== childFolderId.current) {
+      setMoveModalFlag(true);
+    } else if (droppableId && childFolderId.current === droppableId) {
+      moveCollectionError("You can't move collection into a same collection");
+    } else if (!droppableId && draggable.current) {
+      moveCollectionError("You can't move collection into a subcollection");
+    } else if (!draggable.current && droppableId) {
+      moveCollectionError("You can't move collection with a sub-collection");
     }
+    // }
   };
 
   const filterFolderInList = (folderList, updatedFolder) => {
@@ -421,14 +421,14 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
 
   // For assets drop only and collection Drop from main listing page to sidebar 
   const handleDrop = (e) => {
-    if (isAdmin() && assetDragFlag) {
+    if (assetDragFlag) {
       if (assetDragId && droppableId) {
         setAssetModalFlag(true);
         setActionType((assetDragType === 'move' || activeFolder !== "") ? 'move' : 'copy');
       } else {
         moveCollectionError('Could not move/copy assets, please try again later.');
       }
-    } else if (isAdmin() && collectionDragFlag) {
+    } else if (collectionDragFlag) {
       if (collectionDragId && droppableId) {
         if (collectionDragId === droppableId) {
           moveCollectionError("You can't move collection into a same collection");

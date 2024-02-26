@@ -207,9 +207,9 @@ const AssetHeaderOps = ({
       } else if (selectedSubFoldersAndAssets.assets.length > 0) {
         totalDownloadingAssets = selectedSubFoldersAndAssets.assets.length;
         payload.assetIds = selectedSubFoldersAndAssets.assets.map(
-          (assetItem) => {            
+          (assetItem) => {
             // Track assets download event
-            if(isShare){
+            if (isShare) {
               trackLinkEvent(
                 shareLinkEvents.DOWNLOAD_SHARED_ASSET,
                 {
@@ -222,16 +222,16 @@ const AssetHeaderOps = ({
                 assetId: assetItem.asset.id,
               });
             }
-           
+
 
             return assetItem.asset.id
           }
         );
-      } else {        
+      } else {
         totalDownloadingAssets = selectedAssets.length;
         payload.assetIds = selectedAssets.map((assetItem) => {
           // Track assets download event
-          if(isShare){
+          if (isShare) {
             trackLinkEvent(
               shareLinkEvents.DOWNLOAD_SHARED_ASSET,
               {
@@ -302,7 +302,7 @@ const AssetHeaderOps = ({
       } else {
         associateAssets = selectedAssets;
       }
-      
+
       const assetIds = associateAssets.map((assetItem) => assetItem.asset.id);
       if (assetIds?.length > 1) {
         const assetsToAssociate = associateAssets.filter(
@@ -704,7 +704,6 @@ const AssetHeaderOps = ({
       },
     },
   ];
-
   return (
     <div className={styles.bar}>
       <div className={styles.wrapper}>

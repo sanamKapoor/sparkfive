@@ -166,7 +166,7 @@ export default function SharedPageSidenav({ viewFolder, headingClick, sharePath 
                     {item?.childFolders?.length > 0 ? (
                       <div className={styles.clickable} onClick={() => toggleDropdown(index, item, true)}>
                         <img
-                        data-drag="false"
+                          data-drag="false"
                           className={showDropdown[index] ? styles.iconClick : styles.rightIcon}
                           src={Utilities.caretRightSolid}
                         />
@@ -175,7 +175,7 @@ export default function SharedPageSidenav({ viewFolder, headingClick, sharePath 
                       <div className={styles.emptyBox}></div>
                     )}
                     <li
-                    data-drag="false"
+                      data-drag="false"
                       key={index}
                       className={`${styles["list1-description"]} ${styles["border-bottom"]} 
                       ${((item.id === activeSubFolders)) ? styles.active : ""}`}
@@ -225,12 +225,6 @@ export default function SharedPageSidenav({ viewFolder, headingClick, sharePath 
                                           setSidebarOpen(false);
                                         }
                                       }}
-                                    // onClick={() => {
-                                    //   vewFolderSidenavStateActive(record.id,
-                                    //     false,
-                                    //     item.id,
-                                    //     record.name, record)
-                                    // }}
                                     >
                                       <div data-drag="false" className={styles.dropdownIcons}>
                                         <img

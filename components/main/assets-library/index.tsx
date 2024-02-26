@@ -87,8 +87,6 @@ const AssetsLibrary = () => {
     selectedAllSubAssets,
     setSelectedAllSubAssets,
     setListUpdateFlag,
-    currentFolder,
-    setCurrentFolder,
     showSubCollectionContent,
     setShowSubCollectionContent,
   } = useContext(AssetContext);
@@ -106,7 +104,6 @@ const AssetsLibrary = () => {
     loadCampaigns,
     term,
     searchFilterParams,
-    renderFlag,
   } = useContext(FilterContext) as any;
 
   const { advancedConfig, hasPermission } = useContext(UserContext) as any;
@@ -261,7 +258,6 @@ const AssetsLibrary = () => {
 
   useEffect(() => {
     if (firstLoaded && activeFolder) {
-
       setActiveSortFilter({
         ...activeSortFilter,
         mainFilter: activeFolder ? "all" : activeSortFilter.mainFilter,
@@ -285,7 +281,6 @@ const AssetsLibrary = () => {
     if (activeMode === "folders") {
       setAssets(assets.map((asset) => ({ ...asset, isSelected: false })));
     }
-
     if (activeMode === "assets") {
       setFolders(folders.map((folder) => ({ ...folder, isSelected: false })));
     }
@@ -298,13 +293,11 @@ const AssetsLibrary = () => {
     if (selectedAllSubAssets) {
       setSelectedAllSubAssets(false);
     }
-
     setActiveSortFilter({
       ...activeSortFilter,
       ...initialActiveSortFilters,
       ...DEFAULT_CUSTOM_FIELD_FILTERS(activeSortFilter),
     });
-
   }, [activeMode]);
 
   useEffect(() => {
