@@ -188,3 +188,8 @@
         top: 10px;
     }
 }
+@media (min-width:1026px) and (max-width: 1399px) {
+    .search-content {
+        width: 210px;
+    }
+}
