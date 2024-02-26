@@ -617,9 +617,10 @@ const ShareFolderMain = () => {
         >
           {getSidebarRender() && sidebarOpen && (
             <div className={`${styles["sidenav-main-wrapper"]}`}>
-              <NestedFirstlist sharePath={sharePath} />
+               <NestedFirstlist sharePath={sharePath} />
+              
               <SharedPageSidenav viewFolder={viewFolder} headingClick={headingClick} sharePath={sharePath} />
-            </div>
+           </div>
           )}
           <TopBar
             activeSearchOverlay={activeSearchOverlay}
