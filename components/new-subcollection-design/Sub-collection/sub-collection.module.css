@@ -307,3 +307,13 @@
     padding: 0 20px;
 
   }
+
+  @media (min-width:600px) and (max-width:999px){
+  .collection-filter-wrap{
+    width: 100% !important;
+    top:250!important;
+
+  }
+
+
+  }
