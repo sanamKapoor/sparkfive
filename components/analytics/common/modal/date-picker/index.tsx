@@ -1,13 +1,13 @@
-import React from 'react'
-import DayPickerInput from "react-day-picker/DayPickerInput"
-import modalStyles from "./date-picker.module.css"
+import React from "react";
+import DayPickerInput from "react-day-picker/DayPickerInput";
+import modalStyles from "./date-picker.module.css";
 import styles from "../../date-filter/date-filter.module.css";
 
 import { Utilities } from "../../../../../assets";
-import { insights } from "../../../../../assets"
-import IconClickable from '../../../../common/buttons/icon-clickable'
-import Button from '../../../../common/buttons/button'
-import { calculateBeginDate } from '../../../../../config/data/filter';
+import { insights } from "../../../../../assets";
+import IconClickable from "../../../../common/buttons/icon-clickable";
+import Button from "../../../../common/buttons/button";
+import { calculateBeginDate } from "../../../../../config/data/filter";
 import DateUtils from "../../../../../utils/date";
 
 const DatePickerModal = ({
@@ -29,48 +29,47 @@ const DatePickerModal = ({
   setCustomDates,
   customDates,
   tabView,
-  mobileView
+  mobileView,
 }) => {
-
   const closePopup = () => {
-    if(mobileView) setMobileView(false)
-    if(tabView) setTabView(false)
-  }
+    if (mobileView) setMobileView(false);
+    if (tabView) setTabView(false);
+  };
 
   const handleRadioSelect = (filter, days) => {
-    if (filter) setActiveFilter(filter)
-    if (days) setActiveDays(days)
-    if (showCustomRange) setShowCustomRange(false)
-    if (customDates) setCustomDates(false)
-  }
+    if (filter) setActiveFilter(filter);
+    if (days) setActiveDays(days);
+    if (showCustomRange) setShowCustomRange(false);
+    if (customDates) setCustomDates(false);
+  };
 
   const handleApplyDate = () => {
-    if (activeFilter !== 'custom') {
+    if (activeFilter !== "custom") {
       setFilter({
         endDate: new Date(),
         beginDate: calculateBeginDate(activeDays, 1),
       });
     } else {
-      handleApplyCustomDate()
+      handleApplyCustomDate();
     }
-  }
+  };
 
   const handleCancelDates = () => {
-    if(showCustomRange){
+    if (showCustomRange) {
       setCustomDateVal({
         endDate: "",
         beginDate: "",
-      })
+      });
     }
-    closePopup()
-  }
+    closePopup();
+  };
 
   const handleCustomDateRadio = () => {
-    setActiveFilter('custom')
-    setShowCustomRange(true)
-  }
+    setActiveFilter("custom");
+    setShowCustomRange(true);
+  };
 
-  const outterClass = tabView ? '' : `${modalStyles.backdrop}`;
+  const outterClass = tabView ? "" : `${modalStyles.backdrop}`;
   const innerClass = tabView ? `${styles["date-picker-wrapper"]}` : `${modalStyles["modal-outer"]}`;
 
   return (
@@ -79,11 +78,7 @@ const DatePickerModal = ({
         <div className={`${styles["date-picker-top"]}`}>
           <div className={`${styles["left-side"]}`}>Date Range</div>
           <div className={`${styles["right-side"]}`}>
-            <IconClickable
-              src={insights.insightClose}
-              additionalClass={styles["close-icon"]}
-              onClick={closePopup}
-            />
+            <IconClickable src={insights.insightClose} additionalClass={styles["close-icon"]} onClick={closePopup} />
           </div>
         </div>
 
@@ -145,9 +140,9 @@ const DatePickerModal = ({
           </div>
         </div>
 
-        {showCustomRange &&
+        {showCustomRange && (
           <div className={`${styles["date-filters"]}`}>
-            <div className={modalStyles.custom}>
+            <div className={modalStyles.customFrom}>
               <label className={styles.label} htmlFor="">
                 From Date
               </label>
@@ -185,20 +180,16 @@ const DatePickerModal = ({
               />
             </div>
           </div>
-        }
+        )}
 
         {dateError && <small className={`${modalStyles.small}`}>{dateError}</small>}
         <div className={`${styles["datepicker-buttons-outer"]}`}>
           <Button text={"Cancel"} className={"cancel-btn"} onClick={handleCancelDates}></Button>
-          <Button
-            text={"Apply"}
-            className='apply-btn'
-            onClick={handleApplyDate}
-          ></Button>
+          <Button text={"Apply"} className="apply-btn" onClick={handleApplyDate}></Button>
         </div>
       </section>
     </div>
-  )
-}
+  );
+};
 
-export default DatePickerModal
+export default DatePickerModal;
