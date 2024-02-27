@@ -66,7 +66,6 @@ const DatePickerModal = ({
   }
 
   const handleCustomDateRadio = () => {
-    handleCancelDates()
     setActiveFilter('custom')
     setShowCustomRange(true)
   }
@@ -148,7 +147,7 @@ const DatePickerModal = ({
 
         {showCustomRange &&
           <div className={`${styles["date-filters"]}`}>
-            <div className={styles.dummy}>
+            <div className={modalStyles.custom}>
               <label className={styles.label} htmlFor="">
                 From Date
               </label>
@@ -167,7 +166,7 @@ const DatePickerModal = ({
                 }}
               />
             </div>
-            <div className={styles.dummy}>
+            <div className={modalStyles.custom}>
               <label className={styles.label} htmlFor="">
                 To Date
               </label>
