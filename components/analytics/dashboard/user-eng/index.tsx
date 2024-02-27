@@ -23,8 +23,13 @@ const UserEngagment = ({ initialData }) => {
       setEmptyRows(Array.from({ length: Math.max(DASHBOARD_TABLE_REC_LEN - (data ? data.length : 0), 0) }, (_, index) => ({})));
       setTotalUsers(totalRecords);
       setTotalUsersData(data);
+    } else {
+      if(!loading){
+        setTotalUsers(0)
+        setTotalUsersData([])
+      }
     }
-  }, [totalRecords, data]);
+  }, [totalRecords, data, loading]);
 
   const handleClearSorting = () => {
     setSortBy("");

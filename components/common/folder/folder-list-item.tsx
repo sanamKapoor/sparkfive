@@ -103,8 +103,6 @@ const FolderListItem = ({
     if (sharePath) {
       filters["sharePath"] = sharePath;
     }
-
-    console.log({ payload });
     
     const { data } = await api.downloadFoldersAsZip(payload, filters);
 

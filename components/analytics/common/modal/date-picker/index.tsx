@@ -154,9 +154,9 @@ const DatePickerModal = ({
               <DayPickerInput
                 onDayChange={(day) => handleStartDay(day)}
                 value={
-                  customDateVal.beginDate !== null
+                  customDateVal.beginDate
                     ? DateUtils.parseDateToStringForAnalytics(customDateVal.beginDate)
-                    : ""
+                    : "MM/DD/YY"
                 }
                 dayPickerProps={{
                   disabledDays: {
@@ -173,7 +173,7 @@ const DatePickerModal = ({
               <DayPickerInput
                 onDayChange={(day) => handleEndDay(day)}
                 value={
-                  customDateVal.endDate !== null ? DateUtils.parseDateToStringForAnalytics(customDateVal.endDate) : ""
+                  customDateVal.endDate ? DateUtils.parseDateToStringForAnalytics(customDateVal.endDate) : "MM/DD/YY"
                 }
                 dayPickerProps={{
                   className: styles.calendar,

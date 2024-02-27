@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import Dashboard from "../../../components/analytics/dashboard";
 import InsightsLayout from "../../../components/common/layouts/insights-layout";
 import { calculateBeginDate } from "../../../config/data/filter";
-import { DashboardSections, pages } from "../../../constants/analytics";
+import { DASHBOARD_ASSET_TABLE_REC_LEN, DASHBOARD_REC_LIMIT, DashboardSections, pages } from "../../../constants/analytics";
 import { SOMETHING_WENT_WRONG } from "../../../constants/messages";
 import { UserContext } from "../../../context";
 import useAnalytics from "../../../hooks/useAnalytics";
@@ -60,7 +60,7 @@ export async function getServerSideProps({ req, res, query }) {
       payload = {
         ...payload,
         page: 1,
-        limit: DashboardSections[endpoint] === DashboardSections.ASSET ? 9 : 6,
+        limit: DashboardSections[endpoint] === DashboardSections.ASSET ? DASHBOARD_ASSET_TABLE_REC_LEN : DASHBOARD_REC_LIMIT,
         sortBy: "",
         sortOrder: true,
       }

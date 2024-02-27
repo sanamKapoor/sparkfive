@@ -20,8 +20,13 @@ const TopAssets = ({ initialData }) => {
       setEmptyRows(Array.from({ length: Math.max(DASHBOARD_ASSET_TABLE_REC_LEN - (data ? data.length : 0), 0) }, (_, index) => ({})));
       setTotalAssets(totalRecords);
       setTotalAssetsData(data);
+    } else {
+      if(!loading){
+        setTotalAssets(0)
+        setTotalAssetsData([])
+      }
     }
-  }, [totalRecords, data]);
+  }, [totalRecords, data, loading]);
 
   const handleClearSorting = () => {
     setSortBy("");

@@ -32,6 +32,8 @@ import AssetThumbail from './asset-thumbail';
 import AssetUpload from './asset-upload';
 import DetailOverlay from './detail-overlay';
 import FolderTableHeader from './Folder-table-header/folder-table-header';
+import { events } from '../../../constants/analytics';
+import useAnalytics from '../../../hooks/useAnalytics';
 
 interface Box {
   left: number;
@@ -100,6 +102,7 @@ const AssetGrid = ({
   const { advancedConfig, hasPermission, user } = useContext(UserContext);
   const { activeSortFilter } = useContext(FilterContext);
   const { setIsLoading } = useContext(LoadingContext);
+  const { trackEvent } = useAnalytics();
 
   // Ref values
   const childFolder = useRef("")
@@ -293,6 +296,7 @@ const AssetGrid = ({
 
   const downloadSelectedAssets = async (id) => {
     try {
+
       let payload = {
         assetIds: [id],
       };
@@ -330,6 +334,9 @@ const AssetGrid = ({
   };
 
   const downloadAsset = (assetItem) => {
+    trackEvent(events.DOWNLOAD_ASSET, {
+      assetId: assetItem.asset.id,
+    });
     if (assetItem.asset.size >= sizeToZipDownload) {
       downloadSelectedAssets(assetItem.asset.id);
     } else {
