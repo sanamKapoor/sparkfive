@@ -553,6 +553,7 @@ console
     min-width: fit-content;
     height:26px;
     font-size: 10px;
+    display: none;
   }
 }
 

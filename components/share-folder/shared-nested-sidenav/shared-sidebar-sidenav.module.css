@@ -412,6 +412,12 @@
     padding: 0;
   }
 }
+@media (min-width:1080px) and (max-width:1600px){
+  .sidenav-list1 {
+    max-height: 46vh;
+  }
+  
+}
 
 @media (max-width:490px){
   .shared-sidenav-outer{

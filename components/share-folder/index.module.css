@@ -146,3 +146,10 @@
   }
   
 }
+
+@media (max-width:600px){
+  .col-wrapperview{
+    padding-top: 0 !important;
+  }
+
+}

@@ -154,10 +154,13 @@ const SubCollection = ({
     }
   };
 
-  //Handle the dynamically stopage of filters at top of page position on scroll down
+  // Handle the dynamically stopage of filters at top of page position on scroll down
   const getStyling = (): CSSProperties => {
-    return isSticky ? { position: "fixed", width: "calc(100% - 350px)", top: bottom1, zIndex: 1200 } : {};
+    return isSticky ? { position: "fixed", top: bottom1, zIndex: 1200, width: "calc(100% - 350px)",   } : {};
   };
+
+
+
   //Handle the selctable Item for the drag selct area at initial load and load more functionality
   useEffect(() => {
     let liElements, containerRect; // Declare liElements in the outer scope
