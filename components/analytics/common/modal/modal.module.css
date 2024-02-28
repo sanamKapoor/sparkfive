@@ -146,14 +146,13 @@
   }
   .modal-chart-container{
     height:600px;
-    margin-top: 55px;
+    margin-top: 50px;
   }
   @media (min-width:1970px){
     .modal-chart-container{
       height:800px;
-      margin-top: 55px;
+      margin-top: 50px;
     }
-
   }
   .close-mob{
     position: absolute;

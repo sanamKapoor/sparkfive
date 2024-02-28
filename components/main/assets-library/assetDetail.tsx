@@ -33,12 +33,15 @@ import { sizeToZipDownload } from '../../../constants/download';
 import { ASSET_DOWNLOAD } from '../../../constants/permissions';
 import { AssetContext, FilterContext, ShareContext, UserContext } from '../../../context';
 import assetApi from '../../../server-api/asset';
+import cookiesApi from '../../../utils/cookies';
 import shareApi from '../../../server-api/share-collection';
 import customFileSizeApi from '../../../server-api/size';
 import downloadUtils from '../../../utils/download';
 import { isImageType } from '../../../utils/file';
 import toastUtils from '../../../utils/toast';
 import urlUtils from '../../../utils/url';
+import { events, shareLinkEvents } from '../../../constants/analytics';
+import useAnalytics from '../../../hooks/useAnalytics';
 
 // Components
 const getDefaultDownloadImageType = (extension) => {
@@ -156,6 +159,7 @@ const DetailOverlay = ({
     const { folderInfo } = useContext(ShareContext);
 
     const { activeSortFilter } = useContext(FilterContext);
+    const { trackEvent, trackLinkEvent } = useAnalytics();
 
     const [assetDetail, setAssetDetail] = useState(undefined);
 
@@ -716,6 +720,21 @@ const DetailOverlay = ({
                     updateDownloadingStatus("done", 0, 0);
                 }
             }
+
+            // Track download asset event
+            if (isShare) {
+                trackLinkEvent(
+                    shareLinkEvents.DOWNLOAD_SHARED_ASSET,
+                    {
+                        email: cookiesApi.get('shared_email') || null,
+                        teamId: cookiesApi.get('teamId') || null,
+                        assetId: asset.id,
+                    });
+            } else {
+                trackEvent(events.DOWNLOAD_ASSET, {
+                    assetId: asset.id,
+                });
+            }
         } catch (e) {
             const errorResponse = (await e?.response?.data?.text()) || "{}";
             const parsedErrorResponse = JSON.parse(errorResponse);
@@ -762,6 +781,20 @@ const DetailOverlay = ({
         if (currentAsset >= sizeToZipDownload || currentAsset.type === "video") {
             downloadSelectedAssets(id);
         } else {
+            if (isShare) {
+                trackLinkEvent(
+                    shareLinkEvents.DOWNLOAD_SHARED_ASSET,
+                    {
+                        email: cookiesApi.get('shared_email') || null,
+                        teamId: cookiesApi.get('teamId') || null,
+                        assetId: currentAsset.id,
+                    });
+            } else {
+                trackEvent(events.DOWNLOAD_ASSET, {
+                    assetId: currentAsset.id,
+                });
+            }
+
             downloadUtils.downloadFile(versionRealUrl, currentAsset.name);
         }
     };
@@ -1037,9 +1070,19 @@ const DetailOverlay = ({
         }
     };
 
-    const beginAssetOperation = ({ asset = null, folder = null }, operation) => {
-        if (asset) setOperationAsset(asset);
-        if (folder) setOperationFolder(folder);
+    const beginAssetOperation = ({ asset = null, folder = null }, operation) => {        
+        if (asset) {
+            setOperationAsset(asset);
+            trackEvent(events.SHARE_ASSET, {
+                assetId: asset?.asset?.id,
+            });
+        }
+        if (folder) {
+            setOperationFolder(folder);
+            trackEvent(events.SHARE_COLLECTION, {
+                collectionId: folder?.id
+            });
+        }
         setActiveOperation(operation);
     };
 

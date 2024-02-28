@@ -1,4 +1,3 @@
-import { saveAs } from "file-saver";
 import React, { useEffect, useState } from "react";
 import { insights } from "../../../../assets";
 import { calculateBeginDate } from "../../../../config/data/filter";
@@ -9,7 +8,7 @@ import {
   userActivityModalcolumns,
 } from "../../../../data/analytics";
 import AnalyticsApi from "../../../../server-api/analytics";
-import { getCSVFileName } from "../../../../utils/analytics";
+import { getCSVFileName, handleBlobDownload } from "../../../../utils/analytics";
 import DateFormatter from "../../../../utils/date";
 import Loader from "../../../common/UI/Loader/loader";
 import Button from "../../../common/buttons/button";
@@ -100,11 +99,11 @@ const Modal = ({ section, setShowModal, id }: {
 
       if (downloadCSV) {
         const fileData = new Blob([data], {
-          type: "text/csv;charset=utf-8",
+          type: "blob",
         });
 
         const { fileName, successMsg } = getCSVFileName(activeModalSection);
-        saveAs(fileData, fileName);
+        handleBlobDownload(fileName, fileData)
         toastUtils.success(successMsg);
       } else {
         if (apiEndpoint.includes(InsightsApiEndpoint.TEAM)) {

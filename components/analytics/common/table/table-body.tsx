@@ -3,7 +3,7 @@ import { AnalyticsActiveModal, TableBodySection } from "../../../../constants/an
 import DateFormatter from "../../../../utils/date";
 import AssetIcon from "../../../common/asset/asset-icon";
 import styles from "./table-data.module.css";
-import { useRouter } from "next/router";
+import AssetThumb from "../asset-img";
 
 const TableBody = ({ handleModals, data, tableFor, dashboardView }) => {
 
@@ -164,13 +164,14 @@ export const AssetTableRows = ({ data, handleModals }) => {
               {row.name && (
                 <div className={styles["usernameWithImage"]}>
                   <div className={`${styles["image-wrapper"]}`}>
-                    {row.thumbnail ? (
-                      <img src={row.thumbnail} alt="user" className={styles.assetImage} />
+                    {(row.type === 'image' || row.type === 'video') ? (
+                      <AssetThumb thumbnail={row.thumbnail} type={row.type} />
+                      // <img src={row.thumbnail} alt="user" className={styles.assetImage} />
                     ) : (
                       <AssetIcon imgClass={"analytics-icon"} extension={row.extension} />
                     )}
                   </div>
-                  <span className={`${styles["user-name"]}`}>{row.name}</span>
+                  <span>{row.name}</span>
                 </div>
               )}
             </td>
@@ -284,13 +285,14 @@ export const AssetTableDashboardRows = ({ data }) => {
               {row.name && (
                 <div className={styles["usernameWithImage"]}>
                   <div className={`${styles["image-wrapper"]}`}>
-                    {row.thumbnail ? (
-                      <img src={row.thumbnail} alt="user" className={styles.assetImage} />
+                    {(row.type === 'image' || row.type === 'video') ? (
+                      <AssetThumb thumbnail={row.thumbnail} type={row.type} />
+                      // <img src={row.thumbnail} alt="user" className={styles.assetImage} />
                     ) : (
                       <AssetIcon imgClass={"analytics-icon"} extension={row.extension} />
                     )}
                   </div>
-                  <span className={`${styles["user-name"]}`}>{row.name}</span>
+                  <span>{row.name}</span>
                 </div>
               )}
             </td>
