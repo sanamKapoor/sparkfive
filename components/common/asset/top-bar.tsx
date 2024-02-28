@@ -78,8 +78,8 @@ const TopBar = ({
   return (
     <section
       data-drag="false"
-      className={`${renderSidebar && sidebarOpen ? styles["container"] : styles["container-on-toggle"]
-        }`}
+      className={`${(renderSidebar && sidebarOpen) ? !isShare ? styles["container"] : styles["topbarShareContainer"] : styles["container-on-toggle"]
+        } }`}
       id={"top-bar"}
     >
       <div

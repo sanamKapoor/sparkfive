@@ -636,6 +636,7 @@ const ShareFolderMain = () => {
             closeSearchOverlay={closeSearchOverlay}
             mode={activeMode}
             renderSidebar={getSidebarRender()}
+            isShare={true}
           />
           <div
             className={`${assetGridWrapperStyle} ${sidebarOpen && getSidebarRender() ? styles["mainContainer"] : styles["toggleContainer"]

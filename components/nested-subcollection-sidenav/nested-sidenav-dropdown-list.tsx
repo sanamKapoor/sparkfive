@@ -12,7 +12,6 @@ import ReusableHeading from './nested-heading';
 import styles from './nested-sidenav-dropdown.module.css';
 
 // import Draggable from 'react-draggable';
-
 interface Asset {
   id: string;
   name: string;
@@ -55,7 +54,7 @@ const AssetMoveCopyModal = ({
 }) => {
   return (
     <ConfirmModal
-      message={actionType === 'move' ? `Move 1 asset to ${folderName}` : `Copy 1 asset to ${folderName}`}
+      message={actionType === 'move' ? `Move 1 asset to ${folderName}` : `Add 1 asset to ${folderName}`}
       modalIsOpen={modalIsOpen}
       closeModal={closeModal}
       confirmAction={confirmAction}
@@ -67,6 +66,7 @@ const AssetMoveCopyModal = ({
 
 const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
   const {
+    assets: mainPageAssets,
     folders,
     setFolders,
     sidenavTotalCollectionCount,
@@ -411,7 +411,6 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     }
   };
 
-
   const closeMoveModal = () => {
     resetMoveModalState();
     resetAssetModalState();
@@ -424,9 +423,9 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     if (assetDragFlag) {
       if (assetDragId && droppableId) {
         setAssetModalFlag(true);
-        setActionType((assetDragType === 'move' || activeFolder !== "") ? 'move' : 'copy');
+        setActionType((assetDragType === 'move' || activeFolder !== "") ? 'move' : 'Add To');
       } else {
-        moveCollectionError('Could not move/copy assets, please try again later.');
+        moveCollectionError('Could not move/Add to assets, please try again later.');
       }
     } else if (collectionDragFlag) {
       if (collectionDragId && droppableId) {
@@ -440,12 +439,28 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
   };
 
   const moveReplaceAssets = async () => {
-    const dragType = (assetDragType === 'move' || activeFolder !== "") ? 'move' : 'copy'
+    const dragType = (assetDragType === 'move' || activeFolder !== "") ? 'move' : 'Add To'
     try {
       const moveAssetIds = [assetDragId];
       const parentFolderIds = [droppableId];
-      const apiFunction = (assetDragType === 'move' || activeFolder !== "") ? assetApi.moveAssets : assetApi.copyAssets;
-      await apiFunction({ idList: moveAssetIds, folderId: parentFolderIds }, {});
+      if (assetDragType === 'move' || activeFolder !== "") {
+        await assetApi.moveAssets({ idList: moveAssetIds, folderId: parentFolderIds }, {});
+      } else {
+        const asset = mainPageAssets.find((assetItem) => {
+          return assetItem.asset.id === assetDragId
+        })
+        if (asset) {
+          const updateAssets = [
+            {
+              id: assetDragId,
+              userId: asset?.asset?.userId,
+              changes: { folderId: parentFolderIds },
+            },
+          ];
+          assetApi.updateMultiple(updateAssets, {})
+        }
+
+      }
       setListUpdateFlag(true);
       if (assetDragType === 'move') {
         removeSelectedFromList(); // Resetting all state here
@@ -483,16 +498,17 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
 
   return (
     <div data-drag="false">
+
       {loader && <SpinnerOverlay />}
       <AssetMoveCopyModal
         modalIsOpen={assetModalFlag}
         closeModal={closeMoveModal}
         confirmAction={moveReplaceAssets}
-        confirmText={(assetDragType === 'move' || activeFolder !== "") ? 'Move' : 'Copy'}
+        confirmText={(assetDragType === 'move' || activeFolder !== "") ? 'Move' : 'Add to'}
         subText={
           (assetDragType === 'move' || activeFolder !== "")
             ? 'The assets will be moved into the new collection and will be removed from their current collection'
-            : 'The assets will be duplicated and added into the new collection'
+            : 'The assets will be added into the new collection(s) and will not be removed from their current collection(s)'
         }
         actionType={actionType}
         folderName={droppableFolderName}
