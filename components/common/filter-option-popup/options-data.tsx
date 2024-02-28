@@ -4,19 +4,11 @@ import { OptionsDataProps } from "../../../interfaces/filters";
 import OptionDataItem from "./option-data-item";
 import styles from "./options-data.module.css";
 
-const OptionsData: React.FC<OptionsDataProps> = ({
-  filterKey,
-  dataKey,
-  compareKey,
-  options,
-  setOptions,
-}) => {
+const OptionsData: React.FC<OptionsDataProps> = ({ filterKey, dataKey, compareKey, options, setOptions }) => {
   const { activeSortFilter, setActiveSortFilter } = useContext(FilterContext);
 
   const onSelectOption = (data) => {
-    const index = options.findIndex(
-      (value) => value[compareKey] === data[compareKey]
-    );
+    const index = options.findIndex((value) => value[compareKey] === data[compareKey]);
     if (index !== -1) {
       options[index].isSelected = true;
     }
@@ -42,6 +34,10 @@ const OptionsData: React.FC<OptionsDataProps> = ({
         },
       ];
     }
+    console.log(`>>> Set active sort filter`, {
+      ...activeSortFilter,
+      [filterKey]: newState,
+    });
     setActiveSortFilter({
       ...activeSortFilter,
       [filterKey]: newState,
@@ -49,9 +45,7 @@ const OptionsData: React.FC<OptionsDataProps> = ({
   };
 
   const onDeselectOption = (data) => {
-    const index = options.findIndex(
-      (value) => value[compareKey] === data[compareKey]
-    );
+    const index = options.findIndex((value) => value[compareKey] === data[compareKey]);
     if (index !== -1) {
       options[index].isSelected = false;
     }
@@ -69,17 +63,15 @@ const OptionsData: React.FC<OptionsDataProps> = ({
       [filterKey]: newFilters,
     });
   };
-
-  const containerClass = options && options.length >= 10 ? styles["outer-wrapper"] : styles["outer-grid"];
-
+  const containerClass = options && options.length >= 10 ? `${styles["outer-wrapper"]} data-drag="false"` : styles["outer-grid"];
 
   return (
-    <div className={containerClass}>
+    <div data-drag="false" className={containerClass}>
       {options?.length === 0 ? (
         <p>No Results Found.</p>
       ) : (
         options?.map((item, index) => (
-          <div className={styles["grid-item"]} key={index}>
+          <div data-drag="false" className={styles["grid-item"]} key={index}>
             <OptionDataItem
               name={item[dataKey]}
               count={item.count}

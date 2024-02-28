@@ -1,0 +1,15 @@
+.container{
+    display: flex;
+    align-items: center;
+}
+
+.clear-text{
+    color: var(--secondary-color);
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.tag{
+    padding: 6px 10px;
+}

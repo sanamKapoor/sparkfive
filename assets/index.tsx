@@ -2,6 +2,7 @@ import ViewGrid from "./Icons/Utilities/View Grid";
 import ViewList from "./Icons/Utilities/View List";
 import More from "./Icons/Utilities/More";
 import Delete from "./Icons/Utilities/Delete";
+import DeleteGray from "./Icons/Utilities/DeleteGray/DeleteGray";
 import Info from "./Icons/Utilities/Information";
 import InfoGray from "./Icons/Utilities/Information/gray";
 import CommentGray from "./Icons/Utilities/Comments/CommentGray";
@@ -51,6 +52,9 @@ import Hide from "./Icons/Utilities/Hide/Hide";
 import Upload from "./Icons/Assets/Upload";
 import MoreLight from "./Icons/Utilities/More/MoreLight";
 import CheckMark from "./Icons/Utilities/CheckMark/CheckMark";
+import Run from "./Icons/Utilities/Run/Run";
+import Eye from "./Icons/Utilities/Eye/Eye";
+import ThemeClose from "./Icons/Utilities/ThemeClose/ThemeClose";
 
 export const GeneralImg = {
   logoHorizontal: require("./general/logo-horizontal-sparkfive-RGB.png"),
@@ -149,9 +153,11 @@ export const Utilities = {
   blueCloses: require("./Icons/Utilities/Close/blue-close.svg"),
 
   edit: EditFill,
+  editBorder: Edit,
   editLight: require("./Icons/Utilities/Description-Edit/icn-utilities-description_edit-light.svg"),
   editWhite: require("./Icons/Utilities/Description-Edit/icn-utilities-description_edit-fill-white.svg"),
   delete: Delete,
+  deleteGray: DeleteGray,
   add: require("./Icons/Utilities/Add +/icn-utilities-add+.svg"),
   addLight: require("./Icons/Utilities/Add +/icn-utilities-add+light.svg"),
   addWhite: require("./Icons/Utilities/Add +/icn-utilities-add+white.svg"),
@@ -237,6 +243,9 @@ export const Utilities = {
   download: require("./Icons/Utilities/download.svg"),
   document: require("./Icons/Utilities/document.svg"),
   circlePlusGreen: CirclePlusGreen,
+  eye: Eye,
+  run: Run,
+  themeClose: ThemeClose,
 };
 
 export const ProjectTypes = {
@@ -302,8 +311,8 @@ export const Assets = {
   dropbox: Dropbox,
   gdrive: GoogleDrive,
   msword: require("./Icons/Assets/msword.svg"),
-  folderupload:require("./Icons/Assets/file-upload.svg"),
-  fileupload:require("./Icons/Assets/links-upload.svg"),
+  folderupload: require("./Icons/Assets/file-upload.svg"),
+  fileupload: require("./Icons/Assets/links-upload.svg"),
   msexcel: require("./Icons/Assets/msexcel.svg"),
   msppt: require("./Icons/Assets/msppt.svg"),
   pdf: require("./Icons/Assets/pdf.svg"),

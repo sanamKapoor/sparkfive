@@ -31,14 +31,13 @@ import RenameModal from '../../../components/common/modals/rename-modal';
 import ShareModal from '../../../components/common/modals/share-modal';
 import { sizeToZipDownload } from '../../../constants/download';
 import { ASSET_DOWNLOAD } from '../../../constants/permissions';
-import { AssetContext, FilterContext, UserContext } from '../../../context';
+import { AssetContext, FilterContext, ShareContext, UserContext } from '../../../context';
 import assetApi from '../../../server-api/asset';
 import cookiesApi from '../../../utils/cookies';
 import shareApi from '../../../server-api/share-collection';
 import customFileSizeApi from '../../../server-api/size';
 import downloadUtils from '../../../utils/download';
 import { isImageType } from '../../../utils/file';
-import selectOptions from '../../../utils/select-options';
 import toastUtils from '../../../utils/toast';
 import urlUtils from '../../../utils/url';
 import { events, shareLinkEvents } from '../../../constants/analytics';
@@ -154,7 +153,10 @@ const DetailOverlay = ({
         operationAssets,
         setActiveFolder,
         setActiveSubFolders,
+
     } = useContext(AssetContext);
+
+    const { folderInfo } = useContext(ShareContext);
 
     const { activeSortFilter } = useContext(FilterContext);
     const { trackEvent, trackLinkEvent } = useAnalytics();
@@ -237,6 +239,7 @@ const DetailOverlay = ({
             height: currentAsset.dimensionHeight,
         },
     ]);
+
     const [preset, setPreset] = useState<any>(presetTypes[0]);
 
     const [sizes, setSizes] = useState([
@@ -293,9 +296,14 @@ const DetailOverlay = ({
     const _setActiveCollection = () => {
         // TODO: ? What is purpose of this ?
         if (activeFolder && activeSubFolders !== "") {
-            const folder = folders.find((folder) => {
-                return folder.id === activeSubFolders
-            })
+            let folder = {}
+            if (folderInfo?.singleSharedCollectionId && isShare) {
+                folder = folderInfo.sharedFolder
+            } else {
+                folder = folders.find((folder) => {
+                    return folder.id === activeSubFolders
+                })
+            }
             if (folder) {
                 setActiveCollection(folder);
                 const assetIndx = subcollectionAssets.findIndex((item) => item.asset && item.asset.id === currentAsset.id);
@@ -389,7 +397,6 @@ const DetailOverlay = ({
                 width: currentAsset.dimensionWidth,
                 height: currentAsset.dimensionHeight,
             });
-
             setWidth(currentAsset.dimensionWidth);
             setHeight(currentAsset.dimensionHeight);
         }
@@ -664,8 +671,7 @@ const DetailOverlay = ({
     };
 
     const downloadSelectedAssets = async (id) => {
-        const { shareJWT, code } = urlUtils.getQueryParameters();
-
+        const { shareJWT } = urlUtils.getQueryParameters();
         try {
             let payload = {
                 assetIds: [id],
@@ -677,7 +683,7 @@ const DetailOverlay = ({
             };
 
             // Download files in shared collection or normal download (not share)
-            if ((isShare && sharePath && !code) || !isShare) {
+            if ((isShare && sharePath && !sharedCode) || !isShare) {
                 // Add sharePath property if user is at share collection page
                 if (sharePath) {
                     filters["sharePath"] = sharePath;
@@ -700,13 +706,12 @@ const DetailOverlay = ({
                 updateDownloadingStatus("done", 0, 0);
             } else {
                 // Download shared single asset
-                if (isShare && !sharePath && code) {
+                if (isShare && !sharePath && sharedCode) {
                     // Show processing bar
                     updateDownloadingStatus("zipping", 0, totalDownloadingAssets);
 
                     const { data } = await assetApi.shareDownload(payload, {
-                        shareJWT,
-                        code,
+                        code: sharedCode,
                     });
 
                     // Download file to storage
@@ -731,9 +736,9 @@ const DetailOverlay = ({
                 });
             }
         } catch (e) {
-            const errorResponse = (await e.response.data.text()) || "{}";
+            const errorResponse = (await e?.response?.data?.text()) || "{}";
             const parsedErrorResponse = JSON.parse(errorResponse);
-            updateDownloadingStatus("error", 0, 0, parsedErrorResponse.message || "Internal Server Error. Please try again.");
+            updateDownloadingStatus("error", 0, 0, parsedErrorResponse?.message || "Internal Server Error. Please try again.");
         }
     };
 
@@ -907,21 +912,24 @@ const DetailOverlay = ({
         if (activeSubFolders !== "" && activeFolder !== "") {
             const currentIndx = subcollectionAssets.findIndex((item) => asset && item.asset && item.asset.id === currentAsset.id);
             const newIndx = currentIndx + navBy;
-
-            setAssetIndex(newIndx);
-            setCurrentAsset({
-                ...subcollectionAssets[newIndx].asset, thumbailUrl: subcollectionAssets[newIndx].thumbailUrl
-            });
-            setDetailOverlayId(subcollectionAssets[newIndx].asset.id);
+            if (newIndx >= 0) {
+                setAssetIndex(newIndx);
+                setCurrentAsset({
+                    ...subcollectionAssets[newIndx].asset, thumbailUrl: subcollectionAssets[newIndx].thumbailUrl
+                });
+                setDetailOverlayId(subcollectionAssets[newIndx].asset.id);
+            }
         }
-        else if (activeFolder !== "" && activeFolder === "") {
+        else if (activeFolder !== "" && activeSubFolders === "") {
             const currentIndx = assets.findIndex((item) => asset && item.asset && item.asset.id === currentAsset.id);
             const newIndx = currentIndx + navBy;
-            setAssetIndex(newIndx);
-            setCurrentAsset({
-                ...subcollectionAssets[newIndx].asset, thumbailUrl: subcollectionAssets[newIndx].thumbailUrl
-            });
-            setDetailOverlayId(assets[newIndx].asset.id);
+            if (newIndx >= 0) {
+                setAssetIndex(newIndx);
+                setCurrentAsset({
+                    ...assets[newIndx].asset, thumbailUrl: assets[newIndx].thumbailUrl
+                });
+                setDetailOverlayId(assets[newIndx].asset.id);
+            }
         }
     };
 
@@ -1233,6 +1241,7 @@ const DetailOverlay = ({
             toastUtils.error("Could not delete assets, please try again later.");
         }
     };
+
     return (
         <div className={`app - overlay ${styles.container} ${isShare ? styles.share : ""} `}>
             {assetDetail && (

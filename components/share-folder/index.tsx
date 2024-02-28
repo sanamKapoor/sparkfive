@@ -56,7 +56,7 @@ const ShareFolderMain = () => {
     selectedAllSubAssets,
     setSelectedAllSubAssets,
     selectedAllSubFoldersAndAssets,
-    sidebarOpen,
+    sidebarOpen
   } = useContext(AssetContext);
 
   const { user, advancedConfig, setAdvancedConfig, setLogo } = useContext(UserContext);
@@ -87,7 +87,6 @@ const ShareFolderMain = () => {
       const splitPath = asPath.split("collections/");
 
       const splitPathWithoutQuery = splitPath[1].split("?");
-
       setSharePath(splitPathWithoutQuery[0]);
       setContextPath(splitPathWithoutQuery[0]);
     }
@@ -96,10 +95,11 @@ const ShareFolderMain = () => {
     return () => {
       window.removeEventListener("resize", onChangeWidth);
     };
+
   }, [router.asPath]);
 
   useEffect(() => {
-    if (sharePath && sharePath !== "[team]/[id]/[name]" && !firstLoaded) {
+    if (sharePath && sharePath !== "[team]/[id]/[name]") {
       getFolderInfo();
     }
   }, [sharePath]);
@@ -206,7 +206,6 @@ const ShareFolderMain = () => {
         sortOrder: order,
         sharePath,
       };
-
       if (!replace && addedIds.length > 0) {
         // @ts-ignore
         queryParams.excludeIds = addedIds.join(",");
@@ -219,8 +218,8 @@ const ShareFolderMain = () => {
         ...queryParams,
         ...(term && { term }),
       });
-      let assetList = { ...data, results: data.results };
-      setFolders(assetList, replace);
+      let foldersList = { ...data, results: data.results };
+      setFolders(foldersList, replace);
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -290,11 +289,11 @@ const ShareFolderMain = () => {
         }
       }
 
-
       setHeaderName(data.folderName);
       setFolderInfo(data);
       setAdvancedConfig(data.customAdvanceOptions);
       setActivePasswordOverlay(false);
+
       setLoading(false);
       // There is team theme set
       if (data.theme) {
@@ -304,7 +303,6 @@ const ShareFolderMain = () => {
         // @ts-ignore
         setLogo(currentTheme.logoImage?.realUrl || defaultLogo);
       }
-
       // Track event
       trackLinkEvent(shareLinkEvents.ACCESS_SHARED_LINK, {
         link: window.location.href,
@@ -312,8 +310,6 @@ const ShareFolderMain = () => {
         teamId: cookiesApi.get('teamId') || null,
         email: cookiesApi.get('shared_email') || null,
       });
-
-
 
     } catch (err) {
       // If not 500, must be auth error, request user password
@@ -465,6 +461,10 @@ const ShareFolderMain = () => {
       const folderIndex = subFoldersViewList.results.findIndex((folder) => folder.id === id);
 
       if (folderIndex !== -1) {
+        if (subFoldersViewList.results[folderIndex]?.isSelected) {
+          setSelectedAllSubFoldersAndAssets(false);
+        }
+        setSelectedAllSubAssets(false);
         setSubFoldersViewList({
           ...subFoldersViewList,
           results: update(subFoldersViewList.results, {
@@ -484,6 +484,10 @@ const ShareFolderMain = () => {
         });
       }
       if (assetIndex !== -1) {
+        setSelectedAllSubFoldersAndAssets(false);
+        if (subFoldersAssetsViewList.results[assetIndex]?.isSelected) {
+          setSelectedAllSubAssets(false);
+        }
         setSubFoldersAssetsViewList({
           ...subFoldersAssetsViewList,
           results: update(subFoldersAssetsViewList.results, {
@@ -560,7 +564,6 @@ const ShareFolderMain = () => {
       setHeaderName(folderName ? folderName : folders.find((folder: any) => folder.id === id)?.name || "");
     }
   };
-
   // TODO uncomment all
   const onChangeWidth = () => {
     if (!loading) {
@@ -614,9 +617,10 @@ const ShareFolderMain = () => {
         >
           {getSidebarRender() && sidebarOpen && (
             <div className={`${styles["sidenav-main-wrapper"]}`}>
-              <NestedFirstlist sharePath={sharePath} />
+               <NestedFirstlist sharePath={sharePath} />
+              
               <SharedPageSidenav viewFolder={viewFolder} headingClick={headingClick} sharePath={sharePath} />
-            </div>
+           </div>
           )}
           <TopBar
             activeSearchOverlay={activeSearchOverlay}

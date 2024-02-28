@@ -19,6 +19,7 @@ import { defaultLogo } from "../constants/theme";
 import { events } from '../constants/analytics';
 
 import useAnalytics from '../hooks/useAnalytics';
+import { defaultFaceRecognitionSettings } from "../constants/face-recognition";
 
 const allowedBase = [
   "/signup",
@@ -39,6 +40,7 @@ export default ({ children }) => {
   const [cdnAccess, setCdnAccess] = useState(false);
   const [transcriptAccess, setTranscriptAccess] = useState(false);
   const [advancedConfig, setAdvancedConfig] = useState(advancedConfigParams);
+  const [faceRecognitionSettings, setFaceRecognitionSettings] = useState(defaultFaceRecognitionSettings);
   const [logo, setLogo] = useState<string>(defaultLogo);
   const [logoId, setLogoId] = useState<string>();
 
@@ -76,6 +78,11 @@ export default ({ children }) => {
         const teamResponse = await teamApi.getTeam();
         setCdnAccess(teamResponse.data.cdnAccess);
         setTranscriptAccess(teamResponse.data.transcript);
+
+        setFaceRecognitionSettings({
+          ...defaultFaceRecognitionSettings,
+          ...(data.team?.teamRecognitionSettings || {}),
+        });
 
         const { data: advOptions } = await teamApi.getAdvanceOptions();
         setAdvancedConfig({ ...advOptions, set: true });
@@ -254,6 +261,8 @@ export default ({ children }) => {
     setLogo,
     logoId,
     resetLogo,
+    faceRecognitionSettings,
+    setFaceRecognitionSettings,
   };
 
   return (

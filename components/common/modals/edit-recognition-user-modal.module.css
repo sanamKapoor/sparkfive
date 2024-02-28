@@ -1,0 +1,48 @@
+.container{
+    padding: 24px;
+    width: 100%;
+    overflow-y: scroll;
+    padding-top: 0;
+}
+
+.row{
+    display: flex;
+    padding-top: 24px;
+}
+
+.avatar{
+    min-width: 40px;
+    max-width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar img{
+    width: 100%;
+    height: auto;
+}
+
+.icon{
+    width: 14px;
+    height: 14px;
+    margin-left: 16px;
+}
+
+.input{
+    min-height: auto;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.buttons button{
+    width: 100%
+}

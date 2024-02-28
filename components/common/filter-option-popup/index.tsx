@@ -213,10 +213,12 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
   }, []);
   return (
     <div
+    data-drag="false"
       id="mianFilterModal"
       className={`${styles["main-container"]}`
       }>
       <div
+       data-drag="false"
         id="modal"
         className={`${styles["outer-wrapper"]}`}>
         {loading ? (
@@ -227,8 +229,8 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
           checkIfValuesExist() && options.length > 0 ? <>
             {
               <>
-                <div className={`${styles["popup-mobile-view"]}`}>
-                  <div className={`${styles["popup-mobile-header"]}`}>
+                <div  data-drag="false" className={`${styles["popup-mobile-view"]}`}>
+                  <div  data-drag="false" className={`${styles["popup-mobile-header"]}`}>
                     <img src={Utilities.leftArrow} alt="left-arrow" />
                     <span className={`${styles["main-heading"]}`}>
                       Select {activeAttribute?.name}
@@ -251,11 +253,11 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
                   </div>
                 </div>
 
-                <div className={`${styles["popup-header"]}`}>
-                  <span className={`${styles["main-heading"]}`}>
+                <div data-drag="false" className={`${styles["popup-header"]}`}>
+                  <span data-drag="false" className={`${styles["main-heading"]}`}>
                     Select {activeAttribute?.name}
                   </span>
-                  <div className={styles.buttons}>
+                  <div data-drag="false" className={styles.buttons}>
                     <button
                       className={styles.clear}
                       disabled={loading}
@@ -271,7 +273,7 @@ const FilterOptionPopup: React.FC<FilterOptionPopupProps> = ({
                   </div>
                 </div>
                 {!hideSearch && (
-                  <div className={`${styles["search-btn"]}`}>
+                  <div data-drag="false" className={`${styles["search-btn"]}`}>
                     <Search
                       className={styles.customStyles}
                       buttonClassName={styles.icon}
