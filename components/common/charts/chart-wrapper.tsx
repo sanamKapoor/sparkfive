@@ -15,7 +15,7 @@ const ChartWrapper = ({ chartObj, data }) => {
   }, [chartObj.type]);
 
   useEffect(() => {    
-    if (chart && data.labels && data.datasets) {
+    if (chart && data.labels && data.datasets) {      
       updateChart();
     }
   }, [data]);
