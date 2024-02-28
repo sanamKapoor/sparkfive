@@ -99,7 +99,7 @@ const Modal = ({ section, setShowModal, id }: {
 
       if (downloadCSV) {
         const fileData = new Blob([data], {
-          type: "blob",
+          type: "text/csv;charset=utf-8",
         });
 
         const { fileName, successMsg } = getCSVFileName(activeModalSection);

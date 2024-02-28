@@ -2,13 +2,13 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { calculateBeginDate } from "../config/data/filter";
 import {
-  AnalyticsRoutes,
-  DASHBOARD_ASSET_TABLE_REC_LEN,
-  DASHBOARD_REC_LIMIT,
-  DashboardSections,
-  InsightsApiEndpoint,
-  LIMIT,
-  PAGE,
+    AnalyticsRoutes,
+    DASHBOARD_ASSET_TABLE_REC_LEN,
+    DASHBOARD_REC_LIMIT,
+    DashboardSections,
+    InsightsApiEndpoint,
+    LIMIT,
+    PAGE
 } from "../constants/analytics";
 import { SOMETHING_WENT_WRONG } from "../constants/messages";
 import AnalyticsApi from "../server-api/analytics";
@@ -43,12 +43,7 @@ const useInsights = ({ section, endpoint }: { section?: string; endpoint?: strin
       setData([]);
       setTotalRecords(0);
 
-      const applyLimit =
-        router.pathname !== AnalyticsRoutes.DASHBOARD
-          ? limit
-          : apiEndpoint.includes(DashboardSections.ASSET)
-          ? DASHBOARD_ASSET_TABLE_REC_LEN
-          : DASHBOARD_REC_LIMIT;
+      const applyLimit = router.pathname !== AnalyticsRoutes.DASHBOARD ? limit : apiEndpoint.includes(DashboardSections.ASSET) ? DASHBOARD_ASSET_TABLE_REC_LEN : DASHBOARD_REC_LIMIT;
 
       let payload: Record<string, unknown> = {
         page: defaultPage ? defaultPage : page,
@@ -69,9 +64,9 @@ const useInsights = ({ section, endpoint }: { section?: string; endpoint?: strin
       const { data } = await AnalyticsApi.getAnalyticsData(apiEndpoint, payload);
 
       if (downloadCSV) {
-        const fileData = new Blob([data]);
+        const fileData = new Blob([data], {type: "text/csv;charset=utf-8" });
 
-        const { fileName, successMsg } = getCSVFileName(activeSection);
+        const { fileName, successMsg } = getCSVFileName(activeSection);        
         handleBlobDownload(fileName, fileData)
         toastUtils.success(successMsg);
       } else {
@@ -142,7 +137,7 @@ const useInsights = ({ section, endpoint }: { section?: string; endpoint?: strin
     totalRecords,
     setTotalRecords,
     downloadCSV,
-    setDownloadCSV,
+    setDownloadCSV
   };
 };
 

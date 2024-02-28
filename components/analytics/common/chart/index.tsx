@@ -14,7 +14,7 @@ const ChartComp = ({ data, fileName = '' }) => {
                 ...ChartLines[d.key],
                 data: d.data
             }
-        })
+        })        
 
         setChartData(prev => ({
             labels: data.labels,
