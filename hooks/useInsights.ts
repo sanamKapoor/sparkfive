@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { saveAs } from "file-saver"
 import { useEffect, useState } from "react";
 import { calculateBeginDate } from "../config/data/filter";
 import {
@@ -12,7 +13,7 @@ import {
 } from "../constants/analytics";
 import { SOMETHING_WENT_WRONG } from "../constants/messages";
 import AnalyticsApi from "../server-api/analytics";
-import { getCSVFileName, handleBlobDownload } from "../utils/analytics";
+import { getCSVFileName } from "../utils/analytics";
 import toastUtils from "./../utils/toast";
 
 const useInsights = ({ section, endpoint }: { section?: string; endpoint?: string }) => {
@@ -66,8 +67,8 @@ const useInsights = ({ section, endpoint }: { section?: string; endpoint?: strin
       if (downloadCSV) {
         const fileData = new Blob([data], {type: "text/csv;charset=utf-8" });
 
-        const { fileName, successMsg } = getCSVFileName(activeSection);        
-        handleBlobDownload(fileName, fileData)
+        const { fileName, successMsg } = getCSVFileName(activeSection);       
+        saveAs(fileData, fileName);
         toastUtils.success(successMsg);
       } else {
         if (apiEndpoint.includes(InsightsApiEndpoint.TEAM)) {
