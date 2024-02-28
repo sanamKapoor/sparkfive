@@ -30,3 +30,25 @@ export const getCSVFileName = (section: string) => {
             }
     }
 }
+
+export const handleBlobDownload = (fileName: string, data: Blob) => {
+    // Create a URL for the Blob
+    const blobUrl = URL.createObjectURL(data);
+
+    // Create a link element
+    const link = document.createElement("a");
+    link.href = blobUrl;
+    link.download = fileName;
+
+    // Append the link to the document body
+    document.body.appendChild(link);
+
+    // Trigger a click event on the link to initiate the download
+    link.click();
+
+    // Remove the link from the document body
+    document.body.removeChild(link);
+
+    // Revoke the URL to release memory resources
+    URL.revokeObjectURL(blobUrl);
+}

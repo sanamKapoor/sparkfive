@@ -8,6 +8,7 @@ import Heading from '../../common/header/heading';
 import SectionLink from '../../common/header/link';
 import TableData from '../../common/table';
 import styles from "../../index.module.css";
+import NoData from '../../common/no-data';
 
 const TopAssets = ({ initialData }) => {
   const { filter, setFilter, customDates, setCustomDates, totalRecords, data, error, sortBy, setError, loading, sortOrder, setSortBy, setSortOrder } = useInsights({ section: AnalyticsLayoutSection.DASHBOARD, endpoint: InsightsApiEndpoint.ASSET });
@@ -21,7 +22,7 @@ const TopAssets = ({ initialData }) => {
       setTotalAssets(totalRecords);
       setTotalAssetsData(data);
     } else {
-      if(!loading){
+      if (!loading) {
         setTotalAssets(0)
         setTotalAssetsData([])
       }
@@ -43,7 +44,7 @@ const TopAssets = ({ initialData }) => {
       );
       setTotalAssetsData(initialData.data);
       setTotalAssets(initialData.totalRecords);
-      if(initialData.error) setError(initialData.error);
+      if (initialData.error) setError(initialData.error);
     }
   }, [initialData]);
 
@@ -55,13 +56,13 @@ const TopAssets = ({ initialData }) => {
           <SectionLink title='View All' link="/main/insights/account/assets" />
         </div>
         <div className={`${styles["table-header-tabs"]}`}>
-        <div className={`${styles["button-wrapper"]}`}>
-          <DateFilter filter={filter} setFilter={setFilter} customDates={customDates} setCustomDates={setCustomDates} />
+          <div className={`${styles["button-wrapper"]}`}>
+            <DateFilter filter={filter} setFilter={setFilter} customDates={customDates} setCustomDates={setCustomDates} />
           </div>
         </div>
       </div>
       {totalAssetsData?.length > 0 && sortBy && <ClearSort onClick={handleClearSorting} />}
-      <TableData
+      {totalAssetsData?.length > 0 ? <TableData
         columns={assetColumns}
         data={totalAssetsData ? [...totalAssetsData, ...emptyRows] : null}
         apiData={totalAssetsData}
@@ -75,6 +76,11 @@ const TopAssets = ({ initialData }) => {
         tableFor={TableBodySection.DASHBOARD_ASSETS}
         dashboardView={true}
       />
+        :
+        <div className={styles.empty}>
+          <NoData message="Data not found." wrapper={false} />
+        </div>
+      }
     </div>
   )
 }

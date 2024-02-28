@@ -8,6 +8,7 @@ import Heading from '../../common/header/heading';
 import SectionLink from '../../common/header/link';
 import TableData from '../../common/table';
 import styles from "../../index.module.css";
+import NoData from '../../common/no-data';
 
 const UserEngagment = ({ initialData }) => {
   const { filter, setFilter, customDates, setCustomDates, loading, error, sortBy, sortOrder, totalRecords, data, setSortBy, setSortOrder, setError } = useInsights({
@@ -24,7 +25,7 @@ const UserEngagment = ({ initialData }) => {
       setTotalUsers(totalRecords);
       setTotalUsersData(data);
     } else {
-      if(!loading){
+      if (!loading) {
         setTotalUsers(0)
         setTotalUsersData([])
       }
@@ -36,14 +37,14 @@ const UserEngagment = ({ initialData }) => {
     setSortOrder(true);
   };
 
-  useEffect(() => {    
+  useEffect(() => {
     if (initialData) {
       setEmptyRows(Array.from({ length: Math.max(DASHBOARD_TABLE_REC_LEN - (initialData.data ? initialData.data.length : 0), 0) }, (_, index) => ({})));
       setTotalUsersData(initialData.data);
       setTotalUsers(initialData.totalRecords);
-      if(initialData.error) setError(initialData.error);
+      if (initialData.error) setError(initialData.error);
     }
-  }, [initialData]);  
+  }, [initialData]);
 
   return (
     <div className={styles.tableResponsive}>
@@ -53,13 +54,13 @@ const UserEngagment = ({ initialData }) => {
           <SectionLink title='View All' link="/main/insights/account/users" />
         </div>
         <div className={`${styles["table-header-tabs"]}`}>
-        <div className={`${styles["button-wrapper"]}`}>
-          <DateFilter filter={filter} setFilter={setFilter} customDates={customDates} setCustomDates={setCustomDates} />
+          <div className={`${styles["button-wrapper"]}`}>
+            <DateFilter filter={filter} setFilter={setFilter} customDates={customDates} setCustomDates={setCustomDates} />
           </div>
         </div>
       </div>
       {totalUsersData?.length > 0 && sortBy && <ClearSort onClick={handleClearSorting} />}
-      <TableData
+      {totalUsersData?.length > 0 ? <TableData
         columns={DashboardUserColumns}
         data={totalUsersData ? [...totalUsersData, ...emptyRows] : null}
         apiData={totalUsersData}
@@ -73,6 +74,11 @@ const UserEngagment = ({ initialData }) => {
         tableFor={TableBodySection.DASHBOARD_USERS}
         dashboardView={true}
       />
+        :
+        <div className={styles.empty}>
+          <NoData message="Data not found." wrapper={false} />
+        </div>
+      }
     </div>
   );
 }

@@ -1,19 +1,18 @@
-import { saveAs } from "file-saver";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { calculateBeginDate } from "../config/data/filter";
 import {
-    AnalyticsRoutes,
-    DASHBOARD_ASSET_TABLE_REC_LEN,
-    DASHBOARD_REC_LIMIT,
-    DashboardSections,
-    InsightsApiEndpoint,
-    LIMIT,
-    PAGE
+  AnalyticsRoutes,
+  DASHBOARD_ASSET_TABLE_REC_LEN,
+  DASHBOARD_REC_LIMIT,
+  DashboardSections,
+  InsightsApiEndpoint,
+  LIMIT,
+  PAGE,
 } from "../constants/analytics";
 import { SOMETHING_WENT_WRONG } from "../constants/messages";
 import AnalyticsApi from "../server-api/analytics";
-import { getCSVFileName } from "../utils/analytics";
+import { getCSVFileName, handleBlobDownload } from "../utils/analytics";
 import toastUtils from "./../utils/toast";
 
 const useInsights = ({ section, endpoint }: { section?: string; endpoint?: string }) => {
@@ -44,7 +43,12 @@ const useInsights = ({ section, endpoint }: { section?: string; endpoint?: strin
       setData([]);
       setTotalRecords(0);
 
-      const applyLimit = router.pathname !== AnalyticsRoutes.DASHBOARD ? limit : apiEndpoint.includes(DashboardSections.ASSET) ? DASHBOARD_ASSET_TABLE_REC_LEN : DASHBOARD_REC_LIMIT;
+      const applyLimit =
+        router.pathname !== AnalyticsRoutes.DASHBOARD
+          ? limit
+          : apiEndpoint.includes(DashboardSections.ASSET)
+          ? DASHBOARD_ASSET_TABLE_REC_LEN
+          : DASHBOARD_REC_LIMIT;
 
       let payload: Record<string, unknown> = {
         page: defaultPage ? defaultPage : page,
@@ -65,12 +69,10 @@ const useInsights = ({ section, endpoint }: { section?: string; endpoint?: strin
       const { data } = await AnalyticsApi.getAnalyticsData(apiEndpoint, payload);
 
       if (downloadCSV) {
-        const fileData = new Blob([data], {
-          type: "text/csv;charset=utf-8",
-        });
+        const fileData = new Blob([data]);
 
         const { fileName, successMsg } = getCSVFileName(activeSection);
-        saveAs(fileData, fileName);
+        handleBlobDownload(fileName, fileData)
         toastUtils.success(successMsg);
       } else {
         if (apiEndpoint.includes(InsightsApiEndpoint.TEAM)) {
@@ -140,7 +142,7 @@ const useInsights = ({ section, endpoint }: { section?: string; endpoint?: strin
     totalRecords,
     setTotalRecords,
     downloadCSV,
-    setDownloadCSV
+    setDownloadCSV,
   };
 };
 
