@@ -99,7 +99,9 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     collectionDragId,
     setCollectionDragId,
     collectionParentDragId,
-    setCollectionParentDragId
+    setCollectionParentDragId,
+    subCollectionMove,
+    setSubCollectionMove
   } = useContext(AssetContext);
 
   const { activeSortFilter } = useContext(FilterContext) as {
@@ -274,10 +276,6 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
   };
 
   //------------ Drag folder --------------------------------//
-  const isAdmin = () => {
-    return user?.role?.id === "admin" || user?.role?.id === "super_admin";
-  };
-
   const isMouseWithinDroppableArea = (id: string, e: React.DragEvent<HTMLDivElement>) => {
     const droppableArea = document.getElementById(id);
     if (droppableArea) {
@@ -289,6 +287,9 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
   };
 
   const handleDragStart = (e, parentId: string, shouldDrag: boolean) => {
+    if (parentId !== "") {
+      setSubCollectionMove(true)
+    }
     draggable.current = shouldDrag;
     selectedParentId.current = parentId;
     childFolderId.current = e.currentTarget.id;
@@ -333,6 +334,7 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     setCollectionDragId("");
     setCollectionParentDragId("")
     setLoader(false);
+    setSubCollectionMove(false);
   };
 
   const resetAssetModalState = () => {
@@ -342,8 +344,8 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     setAssetDragId("");// Global state for saving the asset Id 
     setAssetDragType(""); // For drag type either for move or copy
     setDroppableId("");
-    setActionType("")
-    setDroppableFolderName("")
+    setActionType("");
+    setDroppableFolderName("");
   };
   //-------- end -------- //
 
@@ -363,7 +365,6 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
 
   // handling the move Collection in side bar only 
   const handleDragEnd = () => {
-    // if (isAdmin()) {
     if (droppableId && childFolderId.current && droppableId !== childFolderId.current) {
       setMoveModalFlag(true);
     } else if (droppableId && childFolderId.current === droppableId) {
@@ -373,7 +374,6 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
     } else if (!draggable.current && droppableId) {
       moveCollectionError("You can't move collection with a sub-collection");
     }
-    // }
   };
 
   const filterFolderInList = (folderList, updatedFolder) => {
@@ -515,11 +515,11 @@ const NestedSidenavDropdown = ({ headingClick, viewFolder }) => {
       />
 
       <ConfirmModal
-        message={"Make Collection a Subcollection"}
+        message={subCollectionMove ? "Move Subcollection" : "Make Collection a Subcollection"}
         modalIsOpen={moveModalFlag}
         closeModal={() => closeMoveModal()}
         confirmAction={moveCollection}
-        confirmText={"Make Subcollection"}
+        confirmText={subCollectionMove ? "Move Subcollection" : "Make Subcollection"}
         subText="The selected collection will be moved from its current location and made a subcollection of the selected parent collection"
       />
 

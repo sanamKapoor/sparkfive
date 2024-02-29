@@ -248,6 +248,8 @@ export const AssetContext = createContext({
   setCollectionDragId: (value) => { },
   collectionParentDragId: "",
   setCollectionParentDragId: (value) => { },
+  subCollectionMove: false,
+  setSubCollectionMove: (value) => { }
 });
 
 export const TeamContext = createContext({

@@ -71,7 +71,8 @@ const SubCollection = ({
     collectionDragFlag,
     setCollectionDragFlag,
     setCollectionDragId,
-    setCollectionParentDragId
+    setCollectionParentDragId,
+    setSubCollectionMove
   } = useContext(AssetContext);
 
   const { user } = useContext(UserContext);
@@ -249,6 +250,7 @@ const SubCollection = ({
     setCollectionDragId("");// Global state in for collection drag
     setCollectionParentDragId("")
     setDroppableFolderName("");// local state in for drag when
+    setSubCollectionMove(false)
   };
 
   const removeSelectedFromList = () => {
@@ -295,6 +297,7 @@ const SubCollection = ({
     setCollectionDragFlag(true);
     setCollectionDragId(e.currentTarget.id)
     setCollectionParentDragId(parentId)
+    setSubCollectionMove(true)
   };
 
   return (

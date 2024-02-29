@@ -150,6 +150,7 @@ export default ({ children }) => {
   const [collectionDragFlag, setCollectionDragFlag] = useState(false);
   const [collectionDragId, setCollectionDragId] = useState("");
   const [collectionParentDragId, setCollectionParentDragId] = useState("");
+  const [subCollectionMove, setSubCollectionMove] = useState(false);
 
   const setPlaceHolders = (type, replace = true) => {
     if (type === "asset") {
@@ -701,7 +702,9 @@ export default ({ children }) => {
     collectionDragId,
     setCollectionDragId,
     collectionParentDragId,
-    setCollectionParentDragId
+    setCollectionParentDragId,
+    subCollectionMove,
+    setSubCollectionMove
   };
   return <AssetContext.Provider value={assetsValue}>{children}</AssetContext.Provider>;
 };
