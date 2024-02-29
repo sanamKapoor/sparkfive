@@ -423,5 +423,8 @@
   .shared-sidenav-outer{
     top:126px;
   }
+  .sidenav-list1{
+    max-height: 40vh;
+  }
 
 }

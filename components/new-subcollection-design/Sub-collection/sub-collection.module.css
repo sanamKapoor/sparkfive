@@ -234,7 +234,7 @@
     grid-template-columns: unset;
   }
   
-  @media only screen and (min-width: 270px) and (max-width: 375px) {
+  @media only screen and (min-width: 270px) and (max-width: 430px) {
    .rightSide{
     margin-top: 120px;
    }
@@ -245,6 +245,15 @@
   .share-page-right-side{
     margin-top: 0px;
   }
+  .shareWrapper{
+
+    padding: 0 20px;
+
+  }
+  .sub-collection-heading span{
+    margin-left: 11px;
+  }
+
   }
   @media only screen and (min-width: 390px) and (max-width: 540px) {
     .rightSide{
@@ -304,7 +313,7 @@
     grid-template-columns: repeat(auto-fill, minmax(246px, 1fr));
     grid-gap: 40px;
     margin-top:20px;
-    padding: 0 20px;
+    /* padding: 0 20px; */
 
   }
 
