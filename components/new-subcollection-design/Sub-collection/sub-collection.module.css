@@ -176,7 +176,7 @@
   }
   @media (max-width:600px){
     .heading-wrapper{
-      margin:20px;
+      margin:20px 20px 40px 20px;
     }
     /* working fine in asset page  */
     .assetWrapper {
@@ -226,8 +226,8 @@
   
   /* list view css starts from here */
   .list-wrapper {
-    grid-template-columns: unset;
-    grid-gap:20px;
+    grid-template-columns: unset !important;
+    grid-gap:20px !important;
   }
   
   .list-asset-wrapper {
@@ -305,5 +305,15 @@
     grid-gap: 40px;
     margin-top:20px;
     padding: 0 20px;
+
+  }
+
+  @media (min-width:600px) and (max-width:999px){
+  .collection-filter-wrap{
+    width: 100% !important;
+    top:250!important;
+
+  }
+
 
   }

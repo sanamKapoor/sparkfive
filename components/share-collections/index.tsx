@@ -333,7 +333,6 @@ const ShareCollectionMain = () => {
       {!loading && (
         <main className={styles.container}>
           <TopBar
-
             setActiveSortFilter={setActiveSortFilter}
             setActiveView={setActiveView}
             setActiveSearchOverlay={() => setActiveSearchOverlay(true)}

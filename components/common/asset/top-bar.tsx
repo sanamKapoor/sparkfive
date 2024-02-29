@@ -75,9 +75,8 @@ const TopBar = ({
   return (
     <section
       data-drag="false"
-      className={`${renderSidebar && sidebarOpen ? styles["container"] : styles["container-on-toggle"]} ${
-        isShare ? styles["topbarPage"] : ""
-      }`}
+      className={`${(renderSidebar && sidebarOpen) ? !isShare ? styles["container"] : styles["topbarShareContainer"] : styles["container-on-toggle"]
+        } }`}
       id={"top-bar"}
     >
       <div className={styles["filter-mobile"]}>
@@ -129,15 +128,14 @@ const TopBar = ({
               <img
                 src={Utilities.search}
                 onClick={setActiveSearchOverlay}
-                className={`${styles.search} ${styles.SearchWeb} ${
-                  !(
+                className={`${styles.search} ${styles.SearchWeb} ${!(
                     (amountSelected === 0 || mode === "folders") &&
                     showAssetAddition &&
                     hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL])
                   )
                     ? "m-r-20"
                     : ""
-                }`}
+                  }`}
               />
               <div className={styles.SearchMobile}>
                 <SearchOverlayAssets />
@@ -145,16 +143,16 @@ const TopBar = ({
             </div>
           )}
           {activeSearchOverlay && (
-           
-              <SearchOverlay
-                closeOverlay={closeSearchOverlay}
-                activeFolder={mode === "SubCollectionView" ? activeSubFolders : activeFolder}
-                mode={mode}
-                sharePath={sharePath}
-                isFolder={isFolder}
-                onClickOutside={undefined}
-              />
-          
+
+            <SearchOverlay
+              closeOverlay={closeSearchOverlay}
+              activeFolder={mode === "SubCollectionView" ? activeSubFolders : activeFolder}
+              mode={mode}
+              sharePath={sharePath}
+              isFolder={isFolder}
+              onClickOutside={undefined}
+            />
+
           )}
           {(amountSelected === 0 || mode === "folders") &&
             showAssetAddition &&

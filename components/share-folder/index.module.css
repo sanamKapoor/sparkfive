@@ -144,5 +144,15 @@
   .toggleContainer{
     padding-top: 130px;
   }
+  .sidenav-main-wrapper{
+    top: 76px;
+  }
   
+}
+
+@media (max-width:600px){
+  .col-wrapperview{
+    padding-top: 0 !important;
+  }
+
 }

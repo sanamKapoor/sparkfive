@@ -29,8 +29,8 @@ const SubCollection = ({
   isShare = false,
   toggleSelected,
   mode = "assets",
-  deleteFolder = (id: string) => {},
-  viewFolder = (id: string) => {},
+  deleteFolder = (id: string) => { },
+  viewFolder = (id: string) => { },
   sharePath = "",
   widthCard,
   ref,
@@ -72,6 +72,7 @@ const SubCollection = ({
     setCollectionDragFlag,
     setCollectionDragId,
     setCollectionParentDragId,
+    setSubCollectionMove
   } = useContext(AssetContext);
 
   const { user } = useContext(UserContext);
@@ -154,10 +155,13 @@ const SubCollection = ({
     }
   };
 
-  //Handle the dynamically stopage of filters at top of page position on scroll down
+  // Handle the dynamically stopage of filters at top of page position on scroll down
   const getStyling = (): CSSProperties => {
-    return isSticky ? { position: "fixed", width: "calc(100% - 350px)", top: bottom1, zIndex: 1200 } : {};
+    return isSticky ? { position: "fixed", top: bottom1, zIndex: 1200, width: "calc(100% - 350px)", } : {};
   };
+
+
+
   //Handle the selctable Item for the drag selct area at initial load and load more functionality
   useEffect(() => {
     let liElements, containerRect; // Declare liElements in the outer scope
@@ -242,14 +246,15 @@ const SubCollection = ({
     parentFolder.current = "";
     setMoveModalFlag(false);
     setLoader(false);
-    setAssetDragId(""); // Global state for saving the asset Id
-    setAssetDragFlag(false); // Global state for start the dragging in side nav
-    setAssetDragType(""); // Global state in for asset if move or copy
-    setDroppableId(""); //Global state in sidenav for droppbale
-    setCollectionDragFlag(false); // Global state in for collection drag when
-    setCollectionDragId(""); // Global state in for collection drag
-    setCollectionParentDragId("");
-    setDroppableFolderName(""); // local state in for drag when
+    setAssetDragId("");// Global state for saving the asset Id 
+    setAssetDragFlag(false);// Global state for start the dragging in side nav
+    setAssetDragType("");// Global state in for asset if move or copy 
+    setDroppableId("") //Global state in sidenav for droppbale 
+    setCollectionDragFlag(false);// Global state in for collection drag when
+    setCollectionDragId("");// Global state in for collection drag
+    setCollectionParentDragId("")
+    setDroppableFolderName("");// local state in for drag when
+    setSubCollectionMove(false)
   };
 
   const removeSelectedFromList = () => {
@@ -294,8 +299,9 @@ const SubCollection = ({
 
   const handleCollectionDragStart = (e: React.DragEvent<HTMLLIElement>, parentId: string) => {
     setCollectionDragFlag(true);
-    setCollectionDragId(e.currentTarget.id);
-    setCollectionParentDragId(parentId);
+    setCollectionDragId(e.currentTarget.id)
+    setCollectionParentDragId(parentId)
+    setSubCollectionMove(true)
   };
 
   return (
@@ -430,9 +436,8 @@ const SubCollection = ({
           </div>
           <div
             id="filter-view"
-            className={`${styles["collection-filter-wrap"]} ${isSticky ? styles["sticky"] : ""}  ${
-              assetsHide ? styles.hidden : ""
-            }`}
+            className={`${styles["collection-filter-wrap"]} ${isSticky ? styles["sticky"] : ""}  ${assetsHide ? styles.hidden : ""
+              }`}
             style={getStyling()}
           >
             {!assetsHide && <FilterView />}
@@ -444,9 +449,8 @@ const SubCollection = ({
           > */}
           <div
             id="asset-view"
-            className={`${isShare ? styles["shareWrapper"] : styles["assetWrapper"]} ${
-              activeView === "list" && styles["list-wrapper"]
-            }`}
+            className={`${isShare ? styles["shareWrapper"] : styles["assetWrapper"]} ${activeView === "list" && styles["list-wrapper"]
+              }`}
             ref={elementsAssetContainerRef}
           >
             {!assetsHide && sortedAssets.length > 0 && (
