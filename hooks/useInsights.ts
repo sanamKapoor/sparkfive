@@ -62,9 +62,11 @@ const useInsights = ({ section, endpoint }: { section?: string; endpoint?: strin
         };
       }
 
-      const { data } = await AnalyticsApi.getAnalyticsData(apiEndpoint, payload);
+      const { data } = await AnalyticsApi.getAnalyticsData(apiEndpoint, payload);      
 
       if (downloadCSV) {
+        console.log({data});
+
         const fileData = new Blob([data], {type: "text/csv;charset=utf-8" });
 
         const { fileName, successMsg } = getCSVFileName(activeSection);       
