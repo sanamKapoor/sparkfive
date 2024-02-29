@@ -87,6 +87,7 @@ export const initialActiveSortFilters: any = {
   filterProductType: [],
   filterCustomFields: [],
   filterResolutions: [],
+  filterFaceRecognitions: [],
   allNonAiTags: "all",
   allAiTags: "all",
   allCampaigns: "all",

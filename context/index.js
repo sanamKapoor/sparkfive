@@ -82,6 +82,8 @@ export const UserContext = createContext({
   setLogo: (logo) => { },
   logoId: "",
   resetLogo: () => { },
+  faceRecognitionSettings: {},
+  setFaceRecognitionSettings: (value) => { },
 });
 
 export const ThemeContext = createContext({
@@ -249,7 +251,10 @@ export const AssetContext = createContext({
   collectionParentDragId: "",
   setCollectionParentDragId: (value) => { },
   subCollectionMove: false,
-  setSubCollectionMove: (value) => { }
+  setSubCollectionMove: (value) => { },
+  faceRecognitionScanningPercent: 0,
+  faceRecognitionScanning: false,
+  setFaceRecognitionScanning: (value) => { },
 });
 
 export const TeamContext = createContext({
@@ -364,4 +369,21 @@ export const GuestUploadContext = createContext({
   updateLogo: (url) => { },
   banner: "",
   setBanner: (banner) => { },
+});
+
+export const AssetDetailContext = createContext({
+  sharePath: "",
+  isShare: "",
+  asset: {},
+  realUrl: "",
+  activeFolder: "",
+  thumbnailUrl: "",
+  initialParams: {},
+  setSharePath: (data) => { },
+  setisShare: (data) => { },
+  setAsset: (record) => { },
+  setrealUrl: (data) => { },
+  setactiveFolder: (data) => { },
+  setThumbnailURL: (data) => { },
+  setInitialParam: (record) => { },
 });

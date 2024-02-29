@@ -67,6 +67,12 @@ body {
   /* overflow: hidden; */
 }
 
+@media (min-width:1199px){
+  body{
+    height:90vh;
+  }
+}
+
 #__next {
   height: 100%;
 }
@@ -398,6 +404,10 @@ input[role="combobox"] {
   height: 100%;
   width: 100%;
   object-fit: contain;
+}
+
+.theme-stroke-icon{
+  stroke: var(--primary-color);
 }
 
 .theme-icon{

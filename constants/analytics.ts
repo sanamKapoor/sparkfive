@@ -93,7 +93,7 @@ export const AnalyticsActiveModal = {
 
 export const DashboardSections = {
   TEAM: "team?sessionOnly=true",
-  USER: "users",
+  USER: "dashboard-users",
   ASSET: "assets",
   USER_ACTIVITY: "user-activity",
 };
@@ -145,3 +145,5 @@ export const PAGE = 1;
 export const LIMIT = 15;
 export const DASHBOARD_REC_LIMIT = 6;
 export const TABLE_REC_LEN = 15;
+export const DASHBOARD_TABLE_REC_LEN = 6;
+export const DASHBOARD_ASSET_TABLE_REC_LEN = 8;

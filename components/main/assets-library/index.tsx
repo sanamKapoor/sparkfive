@@ -655,7 +655,19 @@ const AssetsLibrary = () => {
       if (replace) {
         setAddedIds([]);
       }
+
+      // console.log(`>>> ... get assets`, activeSortFilter);
       setPlaceHolders("asset", replace);
+
+      console.log(`>>> After process`, {
+        ...getAssetsFilters({
+          replace,
+          activeFolder,
+          addedIds,
+          nextPage,
+          userFilterObject: activeSortFilter,
+        }),
+      });
       const { data } = await assetApi.getAssets({
         ...getAssetsFilters({
           replace,

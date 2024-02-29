@@ -12,10 +12,11 @@ const Tag = ({
   data,
   type = null,
   canRemove = false,
-  removeFunction = () => { },
-  editFunction = () => { },
+  removeFunction = () => {},
+  editFunction = () => {},
   altColor = "",
-}) => {
+  wrapperClass = "",
+}: Props) => {
   const { push, asPath } = useRouter();
   const { hasPermission } = useContext(UserContext);
 
@@ -54,14 +55,15 @@ const Tag = ({
     <div
       onMouseEnter={(_) => setMouseOver(true)}
       onMouseLeave={(_) => setMouseOver(false)}
-      className={`${styles.container} ${hasPermission([SETTINGS_TEAM, SETTINGS_COMPANY]) ? styles["pointer"] : ""} ${altColor && styles[`alt-color-${altColor}`]
-        }`}
+      className={`${styles.container} ${wrapperClass} ${
+        hasPermission([SETTINGS_TEAM, SETTINGS_COMPANY]) ? styles["pointer"] : ""
+      } ${altColor && styles[`alt-color-${altColor}`]}`}
     >
       <span>{tagRender}</span>
 
       {/**
- * TODO conflict issue
- */}
+       * TODO conflict issue
+       */}
       {/* {canRemove && (
         <IconClickable
           additionalClass={styles.remove}
@@ -73,5 +75,16 @@ const Tag = ({
     </div>
   );
 };
+
+interface Props {
+  tag: any;
+  data: any;
+  type?: any;
+  canRemove: boolean;
+  removeFunction: () => void;
+  editFunction?: () => void;
+  altColor?: string;
+  wrapperClass?: string;
+}
 
 export default Tag;

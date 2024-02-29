@@ -37,6 +37,7 @@
   height: auto;
   aspect-ratio: 1 / 1;
   object-fit: cover;
+  background: #F8F8F8
 }
 
 .item-wrapper {

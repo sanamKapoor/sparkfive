@@ -144,6 +144,9 @@
   .toggleContainer{
     padding-top: 130px;
   }
+  .sidenav-main-wrapper{
+    top: 76px;
+  }
   
 }
 

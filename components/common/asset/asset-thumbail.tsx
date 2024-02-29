@@ -214,8 +214,6 @@ const AssetThumbail = ({
   }
 
 
-
-
   return (
     <>
       <div>

@@ -3,7 +3,7 @@ import { AnalyticsActiveModal, TableBodySection } from "../../../../constants/an
 import DateFormatter from "../../../../utils/date";
 import AssetIcon from "../../../common/asset/asset-icon";
 import styles from "./table-data.module.css";
-import { useRouter } from "next/router";
+import AssetThumb from "../asset-img";
 
 const TableBody = ({ handleModals, data, tableFor, dashboardView }) => {
 
@@ -164,13 +164,14 @@ export const AssetTableRows = ({ data, handleModals }) => {
               {row.name && (
                 <div className={styles["usernameWithImage"]}>
                   <div className={`${styles["image-wrapper"]}`}>
-                    {row.thumbnail ? (
-                      <img src={row.thumbnail} alt="user" className={styles.assetImage} />
+                    {(row.type === 'image' || row.type === 'video') ? (
+                      <AssetThumb thumbnail={row.thumbnail} type={row.type} />
+                      // <img src={row.thumbnail} alt="user" className={styles.assetImage} />
                     ) : (
                       <AssetIcon imgClass={"analytics-icon"} extension={row.extension} />
                     )}
                   </div>
-                  <span className={`${styles["user-name"]}`}>{row.name}</span>
+                  <span>{row.name}</span>
                 </div>
               )}
             </td>
@@ -196,9 +197,7 @@ export const UserActivityRows = ({ data, dashboardView }) => {
   let activityDate = "";
   return (
     <tbody className={`${styles['tableContent']}`}>
-      {data.map((row) => {
-        console.log({ row });
-        
+      {data.map((row) => {        
         activityTitle = row.last_download ? "Download" : row.last_viewed ? "Viewed" : row.last_shared ? "Shared" : "";
         activityDate = row.last_download
           ? row.last_download
@@ -266,7 +265,7 @@ export const UserActivityRows = ({ data, dashboardView }) => {
                 </div>
               </td>
               <td>{row.assetId ? <button className={styles.actionButton} onClick={() => {
-                  // window.open(`${window.location.origin}/main/assets/${row.assetId}`, '_blank')
+                  window.open(`${window.location.origin}/main/assets/${row.assetId}?isShare=false&sharePath=&sharedCode=&headerName=All+Assets&activeFolder=&availableNext=true&activeSubFolders=`, '_blank')
                 }}>View Link</button> : ""}</td>
             </tr>
           );
@@ -286,13 +285,14 @@ export const AssetTableDashboardRows = ({ data }) => {
               {row.name && (
                 <div className={styles["usernameWithImage"]}>
                   <div className={`${styles["image-wrapper"]}`}>
-                    {row.thumbnail ? (
-                      <img src={row.thumbnail} alt="user" className={styles.assetImage} />
+                    {(row.type === 'image' || row.type === 'video') ? (
+                      <AssetThumb thumbnail={row.thumbnail} type={row.type} />
+                      // <img src={row.thumbnail} alt="user" className={styles.assetImage} />
                     ) : (
                       <AssetIcon imgClass={"analytics-icon"} extension={row.extension} />
                     )}
                   </div>
-                  <span className={`${styles["user-name"]}`}>{row.name}</span>
+                  <span>{row.name}</span>
                 </div>
               )}
             </td>
@@ -302,7 +302,7 @@ export const AssetTableDashboardRows = ({ data }) => {
             <td>
               {row.id && (
                 <button className={styles.actionButton} onClick={() => {
-                  // window.open(`${window.location.origin}/main/assets/${row.id}`, '_blank')
+                  window.open(`${window.location.origin}/main/assets/${row.id}?isShare=false&sharePath=&sharedCode=&headerName=All+Assets&activeFolder=&availableNext=true&activeSubFolders=`, '_blank')
                 }}>
                   View asset
                 </button>

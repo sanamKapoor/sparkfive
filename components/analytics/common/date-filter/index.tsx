@@ -60,14 +60,14 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
   const handleStartDay = (value) => {
     setCustomDateVal((prev) => ({
       ...prev,
-      beginDate: value,
+      beginDate: DateUtils.parseDateToStringForAnalytics(value),
     }));
   };
 
   const handleEndDay = (value) => {
     setCustomDateVal((prev) => ({
       ...prev,
-      endDate: value,
+      endDate: DateUtils.parseDateToStringForAnalytics(value),
     }));
   };
 
@@ -94,8 +94,8 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
   useEffect(() => {
     if (customDates && filter !== null && showCustomRange) {
       setCustomDateVal({
-        beginDate: filter.beginDate.toDateString(),
-        endDate: filter.endDate.toDateString(),
+        beginDate: new Date(filter.beginDate).toDateString(),
+        endDate: new Date(filter.endDate).toDateString(),
       });
     }
   }, [customDates, showCustomRange]);
@@ -159,7 +159,7 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
         {/* tab-view button */}
         <section>
           <div className={`${styles["date-filter-teb"]}`}>
-        
+
             <Button text="Date Range" className={"outline-text-btn"} onClick={() => {
               setTabView(!tabView)
             }} />
@@ -192,68 +192,6 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
                 </div>
               </div>
 
-              {/* tab-view dates */}
-              {/* {
-                tabView &&
-                <div className={`${styles["date-range-mobile"]}`}>
-                  <div className={styles.radioButtons}>
-                    <div
-                      className={`${styles.circle} ${activeFilter === "7d" && styles.active}`}
-                      onClick={() => handleFilterClick("7d", 7)}
-                    >
-                      {activeFilter === "7d" && <img src={Utilities.radio} />}
-                    </div>
-                    <label className={styles.radioLabel} htmlFor="7d">
-                      7 Day
-                    </label>
-                  </div>
-                  <div className={styles.radioButtons}>
-                    <div
-                      className={`${styles.circle} ${activeFilter === "1m" && styles.active}`}
-                      onClick={() => handleFilterClick("1m", 30)}
-                    >
-                      {activeFilter === "1m" && <img src={Utilities.radio} />}
-                    </div>
-                    <label className={styles.radioLabel} htmlFor="1m">
-                      1 Month
-                    </label>
-                  </div>
-                  <div className={styles.radioButtons}>
-                    <div
-                      className={`${styles.circle} ${activeFilter === "6m" && styles.active}`}
-                      onClick={() => handleFilterClick("6m", 182)}
-                    >
-                      {activeFilter === "6m" && <img src={Utilities.radio} />}
-                    </div>
-                    <label className={styles.radioLabel} htmlFor="6m">
-                      6 Month
-                    </label>
-                  </div>
-                  <div className={styles.radioButtons}>
-                    <div
-                      className={`${styles.circle} ${activeFilter === "12m" && styles.active}`}
-                      onClick={() => handleFilterClick("12m", 365)}
-                    >
-                      {activeFilter === "12m" && <img src={Utilities.radio} />}
-                    </div>
-                    <label className={styles.radioLabel} htmlFor="12m">
-                      12 Month
-                    </label>
-                  </div>
-                  <div className={styles.radioButtons}>
-                    <div
-                      className={`${styles.circle} ${activeFilter === "custom" && styles.active}`}
-                      onClick={handleCustomDateSelector}
-                    >
-                      {activeFilter === "custom" && <img src={Utilities.radio} />}
-                    </div>
-                    <label className={styles.radioLabel} htmlFor="custom">
-                      Custom Range
-                    </label>
-                  </div>
-                </div>
-              } */}
-
               {showCustomRange && <div className={`${styles["date-filters"]}`}>
                 <div className={styles.dummy}>
                   <label className={styles.label} htmlFor="">
@@ -262,9 +200,9 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
                   <DayPickerInput
                     onDayChange={(day) => handleStartDay(day)}
                     value={
-                      customDateVal.beginDate !== null
+                      customDateVal.beginDate
                         ? DateUtils.parseDateToStringForAnalytics(customDateVal.beginDate)
-                        : ""
+                        : "MM/DD/YY"
                     }
                     dayPickerProps={{
                       disabledDays: {
@@ -281,7 +219,7 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
                   <DayPickerInput
                     onDayChange={(day) => handleEndDay(day)}
                     value={
-                      customDateVal.endDate !== null ? DateUtils.parseDateToStringForAnalytics(customDateVal.endDate) : ""
+                      customDateVal.endDate ? DateUtils.parseDateToStringForAnalytics(customDateVal.endDate) : "MM/DD/YY"
                     }
                     dayPickerProps={{
                       className: styles.calendar,
@@ -295,13 +233,13 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
               </div>}
               {dateError && <small>{dateError}</small>}
               <div className={`${styles["datepicker-buttons-outer"]}`}>
+                <Button text={"Cancel"} className={"cancel-btn"} onClick={handleCustomDateSelector}></Button>
                 <Button
                   text={"Apply"}
                   className={!customDateVal.beginDate || !customDateVal.endDate ? "apply-btn-disable" : "apply-btn"}
                   onClick={handleApplyCustomDate}
                   disabled={!customDateVal.beginDate || !customDateVal.endDate}
                 ></Button>
-                <Button text={"Cancel"} className={"cancel-btn"} onClick={handleCustomDateSelector}></Button>
               </div>
             </div>
           )

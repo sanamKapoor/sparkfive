@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AnalyticsLayoutSection, InsightsApiEndpoint, TableBodySection } from "../../../../constants/analytics";
+import { AnalyticsLayoutSection, DASHBOARD_TABLE_REC_LEN, InsightsApiEndpoint, TableBodySection } from "../../../../constants/analytics";
 import {
     activitycolumns,
     userActivityModalArrowColumns
@@ -16,15 +16,22 @@ function Activity({ initialData }) {
     section: AnalyticsLayoutSection.DASHBOARD,
     endpoint: InsightsApiEndpoint.USER_ACTIVITY
   });
+  const [emptyRows, setEmptyRows] = useState([]);
   const [totalActivities, setTotalActivities] = useState(0);
   const [totalActivitiesData, setTotalActivitiesData] = useState([]);
 
   useEffect(() => {
     if (totalRecords > 0 && data.length > 0) {
+      setEmptyRows(Array.from({ length: Math.max(DASHBOARD_TABLE_REC_LEN - (data ? data.length : 0), 0) }, (_, index) => ({})));
       setTotalActivities(totalRecords);
       setTotalActivitiesData(data);
+    } else {
+      if(!loading){
+        setTotalActivities(0)
+        setTotalActivitiesData([])
+      }
     }
-  }, [totalRecords, data]);
+  }, [totalRecords, data, loading]);
 
   const handleClearSorting = () => {
     setSortBy("");
@@ -33,6 +40,7 @@ function Activity({ initialData }) {
 
   useEffect(() => {    
     if (initialData) {
+      setEmptyRows(Array.from({ length: Math.max(DASHBOARD_TABLE_REC_LEN - (initialData.data ? initialData.data.length : 0), 0) }, (_, index) => ({})));
       setTotalActivitiesData(initialData.data);
       setTotalActivities(initialData.totalRecords);
       if(initialData.error) setError(initialData.error);
@@ -50,7 +58,7 @@ function Activity({ initialData }) {
         <TableData 
           columns={activitycolumns} 
           arrowColumns={userActivityModalArrowColumns} 
-          data={totalActivitiesData}
+          data={totalActivitiesData ? [ ...totalActivitiesData, ...emptyRows ] : null}
           apiData={totalActivitiesData}
           tableLoading={loading}
           totalRecords={totalActivities}

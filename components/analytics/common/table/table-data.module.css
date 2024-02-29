@@ -44,13 +44,12 @@
     justify-content: center;
     z-index: 99;
   }
-/* active class when we click on flip icon */
-  /* ${styles['active_table-head']} */
-  .active_table-head{
+
+  /* .active_table-head{
     background:#e5d3b8;
     height:41px;
     padding-left: 10px;
-  }
+  } */
   .flip-direction{
     margin-left: 5px;
   }
@@ -87,6 +86,14 @@
   .table tr:nth-child(odd) {
     background-color: #ffffff;
   }
+  /* active class when we click on flip icon */
+  /* ${styles['active_table-head']} */
+  .table th.active_table-head,
+.table td.active_table-head {
+    background: #e5d3b8;
+    height: 41px;
+    padding-left: 10px;
+}
   .headingIcon{
     display: flex;
     align-items: center;
