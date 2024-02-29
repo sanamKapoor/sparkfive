@@ -22,11 +22,12 @@ const RulesOptions: React.FC<RulesOptionsProps> = ({
   return (
     <div>
       <div
+      data-drag="false"
         className={`${styles["rule-tag"]}`}
         onClick={() => setShowDropdown(!showDropdown)}
       >
         <label>Rule:</label>
-        <div className={`${styles["select-wrapper"]}`}>
+        <div data-drag="false" className={`${styles["select-wrapper"]}`}>
           <p>{activeRuleName}</p>
           <IconClickable
             additionalClass={styles["dropdown-icon"]}

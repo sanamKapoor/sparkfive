@@ -17,6 +17,14 @@
   display: none;
  
 }
+.assetIcon{
+  display: none;
+
+}
+.assetIcon img{
+  display: flex;
+  align-items: center;
+}
 .icon img{
   display: flex;
   align-items: center;
@@ -33,7 +41,7 @@
 .count{
   display: none;
 }
-@media screen and (max-width: 810px) {
+@media screen and (max-width: 1025px) {
   .navigationLinkheading{
     margin-left: 10px;
     font-weight: 500;
@@ -42,6 +50,11 @@
   .menuHeading{
     margin-left: 10px;
    
+  }
+  .assetIcon{
+    margin-left: 34px;
+    display: block;
+
   }
   .icon{
     display: block;
@@ -75,4 +88,18 @@ width: 100%;
     display: block;
     margin-left:20px;
   }
+  .icon img{
+    width: 16px;
+  }
+  .assetIcon{
+    margin-left: 10px;
+    display: block;
+
+  }
+}
+@media (min-width:700px) and (max-width:1025px){
+  .share-page-menu-wrapper{
+    display: none;
+  }
+
 }

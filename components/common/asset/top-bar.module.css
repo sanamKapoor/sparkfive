@@ -38,9 +38,7 @@
   margin-left: 327px;
 }
 
-
-
-  .outer-box{
+.outer-box{
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -50,6 +48,7 @@
   .search-icon{
     display: flex;
     align-items: center;
+  
   }
   .search-icon img{
     width: 24px;
@@ -70,8 +69,10 @@
 .main-heading-wrapper{
   display: flex;
   align-items: end;
- 
-
+ }
+.share-page-heading{
+  display: flex;
+  align-items: end;
 
 }
 .newsidenav{
@@ -252,6 +253,16 @@ li.dropdown-title {
     width: 100%;
     max-width: 290px;
   }
+
+.view-dropdown {
+  left: 0;
+  top: 35px;
+  width: 160px;
+}
+.SearchMobile{
+  display: block;
+}
+
  
 }
 @media screen and (max-width: 810px){
@@ -259,6 +270,11 @@ li.dropdown-title {
     width: 100%;
     margin-left: 0;
   }
+  .view-dropdown {
+    left: 0;
+ 
+  }
+  
 }
 
 @media screen and (min-width: 810px) {
@@ -285,7 +301,7 @@ li.dropdown-title {
 
 }
 
-@media screen and (max-width: 810px) {
+@media screen and (max-width: 1025px) {
   .sec-filters {
     gap: 8px;
     margin-top: 20px;
@@ -364,6 +380,16 @@ li.dropdown-title {
 
 
 }
+
+@media (min-width:810px) and (max-width:1075px){
+  .topbar-share-page{
+    padding: 0;
+  }
+  .share-page-heading{
+    margin-bottom: 15px;
+  }
+
+} 
 
 @media screen and (max-width: 600px) {
   .tab-list {
@@ -459,7 +485,8 @@ li.dropdown-title {
     display: none;
   }
   .sort-wrapper{
-    display: none;
+    display: block;
+    width: 44%;
   }
   .sort-wrapper div>div>{
     outline: none;
@@ -469,8 +496,9 @@ li.dropdown-title {
     display: none;
   }
   .sec-filters {
-   justify-content: space-between;
+   /* justify-content: space-between; */
    padding: 0 20px;
+   flex-wrap: wrap;
   }
   .mobile-app{
     display: block;
@@ -484,6 +512,7 @@ li.dropdown-title {
   }
   .nested-wrapper Button{
     display: block;
+    height: 34px;
   }
   
   .newsidenav{
@@ -494,6 +523,12 @@ li.dropdown-title {
   }
    .outer-box{
     padding:0 20px;
+   }
+   .search-icon{
+    width: 100% !important;
+   }
+   .nested-wrapper{
+    width: 50%;
    }
 
 }
@@ -507,10 +542,17 @@ li.dropdown-title {
     
   }
   
+  
 }
 
-@media (max-width:800px) {
+@media (max-width:1025px) {
   .container-on-toggle{
    padding:33.5px 0;
   }
+  .search-icon{
+    display: block !important;
+    width:61%
+  }
 }
+
+

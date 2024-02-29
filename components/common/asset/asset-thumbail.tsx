@@ -338,9 +338,10 @@ const AssetThumbail = ({
           {activeView === "list" && (
             <div data-drag="false" className={styles["size"]}>{parseInt(asset.size) !== 0 && asset.size && filesize(asset.size)}</div>
           )}
-          <div data-drag="false" className={activeView === "grid" && styles.sizeMargin}>
-            <div
-              data-drag="false"
+          {/* <div data-drag="false" className={activeView === "grid" && styles.sizeMargin}> */}
+          <div data-drag="false" className={`${activeView === "list" ? styles["extra-class"] : ''} ${activeView === "grid" ? styles.sizeMargin : ''}`}>
+           <div
+            data-drag="false"
               className={`${activeView !== "list"
                 ? `secondary-text ${styles["modified-date"]} ${styles["uploadModified"]}`
                 : ""

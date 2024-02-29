@@ -9,8 +9,8 @@ interface NoResultsProps {
 
 const NoResults: React.FC<NoResultsProps> = ({ onClose }) => {
   return (
-    <div className={styles.wrapper}>
-      <p>No Result Found</p>
+    <div data-drag="false" className={styles.wrapper}>
+      <p data-drag="false">No Result Found</p>
       <img
         className={styles.closeIcon}
         src={Utilities.closeIcon}
