@@ -3,7 +3,7 @@ import Router, { useRouter } from "next/router";
 import { useContext, useRef, useState } from "react";
 import { GeneralImg, Navigation, insights } from "../../../assets";
 import { ASSET_UPLOAD_APPROVAL, SETTINGS_TEAM, SUPERADMIN_ACCESS } from "../../../constants/permissions";
-import { LoadingContext, TeamContext, UserContext } from "../../../context";
+import { LoadingContext, TeamContext, UserContext, AssetContext } from "../../../context";
 import cookiesUtils from "../../../utils/cookies";
 import styles from "./main-layout.module.css";
 
@@ -19,12 +19,13 @@ import Notification from "../notifications/notification";
 import SpinnerOverlay from "../spinners/spinner-overlay";
 import UserPhoto from "../user/user-photo";
 
-const MainLayout = ({ children, requiredPermissions = [], headerZIndex}) => {
+const MainLayout = ({ children, requiredPermissions = [], headerZIndex }) => {
   const headerStyle = {
     zIndex: typeof headerZIndex !== 'undefined' ? headerZIndex : '1500',
   };
 
   const { user, logOut, hasPermission, logo } = useContext(UserContext);
+  const { setHeaderName } = useContext(AssetContext)
   const { isLoading } = useContext(LoadingContext);
   const pageListRef = useRef(null);
   const router = useRouter();
@@ -33,11 +34,16 @@ const MainLayout = ({ children, requiredPermissions = [], headerZIndex}) => {
 
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const resetStateOnLogout = () => {
+    setHeaderName("");
+    logOut();
+  }
+
   let menuOptions = [
     {
       id: "assets",
       label: "Assets",
-      onClick: () => { 
+      onClick: () => {
         router.push("/main/assets")
       },
     },
@@ -48,11 +54,11 @@ const MainLayout = ({ children, requiredPermissions = [], headerZIndex}) => {
     // },
   ]
 
-  if(user?.team?.analytics && user?.roleId === 'admin') {
+  if (user?.team?.analytics && user?.roleId === 'admin') {
     menuOptions.push({
       id: "insights",
       label: "Insights",
-      onClick: () => { 
+      onClick: () => {
         router.push("/main/insights")
       },
     })
@@ -133,7 +139,7 @@ const MainLayout = ({ children, requiredPermissions = [], headerZIndex}) => {
     <>
       {user && (
         <>
-          <header id={"main-header"} className={styles.header}  style={headerStyle}>
+          <header id={"main-header"} className={styles.header} style={headerStyle}>
             <Link href={plan?.type === "marketing_hub" ? "/main/overview" : "/main/assets"}>
               <a>
                 <img className={styles["logo-img"]} src={logo} alt={"logo"} />
@@ -174,7 +180,7 @@ const MainLayout = ({ children, requiredPermissions = [], headerZIndex}) => {
                 imgHover={insights.insightAsset}
                 text="Assets"
               />
-              
+
               {(user?.team?.analytics && user?.roleId === 'admin') && <HeaderLink
                 active={Router.pathname.indexOf("insights") !== -1}
                 href="/main/insights"
@@ -227,7 +233,7 @@ const MainLayout = ({ children, requiredPermissions = [], headerZIndex}) => {
                   admOptions={admDropdownOptions}
                   settingsOptions={settingsDropdownOptions}
                   user={user}
-                  logout={{ label: "Log Out", onClick: logOut }}
+                  logout={{ label: "Log Out", onClick: resetStateOnLogout }}
                 />
               )}
             />

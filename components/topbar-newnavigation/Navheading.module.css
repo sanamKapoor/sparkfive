@@ -97,9 +97,9 @@ width: 100%;
 
   }
 }
-@media (min-width:700px) and (max-width:1025px){
+/* @media (min-width:700px) and (max-width:1025px){
   .share-page-menu-wrapper{
     display: none;
   }
 
-}
+} */
