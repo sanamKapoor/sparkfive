@@ -25,6 +25,7 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
 
   const handleFilterClick = (filter, days) => {
     setShowCustomRange(false);
+    setShowDatePopup(false);
     setActiveFilter(filter);
     setCustomDates(false);
     if (days !== activeDays) {
@@ -159,7 +160,6 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
         {/* tab-view button */}
         <section>
           <div className={`${styles["date-filter-teb"]}`}>
-
             <Button text="Date Range" className={"outline-text-btn"} onClick={() => {
               setTabView(!tabView)
             }} />
@@ -267,6 +267,7 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
           customDates={customDates}
           tabView={tabView}
           mobileView={mobileView}
+          setDateError={setDateError}
         />}
     </>
   );
