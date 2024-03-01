@@ -30,6 +30,7 @@ const DatePickerModal = ({
   customDates,
   tabView,
   mobileView,
+  setDateError
 }) => {
   const closePopup = () => {
     if (mobileView) setMobileView(false);
@@ -45,6 +46,7 @@ const DatePickerModal = ({
 
   const handleApplyDate = () => {
     if (activeFilter !== "custom") {
+      setDateError('')
       setFilter({
         endDate: new Date(),
         beginDate: calculateBeginDate(activeDays, 1),
@@ -52,6 +54,9 @@ const DatePickerModal = ({
     } else {
       handleApplyCustomDate();
     }
+
+    if(showCustomRange && (!customDateVal.beginDate || !customDateVal.endDate)) return;
+    closePopup();
   };
 
   const handleCancelDates = () => {
