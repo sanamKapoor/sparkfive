@@ -1,37 +1,44 @@
-.container { 
-  /* position: relative; */
+.container, .container-on-toggle {
   position: fixed;
   width: 100%;
-  top: 72px;
-  left: 0;
   z-index: 1300;
   background-color: white;
-  padding: 39px 30px;
-  padding:34.5px 30px 8px 30px;
-  /* padding:34.5px 30px 8px 7px; */
+  left:0;
+}
+
+.container {
+  top: 72px;
+  padding: 34.5px 30px 8px 30px;
   width: calc(100% - 320px);
   margin-left: 327px;
+  
 }
-.topbarPage{
-   padding:34.5px 30px 8px 7px;
+
+.container-on-toggle {
+  top: 54px;
+  padding: 40px 40px 18px 40px;
 }
+
+
 /* for testing purpose need to remove  */
 .shared-container{
   width:100%;
   margin-left: 0;
 }
 
-.container-on-toggle{
+.topbarShareContainer{
+  padding:34.5px 30px 8px 8px;
   position: fixed;
   width: 100%;
-  top: 54px;
-  left: 0;
   z-index: 1300;
   background-color: white;
-  padding: 40px 40px 18px 40px;
-  }
+  left:0;
+  top: 72px;
+  width: calc(100% - 320px);
+  margin-left: 327px;
+}
 
-  .outer-box{
+.outer-box{
     display: flex;
     align-items: center;
     justify-content: space-between;

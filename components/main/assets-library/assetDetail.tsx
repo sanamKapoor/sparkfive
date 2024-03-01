@@ -1322,7 +1322,8 @@ const DetailOverlay = ({
                             )}
                             {mode === "detail" && (isShare || hasPermission([ASSET_DOWNLOAD])) && (
                                 <>
-                                    <Button
+                                <div className={styles.assetDetailBtn}>
+                                <Button
                                         text={"Download"}
                                         type={"button"}
                                         className={`container ${styles["only-desktop-button"]} secondary`}
@@ -1334,6 +1335,8 @@ const DetailOverlay = ({
                                             }
                                         }}
                                     />
+                                </div>
+                               
                                     <div className={styles["only-mobile-button"]}>
                                         <IconClickable
                                             className={styles["only-mobile-button"]}

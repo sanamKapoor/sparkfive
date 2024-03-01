@@ -164,3 +164,9 @@
     padding: 6px 12px;
   }
 }
+@media (min-width:820px) and (max-width:1600px){
+  .input-container input{
+    width: 50% !important;
+  }
+
+}

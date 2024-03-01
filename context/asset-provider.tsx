@@ -150,6 +150,7 @@ export default ({ children }) => {
   const [collectionDragFlag, setCollectionDragFlag] = useState(false);
   const [collectionDragId, setCollectionDragId] = useState("");
   const [collectionParentDragId, setCollectionParentDragId] = useState("");
+  const [subCollectionMove, setSubCollectionMove] = useState(false);
 
   const [faceRecognitionScanning, setFaceRecognitionScanning] = useState(false);
   const [faceRecognitionScanningPercent, setFaceRecognitionScanningPercent] = useState(0);
@@ -713,6 +714,8 @@ export default ({ children }) => {
     setCollectionDragId,
     collectionParentDragId,
     setCollectionParentDragId,
+    subCollectionMove,
+    setSubCollectionMove,
     faceRecognitionScanningPercent,
     faceRecognitionScanning,
     setFaceRecognitionScanning,

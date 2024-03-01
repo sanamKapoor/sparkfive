@@ -26,7 +26,9 @@ import { shareLinkEvents } from "../../constants/analytics";
 import useAnalytics from "../../hooks/useAnalytics";
 
 const ShareFolderMain = () => {
+
   const router = useRouter();
+
   const {
     assets,
     setAssets,
@@ -127,7 +129,7 @@ const ShareFolderMain = () => {
   }, [needsFetch]);
 
   useEffect(() => {
-    setInitialLoad(folderInfo, activeSortFilter.mainFilter);
+    setInitialLoad(folderInfo);
     if (firstLoaded && sharePath) {
       setActivePageMode("library");
       if (activeSortFilter.mainFilter === "folders") {
@@ -262,6 +264,7 @@ const ShareFolderMain = () => {
     try {
       const { data } = await shareCollectionApi.getFolderInfo({ sharePath });
       let sort, mode;
+      console.log(firstLoaded, "firstLoaded", data, "data shared", "activeFolder", activeFolder, "acitveSubFolder", activeSubFolders)
 
       if (firstLoaded) {
         if (data?.singleSharedCollectionId && data?.sharedFolder?.parentId) {
@@ -275,6 +278,16 @@ const ShareFolderMain = () => {
           });
         } else if (data?.singleSharedCollectionId && !data?.sharedFolder?.parentId) {
           setActiveSubFolders(data?.singleSharedCollectionId);
+          sort =
+            data?.customAdvanceOptions.collectionSortView === "alphabetical"
+              ? selectOptions.sort[3]
+              : selectOptions.sort[1];
+          mode = "SubCollectionView";
+          setActiveSortFilter({
+            ...activeSortFilter,
+            mainFilter: mode, // Set to all if only folder is shared
+            sort: sort,
+          });
         } else if (!data?.singleSharedCollectionId) {
           sort =
             data?.customAdvanceOptions.collectionSortView === "alphabetical"
@@ -637,6 +650,7 @@ const ShareFolderMain = () => {
             closeSearchOverlay={closeSearchOverlay}
             mode={activeMode}
             renderSidebar={getSidebarRender()}
+            isShare={true}
           />
           <div
             className={`${assetGridWrapperStyle} ${sidebarOpen && getSidebarRender() ? styles["mainContainer"] : styles["toggleContainer"]

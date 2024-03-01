@@ -42,6 +42,7 @@
 
 .share-page-filter {
   margin-top: 47px;
+  top:74px;
 }
 .share-page-open {
   margin-top: 42px;
@@ -202,6 +203,12 @@
     margin-top: 0;
   }
 }
+@media (min-width:820px) and (max-width:1080px){
+  .marginTopShare{
+    margin-top: 136px !important;
+
+  }
+}
 @media (min-width: 1100px) and (max-width: 1420px) {
   .collectionAssets {
     margin-top: 98px;
@@ -241,7 +248,7 @@
     margin-top:40px;
   }
   .marginTopShare{
-    margin-top:123px !important;
+    margin-top:154px !important;
   }
 }
 
