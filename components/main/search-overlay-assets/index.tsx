@@ -14,7 +14,7 @@ import useAnalytics from '../../../hooks/useAnalytics';
 
 // Components
 const SearchOverlayAssets = ({
-  closeOverlay,
+  closeOverlay = () => { },
   importEnabled = false,
   importAssets = () => { },
   sharePath = "",

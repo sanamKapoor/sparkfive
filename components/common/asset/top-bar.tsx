@@ -1,18 +1,18 @@
-import { useContext, useEffect, useState } from 'react';
-import React from 'react';
-import { isMobile } from 'react-device-detect';
+import { useContext, useEffect, useState } from "react";
+import React from "react";
+import { isMobile } from "react-device-detect";
 
-import { Utilities } from '../../../assets';
-import { ASSET_UPLOAD_APPROVAL, ASSET_UPLOAD_NO_APPROVAL } from '../../../constants/permissions';
-import { AssetContext, UserContext } from '../../../context';
-import selectOptions from '../../../utils/select-options';
-import AssetAddition from '../../common/asset/asset-addition';
-import SearchOverlay, { default as SearchOverlayAssets } from '../../main/search-overlay-assets';
-import NavHeading from '../../topbar-newnavigation/NavHeading';
-import Button from '../buttons/button';
-import Dropdown from '../inputs/dropdown';
-import Select from '../inputs/select';
-import styles from './top-bar.module.css';
+import { Utilities } from "../../../assets";
+import { ASSET_UPLOAD_APPROVAL, ASSET_UPLOAD_NO_APPROVAL } from "../../../constants/permissions";
+import { AssetContext, UserContext } from "../../../context";
+import selectOptions from "../../../utils/select-options";
+import AssetAddition from "../../common/asset/asset-addition";
+import SearchOverlay, { default as SearchOverlayAssets } from "../../main/search-overlay-assets";
+import NavHeading from "../../topbar-newnavigation/NavHeading";
+import Button from "../buttons/button";
+import Dropdown from "../inputs/dropdown";
+import Select from "../inputs/select";
+import styles from "./top-bar.module.css";
 
 const TopBar = ({
   activeSortFilter,
@@ -30,10 +30,9 @@ const TopBar = ({
   activeSearchOverlay,
   closeSearchOverlay,
   sharePath,
-  renderSidebar=true,
+  renderSidebar = true,
   isFolder,
 }: any) => {
-  
   const {
     selectAllAssets,
     selectAllFolders,
@@ -42,15 +41,13 @@ const TopBar = ({
     setSidebarOpen,
     setSelectedAllSubFoldersAndAssets,
     activeSubFolders,
-    setSelectedAllSubAssets
+    setSelectedAllSubAssets,
   } = useContext(AssetContext);
 
   const { hasPermission, advancedConfig } = useContext(UserContext) as any;
   const [showViewDropdown, setShowViewDropdown] = useState(false);
 
-
   const setSortFilterValue = (key: string, value: string) => {
-
     let sort = key === "sort" ? value : activeSortFilter.sort;
     if (key === "mainFilter") {
       if (value === "folders" || value === "SubCollectionView") {
@@ -62,7 +59,7 @@ const TopBar = ({
     // Reset select all status
     selectAllAssets(false);
     selectAllFolders(false);
-    setSelectedAllSubAssets(false)
+    setSelectedAllSubAssets(false);
     setSelectedAllSubFoldersAndAssets(false);
 
     // Needed to reset because it is set for collection upload when alphabetical sort active
@@ -75,21 +72,19 @@ const TopBar = ({
       sort,
     });
   };
-
   return (
     <section
-    data-drag="false"
-      className={`${renderSidebar && sidebarOpen ? styles["container"] : styles["container-on-toggle"]
-        }`}
+      data-drag="false"
+      className={`${renderSidebar && sidebarOpen ? styles["container"] : styles["container-on-toggle"]} ${
+        isShare ? styles["topbarPage"] : ""
+      }`}
       id={"top-bar"}
     >
-      <div
-        className={styles["filter-mobile"]}
-      >
+      <div className={styles["filter-mobile"]}>
         <img src={Utilities.filterBlue} alt={"filter"} />
       </div>
       <div data-drag="false" className={styles.wrapper}>
-        <div className={`${styles["main-heading-wrapper"]}`}>
+        <div className={`${styles["main-heading-wrapper"]} ${isShare ? styles["share-page-heading"] : ""}`}>
           {sidebarOpen ? null : (
             <div className={styles.newsidenav}>
               <img
@@ -121,64 +116,51 @@ const TopBar = ({
                 <h2>Deleted Assets</h2>
                 <div></div>
                 <span className={styles["content"]}>
-                  Deleted assets are retained for 60 days before permanent
-                  removal. Admin can recover deleted assets within 60 days
+                  Deleted assets are retained for 60 days before permanent removal. Admin can recover deleted assets
+                  within 60 days
                 </span>
               </div>
             )}
           </div>
         </div>
         <div className={styles["sec-filters"]}>
-          {!isMobile && !activeSearchOverlay && (
+          {!activeSearchOverlay && (
             <div className={styles["search-icon"]}>
               <img
                 src={Utilities.search}
                 onClick={setActiveSearchOverlay}
-                className={`${styles.search} ${styles.SearchWeb} ${!(
-                  (amountSelected === 0 || mode === "folders") &&
-                  showAssetAddition &&
-                  hasPermission([
-                    ASSET_UPLOAD_NO_APPROVAL,
-                    ASSET_UPLOAD_APPROVAL,
-                  ])
-                )
-                  ? "m-r-20"
-                  : ""
-                  }`}
+                className={`${styles.search} ${styles.SearchWeb} ${
+                  !(
+                    (amountSelected === 0 || mode === "folders") &&
+                    showAssetAddition &&
+                    hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL])
+                  )
+                    ? "m-r-20"
+                    : ""
+                }`}
               />
               <div className={styles.SearchMobile}>
                 <SearchOverlayAssets />
               </div>
             </div>
           )}
-          {activeSearchOverlay &&
-            // !(isShare && isFolder) && 
-            (
+          {activeSearchOverlay && (
+           
               <SearchOverlay
                 closeOverlay={closeSearchOverlay}
-                activeFolder={
-                  mode === "SubCollectionView" ? activeSubFolders : activeFolder
-                }
+                activeFolder={mode === "SubCollectionView" ? activeSubFolders : activeFolder}
                 mode={mode}
                 sharePath={sharePath}
                 isFolder={isFolder}
                 onClickOutside={undefined}
               />
-            )}
+          
+          )}
           {(amountSelected === 0 || mode === "folders") &&
             showAssetAddition &&
-            hasPermission([
-              ASSET_UPLOAD_NO_APPROVAL,
-              ASSET_UPLOAD_APPROVAL,
-            ]) && (
+            hasPermission([ASSET_UPLOAD_NO_APPROVAL, ASSET_UPLOAD_APPROVAL]) && (
               <div className={styles["mobilePlus"]}>
-                <AssetAddition
-                  activeFolder={
-                    mode === "SubCollectionView"
-                      ? activeSubFolders
-                      : activeFolder
-                  }
-                />
+                <AssetAddition activeFolder={mode === "SubCollectionView" ? activeSubFolders : activeFolder} />
               </div>
             )}
           <div className={styles.gridOuter}>
@@ -223,12 +205,7 @@ const TopBar = ({
             )}
           </div>
           <div className={styles["selected-wrapper"]}>
-            <Button
-              type="button"
-              text="Select All"
-              className="container secondary"
-              onClick={selectAll}
-            />
+            <Button type="button" text="Select All" className="container secondary" onClick={selectAll} />
           </div>
 
           <div className={styles["nested-wrapper"]}>
@@ -246,16 +223,14 @@ const TopBar = ({
           <div className={styles["sort-wrapper"]}>
             <Select
               label={"Sort By"}
-              options={selectOptions.sort.filter(item => {
+              options={selectOptions.sort.filter((item) => {
                 const filters = {
-                  folders: ['size', 'none'],
-                  SubCollectionView: ['size', 'none'],
+                  folders: ["size", "none"],
+                  SubCollectionView: ["size", "none"],
                 };
 
-                const shouldExcludeItem = (
-                  filters[activeSortFilter.mainFilter] &&
-                  filters[activeSortFilter.mainFilter].includes(item.value)
-                );
+                const shouldExcludeItem =
+                  filters[activeSortFilter.mainFilter] && filters[activeSortFilter.mainFilter].includes(item.value);
 
                 return !shouldExcludeItem;
               })}
@@ -264,39 +239,6 @@ const TopBar = ({
               onChange={(selected) => setSortFilterValue("sort", selected)}
               placeholder="Sort By"
             />
-          </div>
-        </div>
-        <div className={styles["mobile-app"]}>
-          <div className={styles["outer-box"]}>
-            <div className={styles["selected-wrapper-mob"]}>
-              <Button
-                type="button"
-                text="Select All"
-                className="container secondary mobile-select"
-                onClick={selectAll}
-              />
-            </div>
-            <div className={styles["sort-wrapper-mob"]}>
-              <Select
-                label={"Sort By"}
-                options={selectOptions.sort.filter((item) => {
-                  if (
-                    activeSortFilter.mainFilter === "folders" &&
-                    item.value === "size"
-                  ) {
-                    return !item;
-                  }
-                  return activeSortFilter.mainFilter === "folders" &&
-                    item.value === "none"
-                    ? !item
-                    : item;
-                })}
-                value={activeSortFilter.sort}
-                styleType="filter filter-schedule"
-                onChange={(selected) => setSortFilterValue("sort", selected)}
-                placeholder="Sort By"
-              />
-            </div>
           </div>
         </div>
       </div>

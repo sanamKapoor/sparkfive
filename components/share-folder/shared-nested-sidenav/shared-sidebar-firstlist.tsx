@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 
 import { sideNavFirstList } from "../../../constants/firstList-sidenav";
-import { AssetContext, FilterContext, UserContext } from "../../../context";
+import { AssetContext, FilterContext, UserContext, ShareContext } from "../../../context";
 import shareCollectionApi from "../../../server-api/share-collection";
 import styles from "./shared-sidebar-firstlist.module.css";
 import ReusableHeading from "../../nested-subcollection-sidenav/nested-heading";
@@ -11,6 +11,7 @@ const NestedFirstlist = ({ sharePath }: { sharePath: string }) => {
   const { activeSortFilter } = useContext(FilterContext);
   const { advancedConfig } = useContext(UserContext) as any;
   const { sidebarOpen, setSidebarOpen } = useContext(AssetContext)
+  const { folderInfo } = useContext(ShareContext)
   const [hideFilterElements] = useState(advancedConfig.hideFilterElements);
   const [listingData, setListingData] = useState({
     image: "",
@@ -69,7 +70,7 @@ const NestedFirstlist = ({ sharePath }: { sharePath: string }) => {
           <ReusableHeading
             data-drag="false"
             customStyle={{ padding: "padding: 10px 23px 0px;", cursor: "pointer" }}
-            text={`Hooligan Inc.`}
+            text={`${folderInfo?.companyName}`}
             icon={
               <img
                 onClick={() => {

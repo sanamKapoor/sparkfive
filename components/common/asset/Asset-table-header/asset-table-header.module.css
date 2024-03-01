@@ -40,11 +40,12 @@
  .headContent{
   display: flex;
   align-items: center;
+  
  }
 
- @media (max-width:420px){
+ @media (max-width:430px){
   .listWrapper{
-    grid-template-columns:  50% 25% 25%;
+    grid-template-columns:  60% 30% 10%;
 
   }
   .upload-date{
@@ -58,3 +59,14 @@
   }
 
  }
+ @media (min-width:500px) and (max-width:1050px){
+  .listWrapper{
+    grid-template-columns: 30% 10% 20% 20% 10% 10%;
+  }
+  .listWrapper img{
+    width: 10px;
+  }
+  .listWrapper span{
+    font-size: 10px;
+  }
+}

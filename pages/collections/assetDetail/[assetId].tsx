@@ -48,7 +48,6 @@ const ShareDetailPage = () => {
                 console.log(error);
             }
         };
-
         if (router.query && Object.keys(router.query).length > 0) {
             fetchData();
         }

@@ -25,8 +25,13 @@ function Activity({ initialData }) {
       setEmptyRows(Array.from({ length: Math.max(DASHBOARD_TABLE_REC_LEN - (data ? data.length : 0), 0) }, (_, index) => ({})));
       setTotalActivities(totalRecords);
       setTotalActivitiesData(data);
+    } else {
+      if(!loading){
+        setTotalActivities(0)
+        setTotalActivitiesData([])
+      }
     }
-  }, [totalRecords, data]);
+  }, [totalRecords, data, loading]);
 
   const handleClearSorting = () => {
     setSortBy("");

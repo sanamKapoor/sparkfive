@@ -30,6 +30,7 @@
   /*aspect-ratio: 1 / 1;*/
   width: initial;
   max-height: 100%;
+  background: #F8F8F8
 }
 
 @media screen and (max-height: 760px) {
@@ -143,7 +144,6 @@
   /* flex-direction: column; */
   position: relative;
   flex-direction: column;
-
 }
 
 .img-wrapper>img,
@@ -312,6 +312,17 @@
   display: none;
 }
 
+@media(max-width:1050px){
+  .menu {
+    position: relative !important;
+  }
+  .side{
+    position:unset;
+  }
+
+
+}
+
 
 @media screen and (max-width: 1200px) {
   .container {
@@ -330,7 +341,7 @@
   }
 }
 
-@media (max-width:810px) {
+@media  (max-width:810px) {
   .share-right-button {
     display: flex;
     background-color: var(--color-sec-lightivory);
@@ -351,20 +362,21 @@
 
   .share .side {
     width: calc(100% - 49px);
-    position: absolute;
-    right: 50px;
+    /* position: absolute;
+    right: 50px; */
   }
 
-  .share .content {
-    width: 100%;
 
-  }
 }
 
 .notes-container{
   /* height: 100%; */
   height:91vh;
   width: 100%
+}
+
+.selected-menu{
+  opacity: 0.2 !important;
 }
 
 @media screen and (min-width: 601px) {
@@ -396,8 +408,22 @@
 
   .container {
     padding-top: 47px;
-    flex-direction: column;
+    flex-direction: column !important;
   }
+  .share .side {
+    position: relative !important;
+    width: 100% !important;
+    right:0 !important;
+  
+   
+  }
+  .side {
+      width: 100%;
+  }
+
+.share-right-button{
+  display: none !important;
+}
 
   .arrows {
     padding-bottom: 0;
@@ -406,10 +432,12 @@
   .img-wrapper>img,
   .share-img-wrapper>img {
     max-width: 100%;
+    padding: 20px 0;
   }
 
   .share.container {
     flex-direction: row;
+    flex-direction: column;
   }
 
   .field-wrapper {
@@ -424,13 +452,6 @@
   .field-wrapper .secondary-text {
     min-width: 90px;
   }
-
-  .side {
-    position: initial;
-    width: 100%;
-    border-top: none;
-  }
-
 
 
   .hide-on-mobile {
@@ -486,12 +507,13 @@
   }
 
   .top-wrapper {
-    height: 47px;
+    height: 74px;
   }
 
   .content {
     overflow: inherit;
-    height: 100vh;
+    /* height: 100vh; */
+    height:400px;
   }
 
   .expand {

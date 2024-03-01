@@ -175,18 +175,19 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
   }, []);
   return (
     <div
+    data-drag="false"
       id="mianFilterModal"
       className={`${styles["main-container"]}`
       }>
-      <div id="modal" className={`${styles["more-filter-wrapper"]}`}>
+      <div  data-drag="false" id="modal" className={`${styles["more-filter-wrapper"]}`}>
         {loader ? (
           <div className={styles["loader-wrapper"]}>
             <Loader className={styles["customLoader-center"]} />
           </div>
         ) : <>
-          <div className={`${indexStyles["popup-header"]}`}>
+          <div data-drag="false" className={`${indexStyles["popup-header"]}`}>
             <span className={`${indexStyles["main-heading"]}`}>More Filters</span>
-            <div className={indexStyles.buttons}>
+            <div  data-drag="false" className={indexStyles.buttons}>
               <img
                 className={indexStyles.closeIcon}
                 src={Utilities.closeIcon}
@@ -195,13 +196,13 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
             </div>
           </div>
 
-          <div className={`${styles["outer-Box"]}`}>
-            <div className={styles["outer-wrapper"]}>
+          <div  data-drag="false" className={`${styles["outer-Box"]}`}>
+            <div   data-drag="false" className={styles["outer-wrapper"]}>
               {options.length === 0 ? (
                 <p>No Results Found.</p>
               ) : (
                 options.map((item, index) => (
-                  <div className={styles["grid-item"]} key={item.id}>
+                  <div  data-drag="false" className={styles["grid-item"]} key={item.id}>
                     <OptionDataItem
                       name={item.name}
                       count={item.count}
@@ -215,7 +216,7 @@ const MoreFiltersOptionPopup: React.FC<MoreFiltersOptionPopupProps> = ({
             </div>
           </div>
 
-          <div className={`${indexStyles["Modal-btn"]}`}>
+          <div  data-drag="false" className={`${indexStyles["Modal-btn"]}`}>
             <Button className={"apply"} text={"Apply"} onClick={onApply} />
             <Button className={"cancel"} text={"Cancel"} onClick={onCancel} />
           </div>

@@ -520,11 +520,11 @@ const AssetAddition = ({
       setAddedIds(data.id);
       // Mark done
       const updatedAssets = data.map((asset) => {
-      // Track uploaded asset info
-      trackEvent(events.UPLOAD_ASSET, {
-        uploadType: 'Dropbox',
-        assetId: asset.asset.id,
-      });
+        // Track uploaded asset info
+        trackEvent(events.UPLOAD_ASSET, {
+          uploadType: 'Dropbox',
+          assetId: asset.asset.id,
+        });
 
         return { ...asset, status: "done" };
       });
@@ -594,7 +594,7 @@ const AssetAddition = ({
     } catch (err) {
       setDisableButtons(false);
       toastUtils.error
-        (err?.response?.data || "Collection does not created at this please try after some time");
+        (err?.response?.data?.message || "Collection does not created at this please try after some time");
     }
   };
 

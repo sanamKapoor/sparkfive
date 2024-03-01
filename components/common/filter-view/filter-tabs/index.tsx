@@ -3,17 +3,10 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { FilterContext, UserContext, AssetContext } from "../../../../context";
 import useFilters from "../../../../hooks/use-filters";
 import teamApi from "../../../../server-api/team";
-import {
-  checkIfBadgeVisible,
-  getFilterKeyForAttribute,
-  getSortedAttributes,
-} from "../../../../utils/filter";
+import { checkIfBadgeVisible, getFilterKeyForAttribute, getSortedAttributes } from "../../../../utils/filter";
 
 import { Utilities } from "../../../../assets";
-import {
-  FilterAttributeVariants,
-  IAttribute,
-} from "../../../../interfaces/filters";
+import { FilterAttributeVariants, IAttribute } from "../../../../interfaces/filters";
 import shareCollectionApi from "../../../../server-api/share-collection";
 import Badge from "../../UI/Badge/badge";
 import ClickOutside from "../../UI/ClickOutside";
@@ -28,10 +21,7 @@ interface IFilterTabsProps {
   setAttributes: (data: IAttribute[]) => void;
 }
 
-const FilterTabs: React.FC<IFilterTabsProps> = ({
-  attributes,
-  setAttributes,
-}) => {
+const FilterTabs: React.FC<IFilterTabsProps> = ({ attributes, setAttributes }) => {
   const { activeSortFilter, isPublic, sharePath } = useContext(FilterContext);
   const { sidebarOpen } = useContext(AssetContext);
   const {
@@ -43,6 +33,8 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
     filteredOptions,
     setFilteredOptions,
   } = useFilters(attributes);
+
+  // console.log(`>>> Attribute`, attributes);
 
   const { advancedConfig } = useContext(UserContext);
 
@@ -60,11 +52,11 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
       });
       // TODO: need to check for advancedConfig.aiTagging setting as well
 
+      // console.log(`>>> Attribute from server`, res.data.data);
+
       //check for filter elements to hide
       if (advancedConfig?.hideFilterElements) {
-        const filteredAttrs = res.data.data.filter(
-          (item) => advancedConfig?.hideFilterElements[item.id] !== true
-        );
+        const filteredAttrs = res.data.data.filter((item: any) => advancedConfig?.hideFilterElements[item.id] !== true);
 
         setAttributes(getSortedAttributes(filteredAttrs));
       }
@@ -101,10 +93,7 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
             </div>
             <div className={`${styles["close-buttons"]}`}>
               <Button text={"Clear"} className="text-secondary-btn" />
-              <IconClickable
-                additionalClass={styles["close-button"]}
-                src={Utilities.bigblueClose}
-              />
+              <IconClickable additionalClass={styles["close-button"]} src={Utilities.bigblueClose} />
             </div>
           </div>
         </div>
@@ -144,21 +133,10 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
                     FilterAttributeVariants.LAST_UPDATED,
                     FilterAttributeVariants.DATE_UPLOADED,
                     FilterAttributeVariants.DIMENSIONS,
-                  ].includes(attr.id) && (
-                    <Badge
-                      count={
-                        activeSortFilter[getFilterKeyForAttribute(attr.id)]
-                          ?.length
-                      }
-                    />
-                  )}
-                <img
-                  className={`${styles["arrow-down"]}`}
-                  src={Utilities.downIconLight}
-                  alt=""
-                />
+                  ].includes(attr.id) && <Badge count={activeSortFilter[getFilterKeyForAttribute(attr.id)]?.length} />}
+                <img className={`${styles["arrow-down"]}`} src={Utilities.downIconLight} alt="" />
               </div>
-              {(activeAttribute !== null && activeAttribute?.id === attr.id) && (
+              {activeAttribute !== null && activeAttribute?.id === attr.id && (
                 <div ref={exceptionRef}>
                   <FilterOptionPopup
                     sidebarOpen={sidebarOpen}
@@ -177,38 +155,24 @@ const FilterTabs: React.FC<IFilterTabsProps> = ({
 
         {attributes.length > 0 && (
           <>
-
-            <div
-              className={`${styles["more-filter-btn"]}`}
-              id="more-filter"
-            >
-              <div className={`${styles["filter-button"]}`} onClick={onMoreFiltersClick}
-                onKeyDown={onMoreFiltersClick}>
+            <div className={`${styles["more-filter-btn"]}`} id="more-filter">
+              <div className={`${styles["filter-button"]}`} onClick={onMoreFiltersClick} onKeyDown={onMoreFiltersClick}>
                 <Button text="More Filters" className="text-primary-btn" />
-                <img
-                  className={`${styles["more-filter-arrow"]}`}
-                  src={Utilities.downIconLight}
-                  alt=""
-                />
+                <img className={`${styles["more-filter-arrow"]}`} src={Utilities.downIconLight} alt="" />
               </div>
-              <ClickOutside
-                className={`${styles["main-wrapper"]}`}
-                onClick={onClickOutsideMoreFilters}
-              >
+              <ClickOutside className={`${styles["main-wrapper"]}`} onClick={onClickOutsideMoreFilters}>
                 {showMoreFilters && (
                   <MoreFiltersOptionPopup
                     attributes={attributes}
                     setAttributes={setAttributes}
                     setShowModal={setShowMoreFilters}
                   />
-
                 )}
               </ClickOutside>
             </div>
           </>
         )}
       </div>
-
     </div>
   );
 };

@@ -1,5 +1,5 @@
-import { saveAs } from "file-saver";
 import { useRouter } from "next/router";
+import { saveAs } from "file-saver"
 import { useEffect, useState } from "react";
 import { calculateBeginDate } from "../config/data/filter";
 import {
@@ -62,14 +62,14 @@ const useInsights = ({ section, endpoint }: { section?: string; endpoint?: strin
         };
       }
 
-      const { data } = await AnalyticsApi.getAnalyticsData(apiEndpoint, payload);
+      const { data } = await AnalyticsApi.getAnalyticsData(apiEndpoint, payload);      
 
       if (downloadCSV) {
-        const fileData = new Blob([data], {
-          type: "text/csv;charset=utf-8",
-        });
+        console.log({data});
 
-        const { fileName, successMsg } = getCSVFileName(activeSection);
+        const fileData = new Blob([data], {type: "text/csv;charset=utf-8" });
+
+        const { fileName, successMsg } = getCSVFileName(activeSection);       
         saveAs(fileData, fileName);
         toastUtils.success(successMsg);
       } else {

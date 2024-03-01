@@ -1,5 +1,5 @@
-import { saveAs } from "file-saver";
 import React, { useEffect, useState } from "react";
+import { saveAs } from "file-saver";
 import { insights } from "../../../../assets";
 import { calculateBeginDate } from "../../../../config/data/filter";
 import { AnalyticsActiveModal, InsightsApiEndpoint, TableBodySection } from "../../../../constants/analytics";
@@ -104,7 +104,7 @@ const Modal = ({ section, setShowModal, id }: {
         });
 
         const { fileName, successMsg } = getCSVFileName(activeModalSection);
-        saveAs(fileData, fileName);
+        saveAs(fileData, fileName)
         toastUtils.success(successMsg);
       } else {
         if (apiEndpoint.includes(InsightsApiEndpoint.TEAM)) {

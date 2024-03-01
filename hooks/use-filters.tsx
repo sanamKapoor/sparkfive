@@ -13,7 +13,7 @@ import tagsApi from "../server-api/tag";
 
 import { getAssetsFilters } from "../utils/asset";
 
-const useFilters = (attributes, setRender = null) => {
+const useFilters = (attributes: any, setRender: any = null) => {
   const { activeSortFilter, setActiveSortFilter, sharePath, isPublic } = useContext(FilterContext);
   const { activeFolder, activeSubFolders } = useContext(AssetContext);
 
@@ -25,7 +25,7 @@ const useFilters = (attributes, setRender = null) => {
   const [selectedFilters, setSelectedFilters] = useState<ISelectedFilter[]>([]);
 
   const getSelectedFilters = () => {
-    const filters = activeSortFilter;
+    const filters: any = activeSortFilter;
 
     const data: ISelectedFilter[] = [];
 
@@ -65,8 +65,8 @@ const useFilters = (attributes, setRender = null) => {
     setSelectedFilters(data.flat(1));
     if (setRender) {
       setTimeout(() => {
-        setRender((prev) => !prev)
-      })
+        setRender((prev: any) => !prev);
+      }, 100);
     }
   };
 
@@ -278,7 +278,7 @@ const useFilters = (attributes, setRender = null) => {
 
   const onAttributeClick = async (data: IAttribute) => {
     setActiveAttribute(data);
-    const values = await fetchValuesById(data.id);
+    const values: any = await fetchValuesById(data.id);
     setValues(values);
     setFilteredOptions(values);
   };
@@ -294,7 +294,7 @@ const useFilters = (attributes, setRender = null) => {
     const fetchApi = isPublic ? shareCollectionApi : tagsApi;
 
     const allTags = await fetchApi.getTags({ includeAi: true, ...params });
-    return allTags?.data?.filter((item) => item.type === "AI")
+    return allTags?.data?.filter((item) => item.type === "AI");
   };
 
   const fetchProductSku = async (params?: Record<string, unknown>) => {

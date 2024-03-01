@@ -3,7 +3,7 @@ import { AnalyticsActiveModal, TableBodySection } from "../../../../constants/an
 import DateFormatter from "../../../../utils/date";
 import AssetIcon from "../../../common/asset/asset-icon";
 import styles from "./table-data.module.css";
-import { useRouter } from "next/router";
+import AssetThumb from "../asset-img";
 
 const TableBody = ({ handleModals, data, tableFor, dashboardView }) => {
 
@@ -165,7 +165,8 @@ export const AssetTableRows = ({ data, handleModals }) => {
                 <div className={styles["usernameWithImage"]}>
                   <div className={`${styles["image-wrapper"]}`}>
                     {(row.type === 'image' || row.type === 'video') ? (
-                      <img src={row.thumbnail} alt="user" className={styles.assetImage} />
+                      <AssetThumb thumbnail={row.thumbnail} type={row.type} />
+                      // <img src={row.thumbnail} alt="user" className={styles.assetImage} />
                     ) : (
                       <AssetIcon imgClass={"analytics-icon"} extension={row.extension} />
                     )}
@@ -264,7 +265,7 @@ export const UserActivityRows = ({ data, dashboardView }) => {
                 </div>
               </td>
               <td>{row.assetId ? <button className={styles.actionButton} onClick={() => {
-                  // window.open(`${window.location.origin}/main/assets/${row.assetId}`, '_blank')
+                  window.open(`${window.location.origin}/main/assets/${row.assetId}?isShare=false&sharePath=&sharedCode=&headerName=All+Assets&activeFolder=&availableNext=true&activeSubFolders=`, '_blank')
                 }}>View Link</button> : ""}</td>
             </tr>
           );
@@ -285,7 +286,8 @@ export const AssetTableDashboardRows = ({ data }) => {
                 <div className={styles["usernameWithImage"]}>
                   <div className={`${styles["image-wrapper"]}`}>
                     {(row.type === 'image' || row.type === 'video') ? (
-                      <img src={row.thumbnail} alt="user" className={styles.assetImage} />
+                      <AssetThumb thumbnail={row.thumbnail} type={row.type} />
+                      // <img src={row.thumbnail} alt="user" className={styles.assetImage} />
                     ) : (
                       <AssetIcon imgClass={"analytics-icon"} extension={row.extension} />
                     )}
@@ -300,7 +302,7 @@ export const AssetTableDashboardRows = ({ data }) => {
             <td>
               {row.id && (
                 <button className={styles.actionButton} onClick={() => {
-                  // window.open(`${window.location.origin}/main/assets/${row.id}`, '_blank')
+                  window.open(`${window.location.origin}/main/assets/${row.id}?isShare=false&sharePath=&sharedCode=&headerName=All+Assets&activeFolder=&availableNext=true&activeSubFolders=`, '_blank')
                 }}>
                   View asset
                 </button>

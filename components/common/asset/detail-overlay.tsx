@@ -113,9 +113,9 @@ const DetailOverlay = ({
   realUrl,
   thumbailUrl,
   closeOverlay,
-  openShareAsset = () => { },
-  openDeleteAsset = () => { },
-  loadMore = () => { },
+  openShareAsset = () => {},
+  openDeleteAsset = () => {},
+  loadMore = () => {},
   isShare = false,
   sharePath = "",
   activeFolder = "",
@@ -157,8 +157,8 @@ const DetailOverlay = ({
     activeSubFolders,
     setSubFoldersAssetsViewList,
     subFoldersViewList,
-    currentFolder } =
-    useContext(AssetContext);
+    currentFolder,
+  } = useContext(AssetContext);
 
   const [sideOpen, setSideOpen] = useState(true);
 
@@ -265,15 +265,15 @@ const DetailOverlay = ({
           setPresetTypes(presetTypes.concat(data));
         }
       }
-    } catch (e) { }
+    } catch (e) {}
   };
 
   const _setActiveCollection = () => {
     // TODO: ? What is purpose of this ?
     if (activeFolder && activeSubFolders !== "") {
       const folder = folders.find((folder) => {
-        return folder.id === activeSubFolders
-      })
+        return folder.id === activeSubFolders;
+      });
       if (folder) {
         setActiveCollection(folder);
         const assetIndx = subcollectionAssets.findIndex((item) => item.asset && item.asset.id === asset.id);
@@ -285,8 +285,8 @@ const DetailOverlay = ({
       }
     } else if (activeFolder && activeSubFolders === "") {
       const folder = subFoldersViewList?.results?.find((folder) => {
-        return folder.id === activeFolder
-      })
+        return folder.id === activeFolder;
+      });
       if (folder) {
         setActiveCollection(folder);
         const assetIndx = assets.findIndex((item) => item.asset && item.asset.id === asset.id);
@@ -1162,8 +1162,9 @@ const DetailOverlay = ({
             </div>
 
             <div
-              className={`${!isShare ? styles["img-wrapper"] : styles["share-img-wrapper"]}${activeFolder && ` ${styles["active-folderimg"]}`
-                }`}
+              className={`${!isShare ? styles["img-wrapper"] : styles["share-img-wrapper"]}${
+                activeFolder && ` ${styles["active-folderimg"]}`
+              }`}
               style={{ height: `calc(100% - ${noteHeight}px)` }}
             >
               {assetDetail.type === "image" && (
@@ -1174,12 +1175,12 @@ const DetailOverlay = ({
                       name={assetDetail.name}
                       assetImg={
                         assetDetail.extension === "tiff" ||
-                          assetDetail.extension === "tif" ||
-                          assetDetail.extension === "svg" ||
-                          assetDetail.extension === "svg+xml" ||
-                          assetDetail.extension === "heif" ||
-                          assetDetail.extension === "heic" ||
-                          assetDetail.extension === "cr2"
+                        assetDetail.extension === "tif" ||
+                        assetDetail.extension === "svg" ||
+                        assetDetail.extension === "svg+xml" ||
+                        assetDetail.extension === "heif" ||
+                        assetDetail.extension === "heic" ||
+                        assetDetail.extension === "cr2"
                           ? versionThumbnailUrl
                           : versionRealUrl
                       }
@@ -1240,343 +1241,376 @@ const DetailOverlay = ({
               {assetDetail.type !== "image" && assetDetail.type !== "video" && !versionThumbnailUrl && (
                 <AssetIcon extension={currentAsset.extension} />
               )}
-              {
-                assetDetail.type === "video" && (
-                  <>
-                    {(previewUrl || (!previewUrl && currentAsset.extension === "mp4")) && <video controls id={"video-element"}>
-                      <source
-                        src={previewUrl ?? versionRealUrl}
-                        type={
-                          "video/mp4"
-                        }
-                      />
+              {assetDetail.type === "video" && (
+                <>
+                  {(previewUrl || (!previewUrl && currentAsset.extension === "mp4")) && (
+                    <video controls id={"video-element"}>
+                      <source src={previewUrl ?? versionRealUrl} type={"video/mp4"} />
                       Sorry, your browser doesn't support video playback.
-                    </video>}
+                    </video>
+                  )}
 
-                    {(!previewUrl && currentAsset.extension !== "mp4") && <AssetImg
-                      name={assetDetail.name}
-                      assetImg={""}
-                      type={"video"}
-                      imgClass="img-preview"
-                      isResize
-                    />}
-                  </>
-
-                )
-              }
-              {
-                activeFolder && activeSubFolders !== "" && (
-                  <div className={styles.arrows}>
-                    <div>
-                      {subcollectionAssets.length &&
-                        subcollectionAssets[0].asset &&
-                        subcollectionAssets[0].asset.id !== asset.id && (
-                          <span className={styles["arrow-prev"]}>
-                            <IconClickable src={Utilities.arrowPrev} onClick={() => navigateOverlay(-1)} />
-                          </span>
-                        )}
-                      {availableNext &&
-                        subcollectionAssets.length &&
-                        subcollectionAssets[subcollectionAssets.length - 1].asset &&
-                        subcollectionAssets[subcollectionAssets.length - 1].asset.id !== asset.id && (
-                          <span className={styles["arrow-next"]}>
-                            <IconClickable src={Utilities.arrowNext} onClick={() => navigateOverlay(1)} />
-                          </span>
-                        )
-                      }
-                    </div>
-                    <span>
-                      {(assetIndex % activeCollection?.assetsCount) + 1} of {activeCollection?.assetsCount} in{" "}
-                      {activeCollection?.name} collection
-                    </span>
+                  {!previewUrl && currentAsset.extension !== "mp4" && (
+                    <AssetImg name={assetDetail.name} assetImg={""} type={"video"} imgClass="img-preview" isResize />
+                  )}
+                </>
+              )}
+              {activeFolder && activeSubFolders !== "" && (
+                <div className={styles.arrows}>
+                  <div>
+                    {subcollectionAssets.length &&
+                      subcollectionAssets[0].asset &&
+                      subcollectionAssets[0].asset.id !== asset.id && (
+                        <span className={styles["arrow-prev"]}>
+                          <IconClickable src={Utilities.arrowPrev} onClick={() => navigateOverlay(-1)} />
+                        </span>
+                      )}
+                    {availableNext &&
+                      subcollectionAssets.length &&
+                      subcollectionAssets[subcollectionAssets.length - 1].asset &&
+                      subcollectionAssets[subcollectionAssets.length - 1].asset.id !== asset.id && (
+                        <span className={styles["arrow-next"]}>
+                          <IconClickable src={Utilities.arrowNext} onClick={() => navigateOverlay(1)} />
+                        </span>
+                      )}
                   </div>
-                )
-              }
-              {
-                activeFolder && activeSubFolders === "" && (
-                  <div className={styles.arrows}>
-                    <div>
-                      {assets.length &&
-                        assets[0].asset &&
-                        assets[0].asset.id !== asset.id && (
-                          <span className={styles["arrow-prev"]}>
-                            <IconClickable src={Utilities.arrowPrev} onClick={() => navigateOverlay(-1)} />
-                          </span>
-                        )}
-                      {availableNext && assets.length && assets[assets.length - 1].asset &&
-                        assets[assets.length - 1].asset.id !== asset.id && (
-                          <span className={styles["arrow-next"]}>
-                            <IconClickable src={Utilities.arrowNext} onClick={() => navigateOverlay(1)} />
-                          </span>
-                        )}
-                    </div>
-                    <span>
-                      {(assetIndex % activeCollection?.assetsCount) + 1} of {activeCollection?.assetsCount} in{" "}
-                      {activeCollection?.name} collection
-                    </span>
+                  <span>
+                    {(assetIndex % activeCollection?.assetsCount) + 1} of {activeCollection?.assetsCount} in{" "}
+                    {activeCollection?.name} collection
+                  </span>
+                </div>
+              )}
+              {activeFolder && activeSubFolders === "" && (
+                <div className={styles.arrows}>
+                  <div>
+                    {assets.length && assets[0].asset && assets[0].asset.id !== asset.id && (
+                      <span className={styles["arrow-prev"]}>
+                        <IconClickable src={Utilities.arrowPrev} onClick={() => navigateOverlay(-1)} />
+                      </span>
+                    )}
+                    {availableNext &&
+                      assets.length &&
+                      assets[assets.length - 1].asset &&
+                      assets[assets.length - 1].asset.id !== asset.id && (
+                        <span className={styles["arrow-next"]}>
+                          <IconClickable src={Utilities.arrowNext} onClick={() => navigateOverlay(1)} />
+                        </span>
+                      )}
                   </div>
-                )
-              }
-            </div >
-          </div >
-        </section >
-      )}
-      {
-        sideOpen && (
-          <section className={styles.side}>
-            {assetDetail && activeSideComponent === "detail" && (
-              <>
-                {mode === "detail" && (
-                  <SidePanel
-                    asset={assetDetail}
-                    updateAsset={updateAsset}
-                    setAssetDetail={setAssetDetail}
-                    isShare={isShare}
-                  />
-                )}
-              </>
-            )}
-            {activeSideComponent === "download" && (
-              <CropSidePanel
-                isShare={isShare}
-                sharePath={sharePath}
-                imageType={imageType}
-                onImageTypeChange={(type) => {
-                  setImageType(type);
-                }}
-                downloadImageTypes={downloadImageTypes}
-                presetTypes={presetTypes}
-                presetTypeValue={preset}
-                sizes={sizes}
-                sizeValue={size}
-                mode={mode}
-                widthOriginal={width}
-                heightOriginal={height}
-                onModeChange={(mode) => {
-                  setMode(mode);
-                  if (mode === "crop") {
-                    setSizeOfCrop({
-                      width: Math.round(width / 2),
-                      height: Math.round(height / 2),
-                    });
-                  }
-                }}
-                onSelectChange={onSelectChange}
-                onSizeInputChange={onSizeInputChange}
-                asset={assetDetail}
-                versionRealUrl={versionRealUrl}
-                versionThumbnailUrl={versionThumbnailUrl}
-                onResetImageSize={() => {
-                  resetValues();
-                  setDetailPosSize({
-                    ...detailPosSize,
-                    width: defaultSize.width,
-                    height: defaultSize.height,
-                  });
-                }}
-                sizeOfCrop={sizeOfCrop}
-                setSizeOfCrop={setSizeOfCrop}
-                detailPosSize={detailPosSize}
-                onAddAssociate={(asset) => {
-                  const detail = { ...assetDetail };
-                  detail.fileAssociations.push(asset);
-
-                  setAssetDetail(detail);
-                }}
-                setRenameData={setRenameValue}
-              />
-            )}
-            {!isShare && activeSideComponent === "comments" && <ConversationList itemId={asset?.id} itemType="assets" />}
-            {!isShare && activeSideComponent === "versions" && (
-              <VersionList versions={versions} currentAsset={currentAsset} triggerUserEvent={onUserEvent} />
-            )}
-            {activeSideComponent === "cdn" && <CdnPanel assetDetail={assetDetail} />}
-
-            {activeSideComponent === "notes" && notes && <AssetNotes asset={asset} notes={notes} applyCrud={applyCrud} />}
-
-            {activeSideComponent === "related" && (
-              <AssetRelatedFilesList
-                currentAsset={assetDetail}
-                relatedAssets={assetDetail?.fileAssociations || []}
-                associateFileId={currentAsset.id}
-                onChangeRelatedFiles={onChangeRelatedFiles}
-                onAddRelatedFiles={(data) => {
-                  let updatedAssets = [...assetDetail.fileAssociations];
-                  updatedAssets = updatedAssets.concat(data);
-                  setAssetDetail({
-                    ...assetDetail,
-                    fileAssociations: updatedAssets,
-                  });
-                }}
-              />
-            )}
-            {activeSideComponent === "transcript" && transcripts && (
-              <AssetTranscript
-                title={"Transcript"}
-                transcripts={transcripts}
-                loading={transcriptLoading}
-                navigateToTime={seekVideo}
-              />
-            )}
-          </section>
-        )
-      }
-      {/* Share page mobile right button */}
-      {
-        isShare && (
-          <div className={styles["share-right-button"]}>
-            {" "}
-            <IconClickable
-              src={Utilities.closePanelLight}
-              onClick={() => toggleSideMenu()}
-              additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"}`}
-            />{" "}
-            <IconClickable
-              SVGElement={isMobile ? Utilities.infoGray : Utilities.info}
-              additionalClass={styles["menu-icon"]}
-              onClick={() => {
-                setMode("detail");
-                resetValues();
-                changeActiveSide("detail");
-              }}
-            />
+                  <span>
+                    {(assetIndex % activeCollection?.assetsCount) + 1} of {activeCollection?.assetsCount} in{" "}
+                    {activeCollection?.name} collection
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
-        )
-      }
-      {
-        !isShare && (
-          <section className={styles.menu}>
-            <IconClickable
-              src={Utilities.closePanelLight}
-              onClick={() => toggleSideMenu()}
-              additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"} ${styles.expand
-                }`}
-            />
-            {!isShare && (
-              <>
-                <div className={`${styles.separator} ${styles.expand}`}></div>
-                <IconClickable
-                  SVGElement={Utilities.delete}
-                  additionalClass={styles["menu-icon"] + " " + styles["only-desktop-button"]}
-                  onClick={openDeleteAsset}
+        </section>
+      )}
+      {sideOpen && (
+        <section className={styles.side}>
+          {assetDetail && activeSideComponent === "detail" && (
+            <>
+              {mode === "detail" && (
+                <SidePanel
+                  asset={assetDetail}
+                  updateAsset={updateAsset}
+                  setAssetDetail={setAssetDetail}
+                  isShare={isShare}
+                  closeOverlay={closeOverlay}
                 />
-              </>
-            )}
-            <div className={styles.separator + " " + styles["only-desktop-button"]}></div>
-            <IconClickable
-              SVGElement={isMobile ? Utilities.infoGray : Utilities.info}
-              additionalClass={styles["menu-icon"]}
-              onClick={() => {
-                setMode("detail");
+              )}
+            </>
+          )}
+          {assetDetail && activeSideComponent === "attributes" && (
+            <>
+              {mode === "detail" && (
+                <AttributeSidePanel
+                  asset={assetDetail}
+                  updateAsset={updateAsset}
+                  setAssetDetail={setAssetDetail}
+                  isShare={isShare}
+                />
+              )}
+            </>
+          )}
+
+          {assetDetail && activeSideComponent === "folder" && (
+            <>
+              {mode === "detail" && (
+                <FolderSidePanel
+                  asset={assetDetail}
+                  updateAsset={updateAsset}
+                  setAssetDetail={setAssetDetail}
+                  isShare={isShare}
+                />
+              )}
+            </>
+          )}
+          {activeSideComponent === "download" && (
+            <CropSidePanel
+              isShare={isShare}
+              sharePath={sharePath}
+              imageType={imageType}
+              onImageTypeChange={(type) => {
+                setImageType(type);
+              }}
+              downloadImageTypes={downloadImageTypes}
+              presetTypes={presetTypes}
+              presetTypeValue={preset}
+              sizes={sizes}
+              sizeValue={size}
+              mode={mode}
+              widthOriginal={width}
+              heightOriginal={height}
+              onModeChange={(mode) => {
+                setMode(mode);
+                if (mode === "crop") {
+                  setSizeOfCrop({
+                    width: Math.round(width / 2),
+                    height: Math.round(height / 2),
+                  });
+                }
+              }}
+              onSelectChange={onSelectChange}
+              onSizeInputChange={onSizeInputChange}
+              asset={assetDetail}
+              onResetImageSize={() => {
                 resetValues();
-                changeActiveSide("detail");
+                setDetailPosSize({
+                  ...detailPosSize,
+                  width: defaultSize.width,
+                  height: defaultSize.height,
+                });
+              }}
+              sizeOfCrop={sizeOfCrop}
+              setSizeOfCrop={setSizeOfCrop}
+              detailPosSize={detailPosSize}
+              onAddAssociate={(asset) => {
+                const detail = { ...assetDetail };
+                detail.fileAssociations.push(asset);
+
+                setAssetDetail(detail);
+              }}
+              setRenameData={setRenameValue}
+            />
+          )}
+          {!isShare && activeSideComponent === "comments" && <ConversationList itemId={asset?.id} itemType="assets" />}
+          {!isShare && activeSideComponent === "versions" && (
+            <VersionList versions={versions} currentAsset={currentAsset} triggerUserEvent={onUserEvent} />
+          )}
+          {activeSideComponent === "cdn" && <CdnPanel assetDetail={assetDetail} />}
+
+          {activeSideComponent === "notes" && notes && <AssetNotes asset={asset} notes={notes} applyCrud={applyCrud} />}
+
+          {activeSideComponent === "related" && (
+            <AssetRelatedFilesList
+              currentAsset={assetDetail}
+              relatedAssets={assetDetail?.fileAssociations || []}
+              associateFileId={currentAsset.id}
+              onChangeRelatedFiles={onChangeRelatedFiles}
+              onAddRelatedFiles={(data) => {
+                let updatedAssets = [...assetDetail.fileAssociations];
+                updatedAssets = updatedAssets.concat(data);
+                setAssetDetail({
+                  ...assetDetail,
+                  fileAssociations: updatedAssets,
+                });
               }}
             />
-            {!isShare && (
-              <>
-                <IconClickable
-                  src={Utilities.tagGray}
-                  additionalClass={
-                    styles["menu-icon"] + " " + styles["only-mobile-button"]
-                  }
-                  onClick={() => { }}
-                />
-                <IconClickable
-                  SVGElement={isMobile ? Utilities.commentLight : Utilities.comment}
-                  additionalClass={styles["menu-icon"]}
-                  onClick={() => {
-                    setMode("detail");
-                    resetValues();
-                    changeActiveSide("comments");
-                  }}
-                />
-                {hasPermission(["admin", "super_admin"]) && (
-                  <div className={styles["only-mobile-button"]}>
-                    <AssetAddition
-                      folderAdd={false}
-                      // versionGroup={assetDetail.versionGroup}
-                      triggerUploadComplete={onUserEvent}
-                    />
-                  </div>
-                )}
-                {shouldRenderCdnTabButton() && (
-                  <IconClickable
-                    // src={Utilities.embedCdn}
-                    SVGElement={isMobile ? Utilities.embedCdnGrey : Utilities.embedCdn}
-                    additionalClass={styles["menu-icon"] + " " + styles["cdn-icon"]}
-                    onClick={() => {
-                      setMode("detail");
-                      resetValues();
-                      changeActiveSide("cdn");
-                    }}
-                  />
-                )}
-                {editThenDownload && hasPermission([ASSET_DOWNLOAD]) && (
-                  <IconClickable
-                    SVGElement={AssetOps.download}
-                    additionalClass={styles["menu-icon"] + " " + styles["only-desktop-button"]}
-                    onClick={() => {
-                      if (currentAsset.type === "image" && isImageType(currentAsset.extension)) {
-                        if (mode !== "resize" && mode !== "crop") {
-                          setMode("resize");
-                        }
-                        changeActiveSide("download");
-                        resetImageSettings(undefined, undefined);
-                      } else {
-                        downloadSelectedAssets(currentAsset.id);
-                      }
-                    }}
-                  />
-                )}
-
-                <IconClickable
-                  SVGElement={isMobile ? Utilities.relatedLight : Utilities.related}
-                  additionalClass={styles["menu-icon"]}
-                  onClick={() => {
-                    setMode("detail");
-                    resetValues();
-                    changeActiveSide("related");
-                  }}
-                />
-                {hasPermission(["admin", "super_admin"]) && (
-                  <IconClickable
-                    SVGElement={isMobile ? Utilities.notesLight : Utilities.notes}
-                    additionalClass={styles["menu-icon"]}
-                    onClick={() => {
-                      setMode("detail");
-                      resetValues();
-                      changeActiveSide("notes");
-                    }}
-                  />
-                )}
-
-                {hasPermission(["admin", "super_admin"]) && versionCount > 0 && (
-                  <IconClickable
-                    SVGElement={isMobile ? Utilities.versionsLight : Utilities.versions}
-                    additionalClass={styles["menu-icon"]}
-                    onClick={() => {
-                      setMode("detail");
-                      resetValues();
-                      changeActiveSide("versions");
-                    }}
-                  />
-                )}
-              </>
-            )}
-            {transcriptAccess && assetDetail?.type === "video" && (
+          )}
+          {activeSideComponent === "transcript" && transcripts && (
+            <AssetTranscript
+              title={"Transcript"}
+              transcripts={transcripts}
+              loading={transcriptLoading}
+              navigateToTime={seekVideo}
+            />
+          )}
+        </section>
+      )}
+      {/* Share page mobile right button */}
+      {isShare && (
+        <div className={styles["share-right-button"]}>
+          {" "}
+          <IconClickable
+            src={Utilities.closePanelLight}
+            onClick={() => toggleSideMenu()}
+            additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"}`}
+          />{" "}
+          <IconClickable
+            SVGElement={isMobile ? Utilities.infoGray : Utilities.info}
+            additionalClass={styles["menu-icon"]}
+            onClick={() => {
+              setMode("detail");
+              resetValues();
+              changeActiveSide("detail");
+            }}
+          />
+        </div>
+      )}
+      {!isShare && (
+        <section className={styles.menu}>
+          <IconClickable
+            src={Utilities.closePanelLight}
+            onClick={() => toggleSideMenu()}
+            additionalClass={`${styles["menu-icon"]} ${!sideOpen && "mirror"} ${styles.expand}`}
+          />
+          {!isShare && (
+            <>
+              <div className={`${styles.separator} ${styles.expand}`}></div>
               <IconClickable
-                SVGElement={Utilities.transcript}
-                additionalClass={styles[""]}
+                SVGElement={isMobile ? Utilities.deleteGray : Utilities.delete}
+                additionalClass={styles["menu-icon"]}
+                onClick={openDeleteAsset}
+              />
+            </>
+          )}
+          <div className={styles.separator + " " + styles["only-desktop-button"]}></div>
+          <IconClickable
+            SVGElement={isMobile ? Utilities.infoGray : Utilities.info}
+            additionalClass={`${styles["menu-icon"]} ${
+              activeSideComponent !== "detail" ? styles["selected-menu"] : ""
+            }`}
+            onClick={() => {
+              setMode("detail");
+              resetValues();
+              changeActiveSide("detail");
+            }}
+          />
+          <IconClickable
+            SVGElement={isMobile ? Utilities.tags : Utilities.tags}
+            additionalClass={`${styles["menu-icon"]} ${
+              activeSideComponent !== "attributes" ? styles["selected-menu"] : ""
+            }`}
+            onClick={() => {
+              setMode("detail");
+              resetValues();
+              changeActiveSide("attributes");
+            }}
+          />
+          <IconClickable
+            SVGElement={isMobile ? AssetOps.move : AssetOps.move}
+            additionalClass={`${styles["menu-icon"]} ${
+              activeSideComponent !== "folder" ? styles["selected-menu"] : ""
+            }`}
+            onClick={() => {
+              setMode("detail");
+              resetValues();
+              changeActiveSide("folder");
+            }}
+          />
+          {!isShare && (
+            <>
+              <IconClickable
+                SVGElement={isMobile ? Utilities.commentLight : Utilities.comment}
+                additionalClass={`${styles["menu-icon"]} ${
+                  activeSideComponent !== "comments" ? styles["selected-menu"] : ""
+                }`}
                 onClick={() => {
                   setMode("detail");
                   resetValues();
-                  changeActiveSide("transcript");
+                  changeActiveSide("comments");
                 }}
               />
-            )}
-          </section>
-        )
-      }
+              {hasPermission(["admin", "super_admin"]) && (
+                <div className={styles["only-mobile-button"]}>
+                  <AssetAddition
+                    folderAdd={false}
+                    // versionGroup={assetDetail.versionGroup}
+                    triggerUploadComplete={onUserEvent}
+                  />
+                </div>
+              )}
+              {shouldRenderCdnTabButton() && (
+                <IconClickable
+                  // src={Utilities.embedCdn}
+                  SVGElement={isMobile ? Utilities.embedCdnGrey : Utilities.embedCdn}
+                  additionalClass={`${styles["menu-icon"]} ${
+                    activeSideComponent !== "cdn" ? styles["selected-menu"] : ""
+                  }`}
+                  onClick={() => {
+                    setMode("detail");
+                    resetValues();
+                    changeActiveSide("cdn");
+                  }}
+                />
+              )}
+              {editThenDownload && hasPermission([ASSET_DOWNLOAD]) && (
+                <IconClickable
+                  SVGElement={AssetOps.download}
+                  additionalClass={`${styles["menu-icon"]} ${
+                    activeSideComponent !== "download" ? styles["selected-menu"] : ""
+                  }`}
+                  onClick={() => {
+                    if (currentAsset.type === "image" && isImageType(currentAsset.extension)) {
+                      if (mode !== "resize" && mode !== "crop") {
+                        setMode("resize");
+                      }
+                      changeActiveSide("download");
+                      resetImageSettings(undefined, undefined);
+                    } else {
+                      downloadSelectedAssets(currentAsset.id);
+                    }
+                  }}
+                />
+              )}
+
+              <IconClickable
+                SVGElement={isMobile ? Utilities.relatedLight : Utilities.related}
+                additionalClass={`${styles["menu-icon"]} ${
+                  activeSideComponent !== "related" ? styles["selected-menu"] : ""
+                }`}
+                onClick={() => {
+                  setMode("detail");
+                  resetValues();
+                  changeActiveSide("related");
+                }}
+              />
+              {hasPermission(["admin", "super_admin"]) && (
+                <IconClickable
+                  SVGElement={isMobile ? Utilities.notesLight : Utilities.notes}
+                  additionalClass={`${styles["menu-icon"]} ${
+                    activeSideComponent !== "notes" ? styles["selected-menu"] : ""
+                  }`}
+                  onClick={() => {
+                    setMode("detail");
+                    resetValues();
+                    changeActiveSide("notes");
+                  }}
+                />
+              )}
+
+              {hasPermission(["admin", "super_admin"]) && versionCount > 0 && (
+                <IconClickable
+                  SVGElement={isMobile ? Utilities.versionsLight : Utilities.versions}
+                  additionalClass={`${styles["menu-icon"]} ${
+                    activeSideComponent !== "versions" ? styles["selected-menu"] : ""
+                  }`}
+                  onClick={() => {
+                    setMode("detail");
+                    resetValues();
+                    changeActiveSide("versions");
+                  }}
+                />
+              )}
+            </>
+          )}
+          {transcriptAccess && assetDetail?.type === "video" && (
+            <IconClickable
+              SVGElement={Utilities.transcript}
+              additionalClass={`${styles["menu-icon"]} ${
+                activeSideComponent !== "transcript" ? styles["selected-menu"] : ""
+              }`}
+              onClick={() => {
+                setMode("detail");
+                resetValues();
+                changeActiveSide("transcript");
+              }}
+            />
+          )}
+        </section>
+      )}
       <RenameModal
         closeModal={() => setRenameModalOpen(false)}
         modalIsOpen={renameModalOpen}
@@ -1584,7 +1618,7 @@ const DetailOverlay = ({
         type={"Asset"}
         initialValue={assetDetail?.name?.substring(0, assetDetail?.name.lastIndexOf("."))}
       />
-    </div >
+    </div>
   );
 };
 
