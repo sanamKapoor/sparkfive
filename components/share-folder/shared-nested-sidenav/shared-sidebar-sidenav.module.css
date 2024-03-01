@@ -83,7 +83,7 @@
 }
 .sidenav-list1 {
   margin-bottom: 10px;
-  max-height: 70vh;
+  max-height: 55vh;
   overflow:auto;
 }
 
@@ -424,7 +424,7 @@
     top:126px;
   }
   .sidenav-list1{
-    max-height: 40vh;
+    max-height: 30vh;
   }
 
 }
