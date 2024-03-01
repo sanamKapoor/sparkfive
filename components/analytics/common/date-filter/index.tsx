@@ -7,7 +7,6 @@ import Button from "../../../common/buttons/button";
 import { calculateBeginDate } from "../../../../config/data/filter";
 import DateUtils from "../../../../utils/date";
 import IconClickable from "../../../common/buttons/icon-clickable";
-import { Utilities } from "../../../../assets";
 import DatePickerModal from "../modal/date-picker";
 
 export default function DateFilter({ filter, setFilter, customDates, setCustomDates }) {

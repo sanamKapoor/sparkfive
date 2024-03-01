@@ -76,7 +76,7 @@ const UserEngagment = ({ initialData }) => {
       />
         :
         <div className={styles.empty}>
-          <NoData message="Data not found." wrapper={false} />
+          <NoData message={error ? error : "Data not found."} wrapper={false} />
         </div>
       }
     </div>

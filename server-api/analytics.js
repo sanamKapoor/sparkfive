@@ -4,6 +4,7 @@ const analyticsUrl = `${process.env.SERVER_BASE_URL}/analytics`;
 
 export default {
   captureAnalytics: async (data) => {
+    if(!process.env.ANALYTICS_LAMBDA_ENDPOINT) return;
     await fetch(process.env.ANALYTICS_LAMBDA_ENDPOINT, {
       method: 'POST',
       body: JSON.stringify(data),
