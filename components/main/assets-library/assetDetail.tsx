@@ -1076,9 +1076,6 @@ const DetailOverlay = ({
         }
         if (folder) {
             setOperationFolder(folder);
-            // trackEvent(events.SHARE_COLLECTION, {
-            //     collectionId: folder?.id
-            // });
         }
         setActiveOperation(operation);
     };
