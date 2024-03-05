@@ -103,6 +103,8 @@ const ShareModal = ({
 
   const getInitialSharedLink = async (showInternalLoading = true) => {
     try {
+      console.log('Inital Share');
+      
       if (showInternalLoading) {
         setLoading(true);
       }
@@ -234,6 +236,8 @@ const ShareModal = ({
 
     // Link is not created yet due to lacking name, saving name then getting url back
     if (firstInit === false && field === "name") {
+      console.log('Share Link', shareAssets);
+
       getInitialSharedLink(false);
     } else {
       const { data } = await shareAssets(
@@ -254,7 +258,7 @@ const ShareModal = ({
         },
         false,
         false,
-      );
+      );      
 
       if (field === "name") {
         if (data.name) {
@@ -284,19 +288,16 @@ const ShareModal = ({
 
   const changeIsPublic = (value) => {
     setIsPublic(value);
-
     saveChanges("", value);
   };
 
   const changeSharable = (value) => {
     setSharable(value);
-
     saveChanges("", undefined, undefined, undefined, undefined, value);
   };
 
   const changeDisplayAttributes = (value) => {
     setDisplayAttributes(value);
-
     saveChanges("", undefined, undefined, undefined, undefined, undefined, value);
   };
 

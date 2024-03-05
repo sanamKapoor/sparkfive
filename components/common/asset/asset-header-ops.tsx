@@ -535,15 +535,6 @@ const AssetHeaderOps = ({
               tooltipText={"Share"}
               tooltipId={"Share"}
               onClick={(e) => {
-                const sharedAssets = selectedSubFoldersAndAssets.assets.length > 0 ? selectedSubFoldersAndAssets.assets : selectedAssets.length > 0 ? selectedAssets : [];
-
-                if (sharedAssets.length > 0) {
-                  sharedAssets.map((assetItem) => {
-                    trackEvent(events.SHARE_ASSET, {
-                      assetId: assetItem.asset.id,
-                    });
-                  })
-                }
                 showShareActionList(e, true);
               }}
             />
@@ -608,13 +599,6 @@ const AssetHeaderOps = ({
         tooltipText: "Share",
         tooltipId: "Share",
         onClick: () => {
-          if (activeMode === "folders") {
-            selectedFolders.map(folder => {
-              trackEvent(events.SHARE_COLLECTION, {
-                collectionId: folder.id
-              });
-            })
-          }
           setActiveOperation("shareCollections")
         },
         child: null,

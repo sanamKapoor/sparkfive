@@ -1073,15 +1073,12 @@ const DetailOverlay = ({
     const beginAssetOperation = ({ asset = null, folder = null }, operation) => {        
         if (asset) {
             setOperationAsset(asset);
-            trackEvent(events.SHARE_ASSET, {
-                assetId: asset?.asset?.id,
-            });
         }
         if (folder) {
             setOperationFolder(folder);
-            trackEvent(events.SHARE_COLLECTION, {
-                collectionId: folder?.id
-            });
+            // trackEvent(events.SHARE_COLLECTION, {
+            //     collectionId: folder?.id
+            // });
         }
         setActiveOperation(operation);
     };
@@ -1125,6 +1122,13 @@ const DetailOverlay = ({
                     },
                     filters,
                 );
+
+
+                assetIds.split(',').map((assetItem) => {                
+                    trackEvent(events.SHARE_ASSET, {
+                        assetId: assetItem,
+                    });
+                })
 
                 if (showStatusToast) {
                     toastUtils.success("Assets shared succesfully");
@@ -1186,6 +1190,15 @@ const DetailOverlay = ({
                 params["tags"] = filters["tags"];
                 filters["subCollection"] = "1";
             }
+
+            if(filters.name){
+                assetIds.split(',').map((assetItem) => {                
+                    trackEvent(events.SHARE_ASSET, {
+                        assetId: assetItem,
+                    });
+                })
+            }
+
             return await assetApi.getShareUrl(params, filters);
         } catch (err) {
             console.log(err);

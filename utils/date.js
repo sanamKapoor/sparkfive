@@ -1,4 +1,7 @@
 import { addDays, format } from 'date-fns'
+import dateFnsFormat from "date-fns/format";
+import dateFnsParse from "date-fns/parse";
+import { DateUtils } from "react-day-picker";
 
 const areSameDates = (date1, date2) => {
   return date1.getDate() === date2.getDate() && date1.getMonth() === date2.getMonth() && date1.getYear() === date2.getYear()
@@ -7,6 +10,18 @@ const areSameDates = (date1, date2) => {
 const getDateKey = (date) => {
   return `${date.getDate()}-${date.getMonth()}-${date.getYear()}`
 }
+
+const formatDate = (date, format, locale) => {
+  return dateFnsFormat(date, format, { locale });
+};
+
+const parseDate = (str, format, locale) => {
+  const parsed = dateFnsParse(str, format, new Date(), { locale });
+  if (DateUtils.isDate(parsed)) {
+    return parsed;
+  }
+  return undefined;
+};
 
 const parseDateToString = (d) => {
   const date = new Date(d)
@@ -255,5 +270,7 @@ export default {
   analyticsDateFormatter,
   analyticsRecordsDateRange,
   calculateDateDifference,
-  daysBetweenDates
+  daysBetweenDates,
+  formatDate,
+  parseDate
 }

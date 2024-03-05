@@ -17,6 +17,8 @@ import MoveModal from "../modals/move-modal";
 import MoveReplaceModal from "../modals/move-replace-modal";
 import ShareCollectionModal from "../modals/share-collection-modal";
 import ShareModal from "../modals/share-modal";
+import useAnalytics from "../../../hooks/useAnalytics";
+import { events } from "../../../constants/analytics";
 
 export default ({ getAssets }) => {
   const {
@@ -54,6 +56,7 @@ export default ({ getAssets }) => {
   } = useContext(AssetContext);
 
   const { setIsLoading } = useContext(LoadingContext);
+  const { trackEvent } = useAnalytics();
 
   const [completedSubAssets, setCompletedSubAssets] = useState([]);
   const { loadFolders, activeSortFilter, term, searchFilterParams } = useContext(FilterContext);
@@ -539,7 +542,7 @@ export default ({ getAssets }) => {
     }
   };
 
-  const shareAssets = async (recipients, message, sharedLinkData, closeAfterDone = true, showStatusToast = true) => {
+  const shareAssets = async (recipients, message, sharedLinkData, closeAfterDone = true, showStatusToast = true) => {    
     return new Promise<any>(async (resolve) => {
       try {
         let assetIds;
@@ -584,6 +587,14 @@ export default ({ getAssets }) => {
           },
           filters,
         );
+
+        
+        assetIds.split(',').map((assetItem) => {          
+          trackEvent(events.SHARE_ASSET, {
+            assetId: assetItem,
+          });
+        })
+
         if (showStatusToast) {
           toastUtils.success("Assets shared succesfully");
         }
@@ -714,6 +725,14 @@ export default ({ getAssets }) => {
         filters["subCollection"] = "1";
       }
 
+      if(filters['name']){
+        assetIds.split(',').map((assetItem) => {          
+          trackEvent(events.SHARE_ASSET, {
+            assetId: assetItem,
+          });
+        })
+      }
+
       return await assetApi.getShareUrl(params, filters);
     } catch (err) {
       console.log(err);
@@ -762,6 +781,15 @@ export default ({ getAssets }) => {
         filters["parent_id"] = activeSubFolders;
       }
       filters["name"] = name;
+
+      if(filters.name){
+        folderIds.split(',').map((collectionId) => {          
+          trackEvent(events.SHARE_COLLECTION, {
+            collectionId,
+          });
+        })
+      }
+
       return await folderApi.getShareUrl(
         {
           folderIds,

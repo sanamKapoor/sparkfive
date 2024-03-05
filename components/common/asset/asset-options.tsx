@@ -68,9 +68,6 @@ const AssetOptions = ({
     {
       label: "Share",
       onClick: () => {
-        trackEvent(events.SHARE_ASSET, {
-          assetId: asset.id,
-        });
         openShareAsset();
       },
     },

@@ -229,8 +229,10 @@ const ShareCollectionModal = ({
 
     // Link is not created yet due to lacking name, saving name then getting url back
     if (firstInit === false && field === "name") {
+      console.log('Share Collection Link Init');
       getInitialSharedLink(false);
     } else {
+      console.log('Share Collection Link Again');
       const { data } = await shareAssets(
         recipients,
         message,

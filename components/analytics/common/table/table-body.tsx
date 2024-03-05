@@ -171,7 +171,7 @@ export const AssetTableRows = ({ data, handleModals }) => {
                       <AssetIcon imgClass={"analytics-icon"} extension={row.extension} />
                     )}
                   </div>
-                  <span>{row.name}</span>
+                  <span className={`${styles["asset-name"]}`}>{row.name}</span>
                 </div>
               )}
             </td>
@@ -292,7 +292,7 @@ export const AssetTableDashboardRows = ({ data }) => {
                       <AssetIcon imgClass={"analytics-icon"} extension={row.extension} />
                     )}
                   </div>
-                  <span>{row.name}</span>
+                  <span className={`${styles["asset-name"]}`}>{row.name}</span>
                 </div>
               )}
             </td>

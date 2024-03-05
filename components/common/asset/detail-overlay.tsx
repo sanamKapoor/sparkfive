@@ -1080,9 +1080,6 @@ const DetailOverlay = ({
                     type={"button"}
                     className={`container ${styles["only-desktop-button"]} primary`}
                     onClick={() => {
-                      trackEvent(events.SHARE_ASSET, {
-                        assetId: asset.id,
-                      });
                       openShareAsset();
                     }}
                   />
