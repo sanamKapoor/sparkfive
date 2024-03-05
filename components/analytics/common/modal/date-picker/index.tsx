@@ -9,6 +9,8 @@ import IconClickable from "../../../../common/buttons/icon-clickable";
 import Button from "../../../../common/buttons/button";
 import { calculateBeginDate } from "../../../../../config/data/filter";
 import DateUtils from "../../../../../utils/date";
+import { ANALYTICS_DATE_FORMAT, ANALYTICS_DATE_PLACEHOLDER } from "../../../../../constants/analytics";
+
 
 const DatePickerModal = ({
   activeFilter,
@@ -155,8 +157,8 @@ const DatePickerModal = ({
                 onDayChange={(day) => handleStartDay(day)}
                 value={
                   customDateVal.beginDate
-                    ? DateUtils.parseDateToStringForAnalytics(customDateVal.beginDate)
-                    : "MM/DD/YY"
+                    ? new Date(customDateVal.beginDate)
+                    : ANALYTICS_DATE_PLACEHOLDER
                 }
                 dayPickerProps={{
                   disabledDays: {
@@ -164,6 +166,10 @@ const DatePickerModal = ({
                     after: customDateVal.endDate ? new Date(customDateVal.endDate) : new Date(),
                   },
                 }}
+                placeholder={ANALYTICS_DATE_PLACEHOLDER}
+                format={ANALYTICS_DATE_FORMAT}
+                formatDate={DateUtils.formatDate}
+                parseDate={DateUtils.parseDate}
               />
             </div>
             <div className={modalStyles.custom}>
@@ -173,7 +179,8 @@ const DatePickerModal = ({
               <DayPickerInput
                 onDayChange={(day) => handleEndDay(day)}
                 value={
-                  customDateVal.endDate ? DateUtils.parseDateToStringForAnalytics(customDateVal.endDate) : "MM/DD/YY"
+                  customDateVal.endDate 
+                  ? new Date(customDateVal.endDate) : ANALYTICS_DATE_PLACEHOLDER
                 }
                 dayPickerProps={{
                   className: styles.calendar,
@@ -182,6 +189,10 @@ const DatePickerModal = ({
                     after: new Date(),
                   },
                 }}
+                placeholder={ANALYTICS_DATE_PLACEHOLDER}
+                format={ANALYTICS_DATE_FORMAT}
+                formatDate={DateUtils.formatDate}
+                parseDate={DateUtils.parseDate}
               />
             </div>
           </div>

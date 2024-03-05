@@ -48,19 +48,6 @@ const AssetOptions = ({
     {
       label: "Download",
       onClick: () => {
-        // if(isShare){
-        //   trackLinkEvent(
-        //     shareLinkEvents.DOWNLOAD_SHARED_ASSET,
-        //     {
-        //       email: cookiesApi.get('shared_email') || null,
-        //       teamId: cookiesApi.get('teamId') || null,
-        //       assetId: asset.id,
-        //     });
-        // } else {
-        //   trackEvent(events.DOWNLOAD_ASSET, {
-        //     assetId: asset.id,
-        //   });
-        // }
         downloadAsset();
       },
       permissions: [ASSET_DOWNLOAD],
@@ -68,9 +55,6 @@ const AssetOptions = ({
     {
       label: "Share",
       onClick: () => {
-        trackEvent(events.SHARE_ASSET, {
-          assetId: asset.id,
-        });
         openShareAsset();
       },
     },

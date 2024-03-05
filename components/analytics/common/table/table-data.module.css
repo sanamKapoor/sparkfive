@@ -155,6 +155,12 @@
   .user-name, .user-role{
     text-transform: capitalize;
   }
+  .asset-name{
+    width: 200px; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+  }
   .empty{
     display: flex;
     justify-content: center;

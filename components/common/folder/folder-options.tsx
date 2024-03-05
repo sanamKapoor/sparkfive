@@ -60,9 +60,6 @@ const FolderOptions = ({
       // { label: "Delete", onClick: () => setDeleteOpen(true) },
       {
         label: "Share", onClick: () => {
-          trackEvent(events.SHARE_COLLECTION, {
-            collectionId: activeFolderId
-          });
           shareAssets();
         }
       },

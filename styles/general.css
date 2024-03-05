@@ -72,6 +72,12 @@ body {
     height:90vh;
   }
 }
+@media (min-width:1100px) and (max-width:1199px){
+  body{
+    height:50vh !important;
+  }
+}
+
 
 #__next {
   height: 100%;

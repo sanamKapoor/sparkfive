@@ -147,3 +147,5 @@ export const DASHBOARD_REC_LIMIT = 6;
 export const TABLE_REC_LEN = 15;
 export const DASHBOARD_TABLE_REC_LEN = 6;
 export const DASHBOARD_ASSET_TABLE_REC_LEN = 8;
+export const ANALYTICS_DATE_FORMAT = "MM/dd/yy"
+export const ANALYTICS_DATE_PLACEHOLDER = "MM/DD/YY"

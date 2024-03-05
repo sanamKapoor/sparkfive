@@ -8,6 +8,7 @@ import { calculateBeginDate } from "../../../../config/data/filter";
 import DateUtils from "../../../../utils/date";
 import IconClickable from "../../../common/buttons/icon-clickable";
 import DatePickerModal from "../modal/date-picker";
+import { ANALYTICS_DATE_FORMAT, ANALYTICS_DATE_PLACEHOLDER } from "../../../../constants/analytics";
 
 export default function DateFilter({ filter, setFilter, customDates, setCustomDates }) {
   const [activeFilter, setActiveFilter] = useState("7d");
@@ -200,8 +201,8 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
                     onDayChange={(day) => handleStartDay(day)}
                     value={
                       customDateVal.beginDate
-                        ? DateUtils.parseDateToStringForAnalytics(customDateVal.beginDate)
-                        : "MM/DD/YY"
+                      ? new Date(customDateVal.beginDate)
+                      : ANALYTICS_DATE_PLACEHOLDER
                     }
                     dayPickerProps={{
                       disabledDays: {
@@ -209,6 +210,10 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
                         after: customDateVal.endDate ? new Date(customDateVal.endDate) : new Date(),
                       },
                     }}
+                    placeholder={ANALYTICS_DATE_PLACEHOLDER}
+                    formatDate={DateUtils.formatDate}
+                    format={ANALYTICS_DATE_FORMAT}
+                    parseDate={DateUtils.parseDate}
                   />
                 </div>
                 <div className={styles.dummy}>
@@ -218,7 +223,9 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
                   <DayPickerInput
                     onDayChange={(day) => handleEndDay(day)}
                     value={
-                      customDateVal.endDate ? DateUtils.parseDateToStringForAnalytics(customDateVal.endDate) : "MM/DD/YY"
+                      customDateVal.endDate 
+                      ? new Date(customDateVal.endDate) 
+                      : ANALYTICS_DATE_PLACEHOLDER
                     }
                     dayPickerProps={{
                       className: styles.calendar,
@@ -227,6 +234,10 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
                         after: new Date(),
                       },
                     }}
+                    placeholder={ANALYTICS_DATE_PLACEHOLDER}
+                    formatDate={DateUtils.formatDate}
+                    format={ANALYTICS_DATE_FORMAT}
+                    parseDate={DateUtils.parseDate}
                   />
                 </div>
               </div>}
