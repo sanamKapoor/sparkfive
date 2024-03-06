@@ -58,21 +58,26 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
     }
   };
 
-  const handleStartDay = (value) => {    
+  const handleStartDay = (value) => {
+    const validDate = DateUtils.parseDateToStringForAnalytics(value);
+
     setCustomDateVal((prev) => ({
       ...prev,
-      beginDate: DateUtils.parseDateToStringForAnalytics(value),
+      beginDate: validDate ? validDate : "",
     }));
   };
 
   const handleEndDay = (value) => {
+    const validDate = DateUtils.parseDateToStringForAnalytics(value);
     setCustomDateVal((prev) => ({
       ...prev,
-      endDate: DateUtils.parseDateToStringForAnalytics(value),
+      endDate: validDate ? validDate : "",
     }));
   };
 
   const handleApplyCustomDate = () => {
+    console.log({ customDateVal });
+
     if (!customDateVal.beginDate || !customDateVal.endDate) {
       setDateError("Invalid Dates.");
       return;
@@ -201,8 +206,7 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
                     onDayChange={(day) => handleStartDay(day)}
                     value={
                       customDateVal.beginDate
-                      ? new Date(customDateVal.beginDate)
-                      : ANALYTICS_DATE_PLACEHOLDER
+                      && new Date(customDateVal.beginDate)
                     }
                     dayPickerProps={{
                       disabledDays: {
@@ -223,9 +227,8 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
                   <DayPickerInput
                     onDayChange={(day) => handleEndDay(day)}
                     value={
-                      customDateVal.endDate 
-                      ? new Date(customDateVal.endDate) 
-                      : ANALYTICS_DATE_PLACEHOLDER
+                      customDateVal.endDate
+                      && new Date(customDateVal.endDate)
                     }
                     dayPickerProps={{
                       className: styles.calendar,

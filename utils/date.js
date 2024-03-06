@@ -34,7 +34,7 @@ const parseDateToString = (d) => {
 const parseDateToStringForAnalytics = (d) => {
   const date = new Date(d)
 
-  if (!d) return 'MM/DD/YY'
+  if (!d) return null
 
   return format(date, 'MM/dd/yy')
 }
