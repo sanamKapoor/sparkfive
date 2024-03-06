@@ -58,7 +58,7 @@ export default function DateFilter({ filter, setFilter, customDates, setCustomDa
     }
   };
 
-  const handleStartDay = (value) => {
+  const handleStartDay = (value) => {    
     setCustomDateVal((prev) => ({
       ...prev,
       beginDate: DateUtils.parseDateToStringForAnalytics(value),

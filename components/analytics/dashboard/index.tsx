@@ -1,11 +1,11 @@
 import React from "react";
+import { DashboardSections } from "../../../constants/analytics";
+import InsightsHeader from "../common/headline";
 import styles from "../index.module.css";
 import Activity from "./activity";
-import InsightsHeader from "../common/headline";
 import TeamSession from "./session";
 import TopAssets from "./top-asset";
 import UserEngagment from "./user-eng";
-import { DashboardSections } from "../../../constants/analytics";
 
 function Dashboard({ data }) {
   return (

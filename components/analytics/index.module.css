@@ -153,7 +153,8 @@
 }
 
 .tableResponsive {
-  overflow-x: auto;
+  /* overflow-x: auto; */
+  overflow-x:visible;
   border: 1px solid#DEDAD4;
   padding: 18px;
 }

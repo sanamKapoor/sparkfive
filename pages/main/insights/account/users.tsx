@@ -1,15 +1,16 @@
 import React from 'react';
 import Cookies from "universal-cookie";
+import Users from '../../../../components/analytics/users';
 import InsightsLayout from '../../../../components/common/layouts/insights-layout';
 import { calculateBeginDate } from '../../../../config/data/filter';
-import { AnalyticsApiHelperServerRender } from '../../../../server-api/analytics';
 import { InsightsApiEndpoint, LIMIT, PAGE } from '../../../../constants/analytics';
-import Users from '../../../../components/analytics/users';
+import { AnalyticsApiHelperServerRender } from '../../../../server-api/analytics';
+
 
 const UserPage = ({ data }) => {
   return (
     <InsightsLayout title="Insights - Users">
-      <Users initialData={data} />
+      <Users initialData={data} />     
     </InsightsLayout>
   );
 }

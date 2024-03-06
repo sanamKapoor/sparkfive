@@ -1,7 +1,7 @@
 // TableComponent.js
 
 import React, { useEffect, useState } from "react";
-import { AnalyticsLayoutSection, DASHBOARD_TABLE_REC_LEN, InsightsApiEndpoint, TABLE_REC_LEN, TableBodySection } from "../../../constants/analytics";
+import { AnalyticsLayoutSection, InsightsApiEndpoint, TABLE_REC_LEN, TableBodySection } from "../../../constants/analytics";
 import { UserTableColumns, arrowColumns } from "../../../data/analytics";
 import useInsights from "../../../hooks/useInsights";
 import DateFilter from "../common/date-filter";
@@ -70,7 +70,7 @@ const Users = ({
   }, [initialData]);
 
   return (
-    <section className={styles.mainContainer}>
+    <section className={styles.mainContainer} style={{paddingBottom:"30px"}}>
       <div className={styles.tableHeader}>
         <InsightsHeader title="Users" />
       </div>
