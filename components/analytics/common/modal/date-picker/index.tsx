@@ -157,8 +157,7 @@ const DatePickerModal = ({
                 onDayChange={(day) => handleStartDay(day)}
                 value={
                   customDateVal.beginDate
-                    ? new Date(customDateVal.beginDate)
-                    : ANALYTICS_DATE_PLACEHOLDER
+                    && new Date(customDateVal.beginDate)
                 }
                 dayPickerProps={{
                   disabledDays: {
@@ -180,7 +179,7 @@ const DatePickerModal = ({
                 onDayChange={(day) => handleEndDay(day)}
                 value={
                   customDateVal.endDate 
-                  ? new Date(customDateVal.endDate) : ANALYTICS_DATE_PLACEHOLDER
+                  && new Date(customDateVal.endDate)
                 }
                 dayPickerProps={{
                   className: styles.calendar,
