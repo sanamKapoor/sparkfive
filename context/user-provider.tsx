@@ -161,6 +161,7 @@ export default ({ children }) => {
     // Reset theme
     resetTheme();
     cookiesUtils.remove("jwt");
+    cookiesUtils.remove("adminToken");
     requestsUtils.removeAuthToken();
 
     // Track the logout event and remove the userId
