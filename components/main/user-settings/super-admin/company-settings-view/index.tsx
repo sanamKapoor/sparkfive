@@ -261,6 +261,21 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({ onBack, data,
         </div>
 
         <div className={`row align-flex-start ${styles.cdnEmbedding}`}>
+          <div className={"col-20 font-weight-600"}>Analytics Embedding</div>
+
+          <div className={"col-20"}>
+            <OptionList
+              setValue={(value) => setSettings({ ...settings, analytics: value })}
+              data={type}
+              oneColumn={false}
+              value={settings.analytics}
+            />
+          </div>
+
+          <div className={"col-20 align-self-flex-end"}></div>
+        </div>
+
+        <div className={`row align-flex-start ${styles.cdnEmbedding}`}>
           <div className={"col-20 font-weight-600"}>
             <FaceRecognitionOperations teamId={data.id} />
           </div>
