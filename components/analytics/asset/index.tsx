@@ -71,7 +71,7 @@ function Asset({ initialData }) {
   }, [initialData]);
 
   return (
-    <section className={styles.mainContainer}>
+    <section className={styles.mainContainer}  style={{paddingBottom:"30px"}}>
       <div className={styles.tableHeader}>
         <InsightsHeader title="Assets" />
       </div>
