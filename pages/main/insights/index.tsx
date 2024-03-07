@@ -8,7 +8,7 @@ import InsightsLayout from "../../../components/common/layouts/insights-layout";
 import { calculateBeginDate } from "../../../config/data/filter";
 import { DASHBOARD_ASSET_TABLE_REC_LEN, DASHBOARD_REC_LIMIT, DashboardSections, pages } from "../../../constants/analytics";
 import { SOMETHING_WENT_WRONG } from "../../../constants/messages";
-import { UserContext } from "../../../context";
+import { TeamContext, UserContext } from "../../../context";
 import useAnalytics from "../../../hooks/useAnalytics";
 import { AnalyticsApiHelperServerRender } from "../../../server-api/analytics";
 
@@ -17,13 +17,14 @@ const Insights = ({ data }) => {
   const router = useRouter();
   const { pageVisit } = useAnalytics();
   const { user } = useContext(UserContext);
+  const { team } = useContext(TeamContext);
 
   useEffect(() => {
     pageVisit(pages.INSIGHTS);
   }, []);
 
   useEffect(() => {
-    if (!user || !user?.team?.analytics || user?.roleId !== 'admin') {
+    if (!user || !team?.analytics || user?.roleId !== 'admin') {
       router.replace("/main/assets")
     }
   }, [user])

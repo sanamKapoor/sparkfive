@@ -9,7 +9,7 @@ const useAnalytics = () => {
   const { team } = useContext(TeamContext);
   const adminJWT = cookiesUtils.get("adminToken");
 
-  const isTrackingEnabled = user?.team?.analytics || team?.analytics;
+  const isTrackingEnabled = team?.analytics;
 
   // For all page track (No Auth)
   const pageVisit = (title: string) => {
@@ -28,7 +28,7 @@ const useAnalytics = () => {
   };
 
   // For all events (Auth)
-  const trackEvent = (eventName: string, infoObject?: Record<string, unknown>) => {    
+  const trackEvent = (eventName: string, infoObject?: Record<string, unknown>) => {        
     if (isTrackingEnabled && !adminJWT) {
       analyticsApi.captureAnalytics({
         eventType: eventTypes.TRACK,

@@ -25,6 +25,7 @@ const MainLayout = ({ children, requiredPermissions = [], headerZIndex }) => {
   };
 
   const { user, logOut, hasPermission, logo } = useContext(UserContext);
+  const { team } = useContext(TeamContext);
   const { setHeaderName } = useContext(AssetContext)
   const { isLoading } = useContext(LoadingContext);
   const pageListRef = useRef(null);
@@ -54,7 +55,7 @@ const MainLayout = ({ children, requiredPermissions = [], headerZIndex }) => {
     // },
   ]
 
-  if (user?.team?.analytics && user?.roleId === 'admin') {
+  if (team?.analytics && user?.roleId === 'admin') {
     menuOptions.push({
       id: "insights",
       label: "Insights",
@@ -181,7 +182,7 @@ const MainLayout = ({ children, requiredPermissions = [], headerZIndex }) => {
                 text="Assets"
               />
 
-              {(user?.team?.analytics && user?.roleId === 'admin') && <HeaderLink
+              {(team?.analytics && user?.roleId === 'admin') && <HeaderLink
                 active={Router.pathname.indexOf("insights") !== -1}
                 href="/main/insights"
                 img={Router.pathname.indexOf("insights") !== -1 ? Navigation.insightSelected : Navigation.insights}

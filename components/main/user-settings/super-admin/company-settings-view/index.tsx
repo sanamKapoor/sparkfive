@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Utilities } from "../../../../../assets";
 import Button from "../../../../common/buttons/button";
 import IconClickable from "../../../../common/buttons/icon-clickable";
@@ -13,6 +13,7 @@ import Input from "../../../../common/inputs/input";
 import PlanModal from "../../SuperAdmin/PlanModal";
 import OptionList from "../option-list";
 import FaceRecognitionOperations from "../../../../common/custom-settings/face-recognition-operations";
+import { TeamContext } from "../../../../../context";
 
 interface CompanySettingsViewProps {
   onBack: () => void;
@@ -46,6 +47,7 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({ onBack, data,
     analytics: data?.analytics || false,
     faceRecognition: data?.faceRecognition || false,
   });
+  const { team, getTeam } = useContext(TeamContext);
   const [showPlanModal, setShowPlanModal] = useState<boolean>(false);
 
   const [currentPlan, setCurrentPlan] = useState<ITeamPlan>();
@@ -55,10 +57,14 @@ const CompanySettingsView: React.FC<CompanySettingsViewProps> = ({ onBack, data,
       try {
         setLoading(true);
         // @ts-ignore
-        await superAdminApi.updateCompanyConfig(data.id, settings);
+        await superAdminApi.updateCompanyConfig(data.id, settings);        
 
         setLoading(false);
 
+        if(team && data.id === team?.id){
+          getTeam()
+        }
+        
         onBack();
 
         toastUtils.success("Setting changes saved");
