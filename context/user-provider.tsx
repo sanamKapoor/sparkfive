@@ -1,7 +1,7 @@
 import Router, { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 
-import { LoadingContext, UserContext } from "../context";
+import { LoadingContext, TeamContext, UserContext } from "../context";
 
 import SpinnerOverlay from "../components/common/spinners/spinner-overlay";
 
@@ -47,6 +47,7 @@ export default ({ children }) => {
   const { trackEvent, identify } = useAnalytics();
 
   const { setIsLoading } = useContext(LoadingContext);
+  const { setTeam } = useContext(TeamContext);
 
   const router = useRouter();
 
@@ -171,6 +172,7 @@ export default ({ children }) => {
     });
 
     setUser(null);
+    setTeam(null);
     Router.replace("/login");
   };
 

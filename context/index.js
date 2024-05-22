@@ -261,6 +261,7 @@ export const TeamContext = createContext({
   team: null,
   patchTeam: (patchData) => { },
   getTeam: (once) => { },
+  setTeam: (team) => { },
   teamMembers: [],
   setTeamMembers: (data) => { },
   getTeamMembers: () => { },

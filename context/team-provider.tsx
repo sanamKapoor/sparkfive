@@ -55,6 +55,7 @@ export default ({ children }) => {
     team,
     patchTeam,
     getTeam,
+    setTeam,
     plan,
     getPlan,
     teamMembers,
